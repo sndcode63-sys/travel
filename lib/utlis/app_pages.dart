@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/c_chart/retailer/retailer_bindind.dart';
-import 'package:travell_booking_app/presentation/demo/demo_screen.dart';
 import 'package:travell_booking_app/presentation/my_demo/my_demo_binding.dart';
 import 'package:travell_booking_app/presentation/my_demo/my_demo_screen.dart';
 import 'package:travell_booking_app/presentation/tab_retailrDistributers/list_distributres_binding.dart';
@@ -29,11 +28,6 @@ class AppPages {
       transition: Transition.fade,
     ),
 
-    GetPage(
-      name: Routes.demo,
-      page: () => DemoScreen(),
-      transition: Transition.fade,
-    ),
     GetPage(
       name: Routes.myDemo,
       page: () => MyDemoScreen(),
