@@ -1,11 +1,9 @@
-class Routes {
+class AppRoutes {
   static const splash = '/splash';
-  static const screen = '/screen';
-  static const home = '/home';
-  static const profile = '/profile';
-  static const settings = '/settings';
-  static const demo = '/demo';
-  static const myDemo = '/myDemo';
-  static const retailers = '/retailers';
-  static const list = '/list';
+  static const login = '/login-screen';
+  static const forgetPassword = '/forget-password_screen';
+  static const otpVerification = '/otp-verification';
+  static const resetPassword = '/reset-password';
+  static const dashBoard = '/dashBoard-screen';
+  static const home = '/home-screen';
 }

@@ -17,9 +17,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      theme: ThemeData(
+        fontFamily: "OpenSans",
+      ),
       debugShowCheckedModeBanner: false,
       title: "My App",
-      initialRoute: Routes.retailers,
+      initialRoute: AppRoutes.login
+      ,
       getPages: AppPages.routes,
     );
   }

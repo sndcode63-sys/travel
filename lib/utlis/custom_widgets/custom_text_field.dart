@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
   final String? labelText;
@@ -19,13 +19,26 @@ class CustomTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
   final String? Function(String?)? validator;
+  final String obscuringCharacter; // new
+
+
+  // 🎨 Customization Props
   final Color borderColor;
   final Color focusedBorderColor;
   final Color errorBorderColor;
   final Color fillColor;
+  final Color hintColor;
+  final Color labelColor;
+  final double borderRadius;
+  final double borderWidth;
+  final TextStyle? textStyle;
+  final TextStyle? hintStyle;
+  final TextStyle? labelStyle;
+  final TextStyle? errorStyle;
 
-  const CustomTextField({
-    Key? key,
+
+  const AppTextField({
+    super.key,
     this.controller,
     this.hintText,
     this.labelText,
@@ -40,19 +53,33 @@ class CustomTextField extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.focusNode,
-    this.contentPadding = const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+    this.contentPadding =
+    const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
     this.onChanged,
     this.onSubmitted,
     this.validator,
+    this.obscuringCharacter = '•', // default dot
+
+
+    // 🎨 Defaults
     this.borderColor = Colors.grey,
     this.focusedBorderColor = Colors.blue,
     this.errorBorderColor = Colors.red,
     this.fillColor = Colors.white,
-  }) : super(key: key);
+    this.hintColor = Colors.grey,
+    this.labelColor = Colors.black,
+    this.borderRadius = 12,
+    this.borderWidth = 1.2,
+    this.textStyle,
+    this.hintStyle,
+    this.labelStyle,
+    this.errorStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscuringCharacter: obscuringCharacter, // pass here
       controller: controller,
       initialValue: initialValue,
       obscureText: obscureText,
@@ -66,30 +93,41 @@ class CustomTextField extends StatelessWidget {
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,
       validator: validator,
+      style: textStyle ?? const TextStyle(fontSize: 15),
       decoration: InputDecoration(
         hintText: hintText,
         labelText: labelText,
+        hintStyle: hintStyle ??
+            TextStyle(fontSize: 14, color: hintColor.withOpacity(0.7)),
+        labelStyle: labelStyle ??
+            TextStyle(fontSize: 15, color: labelColor, fontWeight: FontWeight.w500),
+        errorStyle: errorStyle ??
+            const TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.w500),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: fillColor,
         contentPadding: contentPadding,
-        counterText: '', // hide character counter
+        counterText: '',
+
+        // Borders
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: borderColor),
-          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor, width: borderWidth),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: focusedBorderColor, width: 2),
-          borderRadius: BorderRadius.circular(12),
+          borderSide:
+          BorderSide(color: focusedBorderColor, width: borderWidth + 0.8),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: errorBorderColor),
-          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: errorBorderColor, width: borderWidth),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: errorBorderColor, width: 2),
-          borderRadius: BorderRadius.circular(12),
+          borderSide:
+          BorderSide(color: errorBorderColor, width: borderWidth + 0.8),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
       ),
     );

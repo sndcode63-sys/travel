@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class AppSizes {
   AppSizes._();
 
@@ -16,4 +18,10 @@ class AppSizes {
   static const double radiusSmall = 4.0;
   static const double radiusMedium = 8.0;
   static const double radiusLarge = 16.0;
+}
+
+
+
+void hideKeyboard() {
+  FocusManager.instance.primaryFocus?.unfocus();
 }

@@ -1,50 +1,62 @@
 import 'package:get/get.dart';
-import 'package:travell_booking_app/presentation/c_chart/retailer/retailer_bindind.dart';
-import 'package:travell_booking_app/presentation/my_demo/my_demo_binding.dart';
-import 'package:travell_booking_app/presentation/my_demo/my_demo_screen.dart';
-import 'package:travell_booking_app/presentation/tab_retailrDistributers/list_distributres_binding.dart';
-import '../presentation/bindings.dart';
-import '../presentation/c_chart/retailer/distributer.dart';
-import '../presentation/screen.dart';
-import '../presentation/splash/splash_binding.dart';
-import '../presentation/splash/splash_screen.dart';
-import '../presentation/tab_retailrDistributers/list_distributres.dart';
+import 'package:travell_booking_app/presentation/auth/login/login_binding.dart';
+import 'package:travell_booking_app/presentation/auth/login/login_screen.dart';
+import 'package:travell_booking_app/presentation/auth/otp/otp_verification_binding.dart';
+import 'package:travell_booking_app/presentation/auth/otp/otp_verification_screen.dart';
+import 'package:travell_booking_app/presentation/auth/password/forget_password_binding.dart';
+import 'package:travell_booking_app/presentation/auth/password/forget_password_screen.dart';
+import 'package:travell_booking_app/presentation/auth/reset_password/reset_password_binding.dart';
+import 'package:travell_booking_app/presentation/dashBoard/bottom_navigation_bar.dart';
+import 'package:travell_booking_app/presentation/dashBoard/dash_board_screen.dart';
+import 'package:travell_booking_app/presentation/home/home_binding.dart';
+import '../presentation/auth/reset_password/reset_password_screen.dart';
+import '../presentation/dashBoard/dash_board_binding.dart';
 import 'app_routes.dart';
+
 
 class AppPages {
   static final routes = [
     GetPage(
-      name: Routes.splash,
-      page: () => SplashScreen(),
-      binding: SplashBinding(),
-      transition: Transition.fade,
-    ),
-
-
-    GetPage(
-      name: Routes.screen,
-      page: () => SettingsScreen(),
-      binding: Binding(),
-      transition: Transition.fade,
-    ),
-
-    GetPage(
-      name: Routes.myDemo,
-      page: () => MyDemoScreen(),
-      binding: MyDemoBinding(),
+      name: AppRoutes.login,
+      page: () => LoginScreen(),
+      binding: LoginBinding(),
       transition: Transition.fade,
     ),
     GetPage(
-      name: Routes.retailers,
-      page: () => AddDistributorRetailerScreen(),
-      binding: RetailerBindind(),
-      transition: Transition.fade,
+      name: AppRoutes.forgetPassword,
+      page: () => ForgetPasswordScreen(),
+      binding: ForgetPasswordBinding(),
+      transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: Routes.list,
-      page: () => DistributorRetailerListScreen(),
-      binding: ListDistributresBinding(),
-      transition: Transition.fade,
+      name: AppRoutes.forgetPassword,
+      page: () => ForgetPasswordScreen(),
+      binding: ForgetPasswordBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.otpVerification,
+      page: () => OtpVerificationScreen(),
+      binding: OtpVerificationBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.resetPassword,
+      page: () => ResetPasswordScreen(),
+      binding: ResetPasswordBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.dashBoard,
+      page: () => DashBoardScreen(),
+      binding: DashBoardBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.home,
+      page: () => HomeScreen(),
+      binding: HomeBinding(),
+      transition: Transition.rightToLeft,
     ),
   ];
 }
