@@ -107,7 +107,6 @@ class OtpVerificationScreen extends StatelessWidget {
                       ),
 
                       onCompleted: (pin) {
-                        print("Completed: $pin");
                       },
                     ),
                   ),
@@ -140,4 +139,5 @@ class OtpVerificationScreen extends StatelessWidget {
       ),
     );
   }
+
 }

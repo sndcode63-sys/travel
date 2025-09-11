@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:travell_booking_app/presentation/addVisit/addVisitForClientInfo/add_client_information.dart';
+import 'package:travell_booking_app/presentation/addVisit/add_visit_screen.dart';
+import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_info_screen.dart';
+import 'package:travell_booking_app/presentation/addmetting/add_meeting_screen.dart';
 import 'package:travell_booking_app/presentation/auth/login/login_screen.dart';
 import 'package:travell_booking_app/utlis/constents/img_constants.dart';
 import 'package:travell_booking_app/utlis/ui/extension.dart';
@@ -17,19 +21,14 @@ import '../home/hom_screen.dart';
 class DashBoardController extends GetxController {
   final pageController = PageController();
   final selectedIndex = 0.obs;
-
-  /// Ye sabhi screens ka list hai
   final List<Widget> views = [
     HomScreen(),
-    Container(
-      color: Colors.purple,
-      child: Center(child: Text("Add Visit")),
-    ), // 1
+    AddClientInformation(),
     Container(
       color: Colors.green,
       child: Center(child: Text("Menu Screen")),
     ), // 2 (center button)
-    Container(color: Colors.red, child: Center(child: Text("Meeting"))), // 3
+    AddMeetingScreen(),
     Container(color: Colors.blue, child: Center(child: Text("Settings"))), // 4
   ];
 
@@ -93,7 +92,7 @@ class CustomBottomNavBar extends StatelessWidget {
             top: -38,
             left: MediaQuery.of(context).size.width / 2 - 40,
             child: GestureDetector(
-              onTap: () => onItemTapped(2), // Center button → Menu Screen
+              onTap: () => onItemTapped(2),
               child: Image.asset(AppImages.menu),
             ),
           ),

@@ -1,4 +1,8 @@
 import 'package:get/get.dart';
+import 'package:travell_booking_app/presentation/addVisit/add_visit_binding.dart';
+import 'package:travell_booking_app/presentation/addVisit/add_visit_screen.dart';
+import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_info_screen.dart';
+import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_infro_binding.dart';
 import 'package:travell_booking_app/presentation/auth/login/login_binding.dart';
 import 'package:travell_booking_app/presentation/auth/login/login_screen.dart';
 import 'package:travell_booking_app/presentation/auth/otp/otp_verification_binding.dart';
@@ -9,6 +13,12 @@ import 'package:travell_booking_app/presentation/auth/reset_password/reset_passw
 import 'package:travell_booking_app/presentation/dashBoard/bottom_navigation_bar.dart';
 import 'package:travell_booking_app/presentation/dashBoard/dash_board_screen.dart';
 import 'package:travell_booking_app/presentation/home/home_binding.dart';
+import 'package:travell_booking_app/presentation/liberary/library_binding.dart';
+import 'package:travell_booking_app/presentation/liberary/library_screen.dart';
+import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_binding.dart';
+import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_screen.dart';
+import 'package:travell_booking_app/presentation/libraryVideo/video_library_binding.dart';
+import 'package:travell_booking_app/presentation/libraryVideo/video_library_screen.dart';
 import '../presentation/auth/reset_password/reset_password_screen.dart';
 import '../presentation/dashBoard/dash_board_binding.dart';
 import 'app_routes.dart';
@@ -56,6 +66,40 @@ class AppPages {
       name: AppRoutes.home,
       page: () => HomeScreen(),
       binding: HomeBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.addVisit,
+      page: () => AddVisitScreen(),
+      binding: AddVisitBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.library,
+      page: () =>
+      LibraryScreen(),
+      binding: LibraryBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.libraryImageCollection,
+      page: () =>
+      LibraryImageCollectionScreen(),
+      binding: LibraryImageCollectionBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.videoLibrary,
+      page: () =>
+      VideoLibraryScreen(),
+      binding: VideoLibraryBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.addMember,
+      page: () =>
+          AddMemberInfoScreen(),
+      binding: AddMemberInfroBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

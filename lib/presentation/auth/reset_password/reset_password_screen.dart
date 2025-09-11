@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_passowrd_controller.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
+import 'package:travell_booking_app/utlis/constents/str_constants.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
 import 'package:travell_booking_app/utlis/ui/extension.dart';
@@ -53,7 +54,7 @@ class ResetPasswordScreen extends StatelessWidget {
                             children: [
                               const TextSpan(text: "Hello! "),
                               TextSpan(
-                                text: "Chart Group",
+                                text: AppStrings.demoTesting,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 20,
@@ -151,3 +152,6 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 }
+
+
+

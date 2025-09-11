@@ -1,6 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/img_constants.dart';
+import 'package:travell_booking_app/utlis/constents/str_constants.dart';
+import 'wigets/home_slider_drawer.dart';
 
 class HomScreen extends StatelessWidget {
   const HomScreen({super.key});
@@ -8,12 +11,13 @@ class HomScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: HomeSliderDrawer(),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
           color: Colors.blue.withOpacity(0.5),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: const BoxDecoration(
               color: Colors.blueAccent,
               borderRadius: BorderRadius.only(
@@ -30,16 +34,21 @@ class HomScreen extends StatelessWidget {
             ),
             child: AppBar(
               backgroundColor: Colors.transparent,
-              elevation: 1,
-              leading: Container(
-                decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                child: Icon(Icons.menu),
+              elevation: 0,
+              leading: Builder(
+                builder: (context) =>
+                IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.white),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
               ),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text(
-                    "Chart Group",
+                   AppStrings.demoTesting,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
@@ -58,11 +67,13 @@ class HomScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.notifications_rounded, color: Colors.white,size: 26,),
+                  icon: const Icon(Icons.notifications_rounded,
+                      color: Colors.white, size: 26),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: const Icon(Icons.settings, color: Colors.white,size: 26,),
+                  icon: const Icon(Icons.settings,
+                      color: Colors.white, size: 26),
                   onPressed: () {},
                 ),
               ],
@@ -70,14 +81,15 @@ class HomScreen extends StatelessWidget {
           ),
         ),
       ),
-      body:
-      Column(
+
+      // ✅ body wahi rehne diya
+      body: Column(
         children: [
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.18,
             width: double.infinity,
             child: Image.asset(
-              AppImages.banner, // apna banner yaha
+              AppImages.banner,
               fit: BoxFit.cover,
             ),
           ),
@@ -88,42 +100,57 @@ class HomScreen extends StatelessWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               children: [
-                _buildItem(Icons.group, "Add Visit", Colors.purple),
+                _buildItem(Icons.group, "Add Visit", Colors.purple, onTap: () {
+                  Get.toNamed(AppRoutes.addVisit);
+                }),
                 _buildItem(Icons.meeting_room, "Add Meeting", Colors.orange),
-                _buildItem(Icons.library_books, "Library", Colors.teal),
-                _buildItem(Icons.calendar_month, "Plot", Colors.pink),
+                _buildItem(Icons.library_books, "Library", Colors.teal,
+                    onTap: () {
+                      Get.toNamed(AppRoutes.library);
+                    }),
+                _buildItem(Icons.calendar_month, "Plot", Colors.pink,
+                    onTap: () {
+                      Get.toNamed(AppRoutes.addMember);
+                    }),
               ],
             ),
           ),
-
         ],
       ),
-
     );
   }
 
-  Widget _buildItem(IconData icon, String title, Color color) {
-    return Column(
-      children: [
-        Container(
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(12),
+  Widget _buildItem(
+      IconData icon,
+      String title,
+      Color color, {
+        VoidCallback? onTap,
+      }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: Colors.white, size: 28),
           ),
-          child: Icon(icon, color: Colors.white, size: 28),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        ),
-      ],
+          const SizedBox(height: 6),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
+
 
 
 
