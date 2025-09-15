@@ -4,7 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 class DeviceInfoHelper {
   static final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
 
-  /// Get device model (Android/iOS)
+  // Get device model (Android/iOS)
   static Future<String> getDeviceModel() async {
     if (Platform.isAndroid) {
       final androidInfo = await _deviceInfo.androidInfo;
@@ -16,7 +16,7 @@ class DeviceInfoHelper {
     return "Unknown Device";
   }
 
-  /// Get OS version
+  // Get OS version
   static Future<String> getOSVersion() async {
     if (Platform.isAndroid) {
       final androidInfo = await _deviceInfo.androidInfo;
@@ -28,7 +28,7 @@ class DeviceInfoHelper {
     return "Unknown OS";
   }
 
-  /// Unique Device Identifier
+  // Unique Device Identifier
   static Future<String> getDeviceId() async {
     if (Platform.isAndroid) {
       final androidInfo = await _deviceInfo.androidInfo;

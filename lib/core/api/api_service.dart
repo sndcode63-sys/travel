@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import '../../utlis/constents/api_constants.dart';
+import '../../utlis/logging/logger.dart';
 import '../../utlis/storage/secure_cache_service.dart';
 import '../../utlis/storage/secure_token_service.dart';
 import 'api_client.dart';
@@ -9,9 +10,14 @@ import 'api_response.dart';
 import 'network_exceptions.dart';
 
 
+
+
+
+
 class ApiService {
   ApiService._();
 
+  // Generic request method
   static Future<ApiResponse<T>> request<T>({
     required String endpoint,
     required String method, // GET, POST, PUT, PATCH, DELETE
@@ -22,24 +28,12 @@ class ApiService {
     bool useCache = false,
     Duration cacheDuration = const Duration(minutes: 5),
     Map<String, String>? extraHeaders,
-    // bool useETag = false, // uncomment if your backend supports ETag
   }) async {
     final uri = Uri.parse("${ApiClient.baseUrl}$endpoint")
         .replace(queryParameters: queryParams?.map((k, v) => MapEntry(k, "$v")));
 
     final cacheKey = _cacheKey(method, uri);
 
-    // 1) cache-first
-    if (useCache) {
-      final cached = SecureCacheService.get(cacheKey);
-      if (cached != null) {
-        return ApiResponse.success(fromJson != null ? fromJson(cached) : cached);
-      }
-    }
-
-    // final cachedEtag = useETag ? SecureCacheService.get("$cacheKey:etag") as String? : null;
-
-    // Network call with retry/backoff for transient failures
     int attempt = 0;
     http.Response response;
 
@@ -48,16 +42,20 @@ class ApiService {
       try {
         final headers = await ApiClient.getHeaders(
           isTokenRequired: isTokenRequired,
-          extra: {
-            if (extraHeaders != null) ...extraHeaders,
-            // if (useETag && cachedEtag != null) 'If-None-Match': cachedEtag,
-          },
+          extra: extraHeaders,
         );
+
+        Logger.info("API REQUEST", {
+          "method": method,
+          "url": uri.toString(),
+          "headers": headers,
+          "body": body,
+        });
 
         response = await _dispatch(method, uri, headers, body)
             .timeout(ApiConstants.requestTimeout);
 
-        // 2) 401 → try refresh & replay once
+        // 401 → refresh token
         if (response.statusCode == 401 && isTokenRequired) {
           final refreshed = await SecureTokenService.getValidToken();
           if (refreshed != null) {
@@ -70,38 +68,34 @@ class ApiService {
           }
         }
 
-        // 3) Success (200..201 / 304)
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          final data = jsonDecode(response.body);
-          if (useCache) {
-            await SecureCacheService.save(cacheKey, data, cacheDuration);
-            // if (useETag) {
-            //   final etag = response.headers['etag'];
-            //   if (etag != null) await SecureCacheService.save("$cacheKey:etag", etag, cacheDuration);
-            // }
-          }
-          return ApiResponse.success(fromJson != null ? fromJson(data) : data);
+        // Parse response
+        dynamic parsedData;
+        try {
+          parsedData = jsonDecode(response.body);
+        } catch (_) {
+          parsedData = response.body;
         }
 
-        // Optional: If-None-Match flow (304)
-        // if (useETag && response.statusCode == 304) {
-        //   final cachedData = SecureCacheService.get(cacheKey);
-        //   if (cachedData != null) {
-        //     return ApiResponse.success(fromJson != null ? fromJson(cachedData) : cachedData);
-        //   }
-        // }
+        Logger.success("API RESPONSE", {
+          "statusCode": response.statusCode,
+          "body": parsedData,
+        });
 
-        // 4) Non-success → map error
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          return ApiResponse.success(fromJson != null ? fromJson(parsedData) : parsedData);
+        }
+
+        // Handle non-success
         final err = NetworkExceptions.handleResponse(response);
-        // For 5xx, we can retry with backoff
-        if (_isRetriableStatus(response.statusCode) && attempt <= ApiConstants.maxNetworkRetries + 1) {
+        if (_isRetriableStatus(response.statusCode) &&
+            attempt <= ApiConstants.maxNetworkRetries + 1) {
           await _sleepBackoff(attempt);
           continue;
         }
-        return ApiResponse.failure(err);
 
+        return ApiResponse.failure(err);
       } catch (e) {
-        // Network/format exceptions → retry if allowed
+        Logger.error("NETWORK ERROR", e.toString());
         if (attempt <= ApiConstants.maxNetworkRetries + 1) {
           await _sleepBackoff(attempt);
           continue;
@@ -111,12 +105,9 @@ class ApiService {
     }
   }
 
+  // HTTP dispatch
   static Future<http.Response> _dispatch(
-      String method,
-      Uri uri,
-      Map<String, String> headers,
-      dynamic body,
-      ) {
+      String method, Uri uri, Map<String, String> headers, dynamic body) {
     switch (method.toUpperCase()) {
       case 'GET':
         return http.get(uri, headers: headers);
@@ -127,19 +118,69 @@ class ApiService {
       case 'PATCH':
         return http.patch(uri, headers: headers, body: jsonEncode(body));
       case 'DELETE':
-      // Some APIs accept JSON body for DELETE; adjust if not needed
-        return http.delete(uri, headers: headers, body: body != null ? jsonEncode(body) : null);
+        return http.delete(uri,
+            headers: headers, body: body != null ? jsonEncode(body) : null);
       default:
         throw ArgumentError("Unsupported method $method");
     }
   }
 
-  static String _cacheKey(String method, Uri uri) => "CACHE:${method.toUpperCase()}:${uri.toString()}";
+  // Cache key generation
+  static String _cacheKey(String method, Uri uri) =>
+      "CACHE:${method.toUpperCase()}:${uri.toString()}";
 
-  static bool _isRetriableStatus(int code) => code == 500 || code == 502 || code == 503 || code == 504;
+  static bool _isRetriableStatus(int code) =>
+      code == 500 || code == 502 || code == 503 || code == 504;
 
   static Future<void> _sleepBackoff(int attempt) async {
     final millis = (pow(2, attempt) * 200).clamp(200, 2000).toInt();
     await Future.delayed(Duration(milliseconds: millis));
   }
+
+  // Convenience helpers
+  static Future<ApiResponse<T>> getApi<T>(
+      String endpoint, {
+        Map<String, dynamic>? queryParams,
+        T Function(dynamic)? fromJson,
+        bool isTokenRequired = true,
+        bool useCache = false,
+        Duration cacheDuration = const Duration(minutes: 5),
+        Map<String, String>? extraHeaders,
+      }) =>
+      request<T>(
+        endpoint: endpoint,
+        method: 'GET',
+        queryParams: queryParams,
+        fromJson: fromJson,
+        isTokenRequired: isTokenRequired,
+        useCache: useCache,
+        cacheDuration: cacheDuration,
+        extraHeaders: extraHeaders,
+      );
+
+  static Future<ApiResponse<T>> postApi<T>(
+      String endpoint, {
+        dynamic body,
+        T Function(dynamic)? fromJson,
+        bool isTokenRequired = true,
+        Map<String, String>? extraHeaders,
+      }) =>
+      request<T>(
+        endpoint: endpoint,
+        method: 'POST',
+        body: body,
+        fromJson: fromJson,
+        isTokenRequired: isTokenRequired,
+        extraHeaders: extraHeaders,
+      );
 }
+
+
+//  Usage Example:
+// final response = await ApiService.getApi<List<SchemeListData>>(
+//   ApiConstants.schemeList,
+//   fromJson: (json) {
+//     final list = (json['data'] as List<dynamic>);
+//     return list.map((e) => SchemeListData.fromJson(e)).toList();
+//   },
+// );

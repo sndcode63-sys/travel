@@ -6,8 +6,20 @@ class AddMeetingWidgets {
   Widget addMeetingTextFormField({
     required String hintText,
     required String labelText,
+    required TextEditingController controller,
+    required String? Function(String? value) validator,
+    required TextInputType keyboardType,
+    bool obscureText = false,
+    int? maxLength,
+    int maxLines = 1,
   }) {
     return TextFormField(
+      controller: controller,          // <-- must pass controller
+      validator: validator,            // <-- must pass validator
+      keyboardType: keyboardType,      // <-- must pass keyboard type
+      obscureText: obscureText,
+      maxLength: maxLength,
+      maxLines: maxLines,
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(

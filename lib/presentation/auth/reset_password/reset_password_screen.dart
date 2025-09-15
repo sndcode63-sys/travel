@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_passowrd_controller.dart';
@@ -10,23 +9,26 @@ import 'package:travell_booking_app/utlis/ui/extension.dart';
 
 import '../../../utlis/constents/app_sizes.dart';
 import '../../../utlis/constents/color_constants.dart';
+import '../../../utlis/theme/widgets_theme/text_theme.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  final ResetPassowrdController controller = Get.put(ResetPassowrdController());
+  const ResetPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ResetPassowrdController controller = Get.put(
+      ResetPassowrdController(),
+    );
+
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         hideKeyboard();
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
           leading: IconButton(
             onPressed: () => Get.back(),
-            icon: Icon(Icons.adaptive.arrow_back, color: Colors.black),
+            icon: Icon(Icons.adaptive.arrow_back,),
           ),
         ),
         body: SafeArea(
@@ -40,7 +42,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     children: [
                       20.h,
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Get.toNamed(AppRoutes.dashBoard);
                         },
                         child: RichText(
@@ -55,11 +57,8 @@ class ResetPasswordScreen extends StatelessWidget {
                               const TextSpan(text: "Hello! "),
                               TextSpan(
                                 text: AppStrings.demoTesting,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
+                                style: UTextTheme.lightTextTheme.bodyLarge,
+
                               ),
                             ],
                           ),
@@ -68,58 +67,61 @@ class ResetPasswordScreen extends StatelessWidget {
                       8.h,
                       Text(
                         'Reset Your Password',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                        ),
+                        style: UTextTheme.lightTextTheme.bodyMedium,
+
                       ),
                       30.h,
 
                       // New Password Field
-                      Obx(() => AppTextField(
-                        controller: controller.newPasswordController,
-                        borderColor: Colors.grey.withOpacity(0.3),
-                        hintText: "New Password",
-                        focusedBorderColor: Colors.green,
-                        obscureText: controller.obscureNew.value,
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.visibility,
-                            color: AppColors.primary,
+                      Obx(
+                        () => AppTextField(
+                          controller: controller.newPasswordController,
+                          hintText: "New Password",
+                          obscureText: controller.obscureNew.value,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              Icons.visibility,
+                              color: AppColors.primary,
+                            ),
+                            onPressed: controller.toggleNew,
                           ),
-                          onPressed: controller.toggleNew,
                         ),
-                      )),
+                      ),
                       15.h,
 
                       // Confirm Password Field
-      // Confirm Password Field
-                      Obx(() => AppTextField(
-                        controller: controller.confirmPasswordController,
-                        borderColor: Colors.grey.withOpacity(0.3),
-                        hintText: "Confirm New Password",
-                        focusedBorderColor: Colors.green,
-                        obscureText: controller.obscureConfirm.value,
-                        obscuringCharacter: '*',
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            controller.obscureConfirm.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.grey,
+                      Obx(
+                        () => AppTextField(
+                          controller: controller.confirmPasswordController,
+                          hintText: "Confirm New Password",
+                          obscureText: controller.obscureConfirm.value,
+                          obscuringCharacter: '*',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              controller.obscureConfirm.value
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                            onPressed: controller.toggleConfirm,
                           ),
-                          onPressed: controller.toggleConfirm,
                         ),
-                      )),
-                      Obx(() => controller.errorMessage.value.isNotEmpty
-                          ? Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          controller.errorMessage.value,
-                          style: TextStyle(color: Colors.red, fontSize: 12),
-                        ),
-                      )
-                          : SizedBox.shrink()),
+                      ),
+                      Obx(
+                        () =>
+                            controller.errorMessage.value.isNotEmpty
+                                ? Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    controller.errorMessage.value,
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                )
+                                : SizedBox.shrink(),
+                      ),
                       SizedBox(height: 20),
                     ],
                   ),
@@ -130,18 +132,22 @@ class ResetPasswordScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Obx(
-                      () => CustomButton(
+                  () => CustomButton(
                     text: "SAVE",
-                    textColor: controller.isButtonEnabled.value
-                        ? Colors.white
-                        : AppColors.primary, // 👈 yaha change kiya
-                    backgroundColor: controller.isButtonEnabled.value
-                        ? AppColors.primary
-                        : Colors.grey.withAlpha(100),
-                    onPressed: controller.isButtonEnabled.value
-                        ? () {
-                    }
-                        : null, // disabled state
+                    textColor:
+                        controller.isButtonEnabled.value
+                            ? Colors.white
+                            : AppColors.primary, // 👈 yaha change kiya
+                    backgroundColor:
+                        controller.isButtonEnabled.value
+                            ? AppColors.primary
+                            : Colors.grey.withAlpha(100),
+                    onPressed:
+                        controller.isButtonEnabled.value
+                            ? () {
+                      controller.onSubmit();
+                        }
+                            : null, // disabled state
                   ),
                 ),
               ),
@@ -152,6 +158,3 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 }
-
-
-

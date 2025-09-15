@@ -3,20 +3,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 extension SpaceExtension on num {
-  /// Vertical responsive space -> 10.sBH means SizedBox(height: responsiveHeight)
+  // Vertical responsive space -> 10.sBH means SizedBox(height: responsiveHeight)
   SizedBox get h => SizedBox(height: sBH);
 
-  /// Horizontal responsive space -> 10.sWH means SizedBox(width: responsiveWidth)
+  // Horizontal responsive space -> 10.sWH means SizedBox(width: responsiveWidth)
   SizedBox get w => SizedBox(width: sWH);
 
-  /// Screen-Based Height (sBH)
+  // Screen-Based Height (sBH)
   double get sBH {
     final screenHeight = WidgetsBinding.instance.window.physicalSize.height /
         WidgetsBinding.instance.window.devicePixelRatio;
     return (this / 812) * screenHeight; // 812 = base design height
   }
 
-  /// Screen-Based Width (sWH)
+  // Screen-Based Width (sWH)
   double get sWH {
     final screenWidth = WidgetsBinding.instance.window.physicalSize.width /
         WidgetsBinding.instance.window.devicePixelRatio;

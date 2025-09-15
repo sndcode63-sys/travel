@@ -11,4 +11,5 @@ class AppRoutes {
   static const libraryImageCollection = '/libraryImageCollection-screen';
   static const videoLibrary = '/videoLibrary-screen';
   static const addMember = '/addMember-screen';
+  static const addClientInformation = '/addClientInformation-screen';
 }

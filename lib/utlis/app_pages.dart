@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:travell_booking_app/presentation/addVisit/addVisitForClientInfo/add_client_information.dart';
+import 'package:travell_booking_app/presentation/addVisit/addVisitForClientInfo/add_client_information_binding.dart';
 import 'package:travell_booking_app/presentation/addVisit/add_visit_binding.dart';
 import 'package:travell_booking_app/presentation/addVisit/add_visit_screen.dart';
 import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_info_screen.dart';
@@ -17,12 +19,9 @@ import 'package:travell_booking_app/presentation/liberary/library_binding.dart';
 import 'package:travell_booking_app/presentation/liberary/library_screen.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_binding.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_screen.dart';
-import 'package:travell_booking_app/presentation/libraryVideo/video_library_binding.dart';
-import 'package:travell_booking_app/presentation/libraryVideo/video_library_screen.dart';
 import '../presentation/auth/reset_password/reset_password_screen.dart';
 import '../presentation/dashBoard/dash_board_binding.dart';
 import 'app_routes.dart';
-
 
 class AppPages {
   static final routes = [
@@ -76,30 +75,26 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.library,
-      page: () =>
-      LibraryScreen(),
+      page: () => LibraryScreen(),
       binding: LibraryBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: AppRoutes.libraryImageCollection,
-      page: () =>
-      LibraryImageCollectionScreen(),
+      page: () => LibraryImageCollectionScreen(),
       binding: LibraryImageCollectionBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: AppRoutes.videoLibrary,
-      page: () =>
-      VideoLibraryScreen(),
-      binding: VideoLibraryBinding(),
+      name: AppRoutes.addMember,
+      page: () => AddMemberInfoScreen(),
+      binding: AddMemberInfroBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: AppRoutes.addMember,
-      page: () =>
-          AddMemberInfoScreen(),
-      binding: AddMemberInfroBinding(),
+      name: AppRoutes.addClientInformation,
+      page: () => AddClientInformation(),
+      binding: AddClientInformationBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

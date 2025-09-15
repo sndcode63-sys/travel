@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DialogHelper {
   DialogHelper._();
 
-  /// Show simple alert dialog
+  // Show simple alert dialog
   static Future<void> showAlert(
       BuildContext context, {
         required String title,
@@ -29,7 +29,7 @@ class DialogHelper {
     );
   }
 
-  /// Show confirmation dialog with yes/no
+  // Show confirmation dialog with yes/no
   static Future<bool> showConfirmation(
       BuildContext context, {
         required String title,

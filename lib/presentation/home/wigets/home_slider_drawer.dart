@@ -5,7 +5,6 @@ import 'slider_drawer_helper.dart';
 
 class HomeSliderDrawer extends StatelessWidget {
   const HomeSliderDrawer({super.key});
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -16,7 +15,6 @@ class HomeSliderDrawer extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
-            // 🔹 Header Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
               child: Column(
@@ -43,7 +41,6 @@ class HomeSliderDrawer extends StatelessWidget {
               ),
             ),
 
-            // 🔹 Profile/Action Card
             Container(
               margin: const EdgeInsets.only(bottom: 20),
               padding: const EdgeInsets.all(5),

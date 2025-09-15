@@ -1,143 +1,212 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import 'package:travell_booking_app/utlis/ui/extension.dart';
-
-import '../../../utlis/app_routes.dart';
 import '../../../utlis/constents/app_sizes.dart';
 import '../../../utlis/constents/color_constants.dart';
 import '../../../utlis/constents/img_constants.dart';
 import '../../../utlis/custom_widgets/custom_button.dart';
-import '../../../utlis/custom_widgets/custom_text_field.dart';
+import '../../../utlis/theme/widgets_theme/text_theme.dart';
+import 'otp_verification_controller.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
   const OtpVerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(OtpVerificationController());
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Align(
+        alignment: Alignment.center,
+        child: Pinput(
+          length: 6,
+          controller: controller.otpController,
+          showCursor: true,
+          obscureText: true,
+          obscuringCharacter: '*',
+
+          defaultPinTheme: PinTheme(
+            width: 56,
+            height: 56,
+            textStyle: TextStyle(
+              fontSize: 20,
+              color: isDarkMode ? Colors.white : Colors.black, // theme-aware text
+              fontWeight: FontWeight.w600,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: isDarkMode ? Colors.white.withAlpha(70) : Colors.grey.withAlpha(75), // theme-aware border
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+
+          submittedPinTheme: PinTheme(
+            width: 56,
+            height: 56,
+            textStyle: TextStyle(
+              fontSize: 20,
+              color: isDarkMode ? Colors.white : Colors.black, // theme-aware text
+              fontWeight: FontWeight.w600,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: isDarkMode ? Colors.white : Colors.green, // theme-aware submitted border
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+
+          onCompleted: (pin) {
+            controller.otpController.text = pin;
+          },
+        ),
+      ),
+    );
+
     return GestureDetector(
-      onTap: () {
-        hideKeyboard();
-      },
+      onTap: () => hideKeyboard(),
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
           leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(Icons.adaptive.arrow_back, color: Colors.black),
+            onPressed: () => Get.back(),
+            icon: Icon(Icons.adaptive.arrow_back,),
           ),
         ),
         body: SafeArea(
+
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                70.h,
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'OTP Verfication',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+            physics: const BouncingScrollPhysics(),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  70.h,
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'OTP Verification',
+                      style: UTextTheme.lightTextTheme.bodyLarge,
+
                     ),
                   ),
-                ),
-                5.h,
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Enter your 6 digit OTP',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
+                  5.h,
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Enter your 6 digit OTP',
+                      style: UTextTheme.lightTextTheme.bodyMedium,
+
+                    ),
+                  ),
+                  35.h,
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(AppImages.strongPassword),
+                  ),
+                  20.h,
+
+                  /// OTP Input
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Pinput(
+                        length: 6,
+                        controller: controller.otpController,
+                        showCursor: true,
+                        obscureText: true,
+                        obscuringCharacter: '*',
+
+                        defaultPinTheme: PinTheme(
+                          width: 56,
+                          height: 56,
+                          textStyle: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).textTheme.bodyLarge!.color, // automatically light/dark
+                            fontWeight: FontWeight.w600,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).dividerColor.withAlpha(70), // adaptive border color
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+
+                        submittedPinTheme: PinTheme(
+                          width: 56,
+                          height: 56,
+                          textStyle: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.primary, // adaptive submit color
+                            fontWeight: FontWeight.w600,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+
+                        onCompleted: (pin) {
+                          controller.otpController.text = pin;
+                        },
+                      ),
+                    ),
+                  ),
+
+                  22.h,
+                  Obx(
+                        () => Align(
+                      alignment: Alignment.center,
+                      child: controller.secondsRemaining.value > 0
+                          ? Text(
+                        "Resend OTP in ${controller.secondsRemaining.value}s",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.7), // adaptive color
+                          fontSize: 14,
+                        ),
+                      )
+                          : GestureDetector(
+                        onTap: controller.onResendOtp,
+                        child: Text(
+                          "Resend OTP",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary, // adaptive primary color
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  20.h,
+
+                  /// Verify Button
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Obx(() => CustomButton(
+                      backgroundColor: AppColors.primary,
+                      text: controller.isLoading.value ? "VERIFYING..." : "VERIFY",
                       fontSize: 16,
-                    ),
-                  ),
-                ),
-                35.h,
-                Align(
-                  alignment: Alignment.center,
-
-                  child: Image.asset(AppImages.strongPassword),
-                ),
-                20.h,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Pinput(
-                      length: 6,
-                      showCursor: true,
-                      obscureText: true,
-                      obscuringCharacter: '*',
-                      defaultPinTheme: PinTheme(
-                        width: 56,
-                        height: 56,
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-
-                      submittedPinTheme: PinTheme(
-                        width: 56,
-                        height: 56,
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.green),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-
-                      onCompleted: (pin) {
-                      },
-                    ),
-                  ),
-                ),
-                22.h,
-                Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text("Resend OTP",style: TextStyle(color: AppColors.primary,fontSize: 16,fontWeight: FontWeight.w400),),
+                      fontWeight: FontWeight.w400,
+                      isLoading: controller.isLoading.value,
+                      onPressed: controller.onVerify,
                     )),
-                20.h,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: CustomButton(
-                    backgroundColor: AppColors.primary,
-                    text: "VERIFY",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.resetPassword);
-                    },
                   ),
-                ),
-                20.h
-              ],
+                  20.h,
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
 }

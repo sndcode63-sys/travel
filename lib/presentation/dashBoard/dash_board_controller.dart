@@ -23,7 +23,8 @@ class DashBoardController extends GetxController {
   final selectedIndex = 0.obs;
   final List<Widget> views = [
     HomScreen(),
-    AddClientInformation(),
+    AddVisitScreen()
+    ,
     Container(
       color: Colors.green,
       child: Center(child: Text("Menu Screen")),
@@ -44,82 +45,3 @@ class DashBoardController extends GetxController {
   }
 }
 
-class CustomBottomNavBar extends StatelessWidget {
-  final int selectedIndex;
-  final Function(int) onItemTapped;
-
-  const CustomBottomNavBar({
-    super.key,
-    required this.selectedIndex,
-    required this.onItemTapped,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      height: 80,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(0, Icons.home, 'Home'),
-                _buildNavItem(1, Icons.add_circle_outline, 'Add Visit'),
-                const SizedBox(width: 80), // Center button ke liye jagah
-                _buildNavItem(3, Icons.people_outline, 'Meeting'),
-                _buildNavItem(4, Icons.settings, 'Setting'),
-              ],
-            ),
-          ),
-          Positioned(
-            top: -38,
-            left: MediaQuery.of(context).size.width / 2 - 40,
-            child: GestureDetector(
-              onTap: () => onItemTapped(2),
-              child: Image.asset(AppImages.menu),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem(int index, IconData icon, String label) {
-    return GestureDetector(
-      onTap: () => onItemTapped(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: selectedIndex == index ? Colors.deepPurple : Colors.grey,
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              color: selectedIndex == index ? Colors.deepPurple : Colors.grey,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

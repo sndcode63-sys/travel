@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:travell_booking_app/utlis/constents/color_constants.dart';
+import 'package:get/get.dart';
+import 'package:travell_booking_app/presentation/addVisit/add_visit_controller.dart';
+import 'package:travell_booking_app/utlis/app_routes.dart';
+import 'package:travell_booking_app/utlis/constents/colors.dart';
+import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
 import 'package:travell_booking_app/utlis/ui/extension.dart';
 
 class AddVisitScreen extends StatelessWidget {
-  const AddVisitScreen({super.key});
+  final AddVisitController controller = Get.put(AddVisitController());
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +30,11 @@ class AddVisitScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /// Back Button + Title
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.grey),
-                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => Get.back(),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,118 +44,105 @@ class AddVisitScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
                           ),
                         ),
                         Text(
-                          "Scheme List",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
+                          "Scheme List"
+                          "",
+                          style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
                   ],
                 ),
-
-                /// Settings Icon
-                IconButton(
-                  icon: const Icon(Icons.settings, color: Colors.black54),
-                  onPressed: () {
-                    // Action here
-                  },
-                ),
+                IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
               ],
             ),
           ),
         ),
-
       ),
-      body:
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            20.h,
-            Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.9, // screen width का 90%
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.search, color: Colors.grey),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Search Scheme",
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            15.h,
+            AppTextField(hintText: "Search",
+            borderColor: Colors.grey.withAlpha(75),
+            fillColor: UColors.white,),
             10.h,
-            addVisitList()
+
+            Expanded(child: SchemeList(controller: controller)),
           ],
         ),
       ),
     );
   }
-  addVisitList() {
-    return Expanded(child: ListView.builder(physics: BouncingScrollPhysics(),
+}
 
-      itemCount: 30,itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 4),
-            padding: EdgeInsets.all(15),
-            decoration: const BoxDecoration(
-              borderRadius:  BorderRadius.all(Radius.circular(20)),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  spreadRadius: 2,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(30),
-                      decoration: BoxDecoration(color: AppColors.secondary.withAlpha(76),borderRadius: BorderRadius.circular(20)),
+class SchemeList extends StatelessWidget {
+  const SchemeList({
+    super.key,
+    required this.controller,
+  });
+
+  final AddVisitController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (controller.schemes.isEmpty) {
+        return Center(child: Text('No schemes available'));
+      }
+      return ListView.builder(
+        physics: BouncingScrollPhysics(),
+        itemCount: controller.schemes.length,
+        itemBuilder: (context, index) {
+          final scheme = controller.schemes[index];
+          return InkWell(
+            onTap: (){
+              Get.toNamed(AppRoutes.addMember);
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.symmetric(vertical: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white,
+                    blurRadius: 6,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+
+                border: Border.all(color: UColors.grey),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    height: 45,
+                    width: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: UColors.grey,
                     ),
-                    10.w,
-                    Text('Aero Residency',style:TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w400) ,)
-                  ],
-                )
-              ],
+                    child: Center(child: Text("${scheme.schemeId}")),
+                  ),
+                  15.w,
+                  Text(
+                    scheme.schemeName ?? '',
+                    style: TextStyle(fontSize: 16, color: UColors.primary,fontWeight: FontWeight.w400),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-
-      },));
+          );
+        },
+      );
+    });
   }
 }

@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:travell_booking_app/utlis/constents/color_constants.dart';
 
+import '../../utlis/constents/img_constants.dart';
 import 'dash_board_controller.dart';
 
 /// HomeScreen with Scaffold + PageView + BottomNav
@@ -23,6 +24,102 @@ class HomeScreen extends StatelessWidget {
         selectedIndex: controller.selectedIndex.value,
         onItemTapped: controller.onItemTapped,
       )),
+    );
+  }
+}
+
+
+class CustomBottomNavBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onItemTapped;
+
+  const CustomBottomNavBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onItemTapped,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.kWhite,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08), // subtle shadow for light mode
+            blurRadius: 12,                        // smooth blur
+            spreadRadius: 5,
+            // small spread
+            offset: const Offset(0, 4),            // shadow below the widget
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03), // li
+            // ghter shadow
+            blurRadius: 6,
+            spreadRadius: 0,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      height: 80,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(context, 0, Icons.home, 'Home'),
+                _buildNavItem(context, 1, Icons.add_circle_outline, 'Add Visit'),
+                const SizedBox(width: 80),
+                _buildNavItem(context, 3, Icons.people_outline, 'Meeting'),
+                _buildNavItem(context, 4, Icons.settings, 'Setting'),
+              ],
+            ),
+          ),
+          Positioned(
+            top: -38,
+            left: MediaQuery.of(context).size.width / 2 - 40,
+            child: GestureDetector(
+              onTap: () => onItemTapped(2),
+              child: Image.asset(AppImages.menu),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNavItem(BuildContext context, int index, IconData icon, String label) {
+    final theme = Theme.of(context);
+    final bool isSelected = selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () => onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: isSelected ? AppColors.primary : Colors.grey, // fixed colors
+          ),
+
+          Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? AppColors.primary : Colors.grey, // fixed colors
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

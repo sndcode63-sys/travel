@@ -1,8 +1,8 @@
-// lib/app/modules/main/views/main_view.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'bottom_navigation_bar.dart';
 import 'dash_board_controller.dart';
 
 class DashBoardScreen extends GetView<DashBoardController> {
@@ -13,7 +13,7 @@ class DashBoardScreen extends GetView<DashBoardController> {
     return Scaffold(
       body: PageView(
         controller: controller.pageController,
-        physics: const NeverScrollableScrollPhysics(), // Prevents manual swiping
+        physics: const NeverScrollableScrollPhysics(),
         children: controller.views,
       ),
       bottomNavigationBar: Obx(
