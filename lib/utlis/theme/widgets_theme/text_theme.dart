@@ -7,50 +7,65 @@ import 'package:flutter/material.dart';
 // Make sure to import your UColors class
 
 class UTextTheme {
-  // private constructor
   UTextTheme._();
 
   static TextTheme lightTextTheme = TextTheme(
-    displayLarge: const TextStyle().copyWith(fontSize: 57, fontWeight: FontWeight.normal, color: UColors.textPrimary),
-    displayMedium: const TextStyle().copyWith(fontSize: 45, fontWeight: FontWeight.normal, color: UColors.textPrimary),
-    displaySmall: const TextStyle().copyWith(fontSize: 36, fontWeight: FontWeight.normal, color: UColors.textPrimary),
+    titleSmall: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      fontFamily: "OpenSans",
+      color: UColors.black,
+    ), // Regular
 
-    headlineLarge: const TextStyle().copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: UColors.textPrimary),
-    headlineMedium: const TextStyle().copyWith(fontSize: 28, fontWeight: FontWeight.bold, color: UColors.textPrimary),
-    headlineSmall: const TextStyle().copyWith(fontSize: 24, fontWeight: FontWeight.w600, color: UColors.textPrimary),
+    titleMedium: const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      fontFamily: "OpenSans",
+      color: UColors.black,
+    ), // Medium
 
-    titleLarge: const TextStyle().copyWith(fontSize: 24, fontWeight: FontWeight.w700, color: UColors.textPrimary),
-    titleMedium: const TextStyle().copyWith(fontSize: 20, fontWeight: FontWeight.w700, color: UColors.textPrimary),
-    titleSmall: const TextStyle().copyWith(fontSize: 16, fontWeight: FontWeight.w400, color: UColors.textPrimary),
+    bodyLarge: const TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      fontFamily: "OpenSans",
+      color: UColors.black,
+    ), // SemiBold
 
-    bodyLarge: const TextStyle().copyWith(fontSize: 16, fontWeight: FontWeight.normal, color: UColors.textPrimary),
-    bodyMedium: const TextStyle().copyWith(fontSize: 14, fontWeight: FontWeight.normal, color: UColors.textSecondary),
-    bodySmall: const TextStyle().copyWith(fontSize: 12, fontWeight: FontWeight.normal, color: UColors.textSecondary),
-
-    labelLarge: const TextStyle().copyWith(fontSize: 14, fontWeight: FontWeight.w400, color: UColors.textPrimary),
-    labelMedium: const TextStyle().copyWith(fontSize: 12, fontWeight: FontWeight.w500, color: UColors.textSecondary),
-    labelSmall: const TextStyle().copyWith(fontSize: 11, fontWeight: FontWeight.w500, color: UColors.textSecondary),
+    titleLarge: const TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
+      fontFamily: "OpenSans",
+      color: UColors.black,
+    ), // Bold
   );
 
   static TextTheme darkTextTheme = TextTheme(
-    displayLarge: const TextStyle().copyWith(fontSize: 57, fontWeight: FontWeight.normal, color: UColors.white),
-    displayMedium: const TextStyle().copyWith(fontSize: 45, fontWeight: FontWeight.normal, color: UColors.white),
-    displaySmall: const TextStyle().copyWith(fontSize: 36, fontWeight: FontWeight.normal, color: UColors.white),
+    titleSmall: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      fontFamily: "OpenSans",
+      color: UColors.white,
+    ),
 
-    headlineLarge: const TextStyle().copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: UColors.white),
-    headlineMedium: const TextStyle().copyWith(fontSize: 28, fontWeight: FontWeight.bold, color: UColors.white),
-    headlineSmall: const TextStyle().copyWith(fontSize: 24, fontWeight: FontWeight.w600, color: UColors.white),
+    titleMedium: const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      fontFamily: "OpenSans",
+      color: UColors.grey,
+    ),
 
-    titleLarge: const TextStyle().copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: UColors.white),
-    titleMedium: const TextStyle().copyWith(fontSize: 16, fontWeight: FontWeight.w500, color: UColors.white),
-    titleSmall: const TextStyle().copyWith(fontSize: 14, fontWeight: FontWeight.w500, color: UColors.white),
+    bodyLarge: const TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      fontFamily: "OpenSans",
+      color: UColors.white,
+    ),
 
-    bodyLarge: const TextStyle().copyWith(fontSize: 16, fontWeight: FontWeight.normal, color: UColors.white),
-    bodyMedium: const TextStyle().copyWith(fontSize: 14, fontWeight: FontWeight.normal, color: UColors.lightGrey),
-    bodySmall: const TextStyle().copyWith(fontSize: 12, fontWeight: FontWeight.normal, color: UColors.lightGrey),
-
-    labelLarge: const TextStyle().copyWith(fontSize: 14, fontWeight: FontWeight.w500, color: UColors.white),
-    labelMedium: const TextStyle().copyWith(fontSize: 12, fontWeight: FontWeight.w500, color: UColors.lightGrey),
-    labelSmall: const TextStyle().copyWith(fontSize: 11, fontWeight: FontWeight.w500, color: UColors.lightGrey),
+    titleLarge: const TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
+      fontFamily: "OpenSans",
+      color: UColors.white,
+    ),
   );
 }

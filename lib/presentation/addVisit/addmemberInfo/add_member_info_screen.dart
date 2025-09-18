@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_info_controller.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
+import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/ui/extension.dart';
 import '../../../utlis/constents/color_constants.dart';
 import '../../../utlis/custom_widgets/custom_button.dart';
@@ -13,6 +14,14 @@ class AddMemberInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AddMemberInfoController());
+    // Receive scheme arguments
+    final args = Get.arguments as Map<String, dynamic>?;
+    final schemeId = args?['id'] ?? '';
+    final schemeName = args?['name'] ?? '';
+
+    // Print to terminal
+    print('➡ Received Scheme -> ID: $schemeId, Name: $schemeName');
+
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -120,7 +129,7 @@ class AddMemberInfoScreen extends StatelessWidget {
 
                           20.h,
                           CustomButton(
-                            text: "SCHEME: AERO RESIDENCY",
+                            text: "SCHEME: $schemeName",
                             backgroundColor: AppColors.primary,
                             fontWeight: FontWeight.w400,
                             borderRadius: 15,
@@ -214,24 +223,41 @@ class AddMemberInfoScreen extends StatelessWidget {
                           100.h,
 
                           /// CONTINUE Button
-                          Obx(() {
-                            final isEnabled = controller.isFormValid.value &&
-                                controller.currentPosition.value != null;
-                            return CustomButton(
-                              text: "CONTINUE",
-                              backgroundColor: isEnabled
-                                  ? AppColors.primary
-                                  : Colors.grey.withAlpha(100),
-                              onPressed: isEnabled
-                                  ? () {
-                                if (controller.formKey.currentState!.validate()) {
-                                  Get.snackbar("Success", "Form Submitted!");
-                                  Get.toNamed(AppRoutes.addClientInformation);
-                                }
+                          CustomButton(
+                            backgroundColor: UColors.primary,
+                            text: "CONTINUE",
+                            onPressed: () {
+
+                              if (controller.formKey.currentState!.validate()) {
+                                // Get scheme info from previous screen arguments
+                                final schemeArgs = Get.arguments as Map<String, dynamic>?;
+                                print("--------kkkkk----------");
+                                print("--------kkkkk----------");
+                                print("--------kkkkk----------");
+                                print("➡ Sending data to AddClientInformationScreen: $schemeArgs");
+                                print("--------kkkkk----------");
+                                print("--------kkkkk----------");
+                                print("--------kkkkk----------");
+                                print("--------kkkkk----------");
+
+
+                                final args = {
+                                  'clientName': controller.clientName.text.trim(),
+                                  'fatherName': controller.fatherName.text.trim(),
+                                  'email': controller.email.text.trim(),
+                                  'contactNo': controller.contactNo.text.trim(),
+                                  'remark': controller.remark.text.trim(),
+                                  'schemeName': schemeArgs?['id'] ?? '',
+                                  'lat': controller.currentPosition.value?.latitude.toString(),
+                                  'lng': controller.currentPosition.value?.longitude.toString(),
+                                };
+
+                                print("➡ Sending data to AddClientInformationScreen: $args");
+
+                                Get.toNamed(AppRoutes.addClientInformation, arguments: args);
                               }
-                                  : null,
-                            );
-                          }),
+                            },
+                          ),
                         ],
                       ),
                     ),

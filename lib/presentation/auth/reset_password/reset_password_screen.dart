@@ -54,10 +54,10 @@ class ResetPasswordScreen extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                             ),
                             children: [
-                              const TextSpan(text: "Hello! "),
+                              const TextSpan(text: "Visit App "),
                               TextSpan(
                                 text: AppStrings.demoTesting,
-                                style: UTextTheme.lightTextTheme.bodyLarge,
+                                style: Theme.of(context).textTheme. bodyLarge,
 
                               ),
                             ],
@@ -67,12 +67,10 @@ class ResetPasswordScreen extends StatelessWidget {
                       8.h,
                       Text(
                         'Reset Your Password',
-                        style: UTextTheme.lightTextTheme.bodyMedium,
+                        style: Theme.of(context).textTheme. titleLarge,
 
                       ),
                       30.h,
-
-                      // New Password Field
                       Obx(
                         () => AppTextField(
                           controller: controller.newPasswordController,

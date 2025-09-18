@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/addmetting/add_meeting_controller.dart';
 import 'package:travell_booking_app/presentation/addmetting/widgets/add_meeting_widgets.dart';
+import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/app_sizes.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'package:travell_booking_app/utlis/ui/extension.dart';
@@ -29,7 +30,13 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
             ),
             child: SafeArea(
               child: Row(
@@ -44,13 +51,22 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
-                          Text("Add Meeting", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(
+                            "Add Meeting",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           Text("Meeting List", style: TextStyle(fontSize: 14)),
                         ],
                       ),
                     ],
                   ),
-                  IconButton(icon: const Icon(Icons.settings, color: Colors.black54), onPressed: () {}),
+                  IconButton(
+                    icon: const Icon(Icons.settings, color: Colors.black54),
+                    onPressed: () {},
+                  ),
                 ],
               ),
             ),
@@ -64,22 +80,21 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                 key: controller.formKey,
                 child: Column(
                   children: [
-                    20.h,
+                    30.h,
                     AppTextField(
                       hintText: 'Number Of Users',
                       labelText: 'Number Of Users',
                       controller: controller.numberOfUsersController,
                       validator: controller.validateNumberOfUsers,
                       keyboardType: TextInputType.number,
-
                     ),
+                    20.h,
                     AppTextField(
                       hintText: 'Reference',
                       labelText: 'Reference',
                       controller: controller.referenceController,
                       validator: controller.validateReference,
                       keyboardType: TextInputType.text,
-
                     ),
 
                     30.h,
@@ -96,79 +111,45 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: controller.capturedImage.value == null
-                              ? const Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.image, color: Colors.grey, size: 40),
-                                SizedBox(height: 8),
-                                Text("Click or Upload Selfie here", style: TextStyle(color: Colors.grey)),
-                              ],
-                            ),
-                          )
-                              : ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.file(controller.capturedImage.value!, fit: BoxFit.cover, width: double.infinity),
-                          ),
+                          child:
+                              controller.capturedImage.value == null
+                                  ? const Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.image,
+                                          color: Colors.grey,
+                                          size: 40,
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          "Click or Upload Selfie here",
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  : ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(
+                                      controller.capturedImage.value!,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    ),
+                                  ),
                         ),
                       );
                     }),
-                    30.h,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Get.bottomSheet(
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                                ),
-                                child: Wrap(
-                                  children: [
-                                    ListTile(
-                                      leading: const Icon(Icons.camera_front, color: AppColors.primary),
-                                      title: const Text("Capture with Front Camera"),
-                                      onTap: () {
-                                        controller.captureImage(true);
-                                        Get.back();
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: const Icon(Icons.camera_rear, color: AppColors.primary),
-                                      title: const Text("Capture with Back Camera"),
-                                      onTap: () {
-                                        controller.captureImage(false);
-                                        Get.back();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            "Capture Visit Image",
-                            style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500, fontSize: 16),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => controller.pickFromGallery(),
-                          child: const Text(
-                            "Upload Image",
-                            style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500, fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
                     25.h,
                     CustomButton(
                       text: 'SAVE',
                       backgroundColor: AppColors.primary,
-                      onPressed: () => controller.saveForm(), // triggers full validation
+                      onPressed: (){
+                        controller.saveForm();
+                      },
+                      isLoading: controller.isLoading.value,
                     ),
                   ],
                 ),

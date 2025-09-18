@@ -1,29 +1,32 @@
 import 'package:travell_booking_app/models/forget/forget_pass_models.dart';
-
-import '../../../core/api/api_service.dart';
-import '../../../utlis/constents/api_constants.dart';
+import '../../../core/constants/api_constants.dart';
+import '../../../data/services/api_services.dart';
 
 class ForgetPasswordRepository {
-  ForgetPasswordRepository._();
+  static final _apiServices = ApiServices();
 
   static Future<ForgetPassModels> requestOtp({
     required String email,
+    String selectType = "email",
+    String type = "Forgot Password",
+    Map<String, dynamic>? extraParams,
   }) async {
-    final response = await ApiService.request(
-      endpoint: ApiConstants.auth, // /authenticateUser
-      method: "POST",
-      body: {
-        "selecttype": "email",          // email ya phone
-        "email": email,                 // user ka email
-        "type": "Forgot Password"       // fixed value
+    final response = await _apiServices.post<Map<String, dynamic>>(
+      ApiConstants1.auth,
+          (json) => json as Map<String, dynamic>,
+      data: {
+        "selecttype": selectType,
+        "email": email,
+        "type": type,
+        if (extraParams != null) ...extraParams,
       },
-      isTokenRequired: false,
     );
 
-    if (response.isSuccess) {
-      return ForgetPassModels.fromJson(response.data);
+    if (response.success && response.data != null) {
+      final otpData = ForgetPassModels.fromJson(response.data!);
+      return otpData;
     } else {
-      throw Exception(response.errorMessage ?? "Request failed");
+      throw Exception(response.errors ?? "Request OTP failed");
     }
   }
 }

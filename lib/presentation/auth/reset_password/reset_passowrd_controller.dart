@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_pass_repo.dart';
-
 import '../../../utlis/app_routes.dart';
 
 class ResetPassowrdController extends GetxController {
@@ -94,20 +90,29 @@ class ResetPassowrdController extends GetxController {
       );
 
       if (result.status == 200) {
-        Get.snackbar("Success", result.message ?? "Password changed",
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          "Success",
+          result.message ?? "Password changed",
+          snackPosition: SnackPosition.BOTTOM,
+        );
         Get.offAllNamed(AppRoutes.login);
       } else {
-        Get.snackbar("Error", result.message ?? "Failed to reset password",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.redAccent,
-            colorText: Colors.white);
-      }
-    } catch (e) {
-      Get.snackbar("Error", e.toString(),
+        Get.snackbar(
+          "Error",
+          result.message ?? "Failed to reset password",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }

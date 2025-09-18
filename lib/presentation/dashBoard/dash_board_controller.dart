@@ -19,23 +19,36 @@ import 'package:get/get.dart';
 import '../home/hom_screen.dart';
 
 class DashBoardController extends GetxController {
-  final pageController = PageController();
-  final selectedIndex = 0.obs;
+  // PageView ka controller
+  final PageController pageController = PageController();
+
+  // Selected bottom navigation index (reactive)
+  final RxInt selectedIndex = 0.obs;
+
+  // Views list (sabhi screen yaha maintain hongi)
   final List<Widget> views = [
     HomScreen(),
-    AddVisitScreen()
-    ,
+    AddVisitScreen(),
     Container(
       color: Colors.green,
       child: Center(child: Text("Menu Screen")),
-    ), // 2 (center button)
+    ),
     AddMeetingScreen(),
-    Container(color: Colors.blue, child: Center(child: Text("Settings"))), // 4
+    Container(
+      color: Colors.blue,
+      child: Center(child: Text("Settings")),
+    ),
   ];
 
+  //Jab bottom navigation item par tap ho
   void onItemTapped(int index) {
     selectedIndex.value = index;
     pageController.jumpToPage(index);
+  }
+
+  // Agar user swipe kare PageView me
+  void onPageChanged(int index) {
+    selectedIndex.value = index;
   }
 
   @override

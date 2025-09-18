@@ -23,7 +23,6 @@ class OtpVerificationScreen extends StatelessWidget {
         alignment: Alignment.center,
         child: Pinput(
           length: 6,
-          controller: controller.otpController,
           showCursor: true,
           obscureText: true,
           obscuringCharacter: '*',
@@ -33,12 +32,12 @@ class OtpVerificationScreen extends StatelessWidget {
             height: 56,
             textStyle: TextStyle(
               fontSize: 20,
-              color: isDarkMode ? Colors.white : Colors.black, // theme-aware text
+              color: isDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.w600,
             ),
             decoration: BoxDecoration(
               border: Border.all(
-                color: isDarkMode ? Colors.white.withAlpha(70) : Colors.grey.withAlpha(75), // theme-aware border
+                color: isDarkMode ? Colors.white.withAlpha(70) : Colors.grey.withAlpha(75),
               ),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -49,12 +48,12 @@ class OtpVerificationScreen extends StatelessWidget {
             height: 56,
             textStyle: TextStyle(
               fontSize: 20,
-              color: isDarkMode ? Colors.white : Colors.black, // theme-aware text
+              color: isDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.w600,
             ),
             decoration: BoxDecoration(
               border: Border.all(
-                color: isDarkMode ? Colors.white : Colors.green, // theme-aware submitted border
+                color: isDarkMode ? Colors.white : Colors.green,
               ),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -90,7 +89,7 @@ class OtpVerificationScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       'OTP Verification',
-                      style: UTextTheme.lightTextTheme.bodyLarge,
+                      style: Theme.of(context).textTheme. bodyLarge,
 
                     ),
                   ),
@@ -99,7 +98,8 @@ class OtpVerificationScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       'Enter your 6 digit OTP',
-                      style: UTextTheme.lightTextTheme.bodyMedium,
+                      style: Theme.of(context).textTheme. bodyMedium,
+
 
                     ),
                   ),
@@ -127,12 +127,12 @@ class OtpVerificationScreen extends StatelessWidget {
                           height: 56,
                           textStyle: TextStyle(
                             fontSize: 20,
-                            color: Theme.of(context).textTheme.bodyLarge!.color, // automatically light/dark
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
                             fontWeight: FontWeight.w600,
                           ),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Theme.of(context).dividerColor.withAlpha(70), // adaptive border color
+                              color: Theme.of(context).dividerColor.withAlpha(70),
                             ),
                             borderRadius: BorderRadius.circular(12),
                           ),

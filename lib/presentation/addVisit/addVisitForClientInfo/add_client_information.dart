@@ -129,69 +129,15 @@ class AddClientInformation extends GetView<AddClientInformationController> {
                 ),
               );
             }),
-            Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.bottomSheet(
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(16)),
-                        ),
-                        child: Wrap(
-                          children: [
-                            ListTile(
-                              leading: const Icon(Icons.camera_front,
-                                  color: AppColors.primary),
-                              title: const Text("Capture with Front Camera"),
-                              onTap: () {
-                                controller.captureImage(true);
-                                Get.back();
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.camera_rear,
-                                  color: AppColors.primary),
-                              title: const Text("Capture with Back Camera"),
-                              onTap: () {
-                                controller.captureImage(false);
-                                Get.back();
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "Capture Visit Image",
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => controller.pickFromGallery(),
-                  child: const Text(
-                    "Upload Image",
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+
             20.h,
-            CustomButton(text: "SAVE",backgroundColor: AppColors.primary,),
+            CustomButton(
+              text: "SAVE",
+              backgroundColor: AppColors.primary,
+              onPressed: () {
+                controller.saveVisit();
+              },
+            ),
             50.h,
           ],
         ),

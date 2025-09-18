@@ -1,5 +1,5 @@
 class AppRoutes {
-  static const splash = '/splash';
+  static const splash = '/splash-screen';
   static const login = '/login-screen';
   static const forgetPassword = '/forget-password_screen';
   static const otpVerification = '/otp-verification';
@@ -12,4 +12,6 @@ class AppRoutes {
   static const videoLibrary = '/videoLibrary-screen';
   static const addMember = '/addMember-screen';
   static const addClientInformation = '/addClientInformation-screen';
+  static const meetingList = '/meetingList-screen';
+  static const teamScreen = '/teamScreen-screen';
 }

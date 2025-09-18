@@ -9,9 +9,11 @@ class UColors{
   static const Color primary = Color(0xFF3F51B5);
 
   // Text colors
-  static const Color textPrimary = black;
+  static const Color textPrimary = white;
   static const Color textSecondary = Color(0xFF6C757D);
   static const Color textWhite = Colors.white;
+
+
 
   // Background colors
   static const Color light = Color(0xFFF6F6F6);

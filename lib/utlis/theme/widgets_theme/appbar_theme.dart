@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../constents/colors.dart';
 import '../../sizes.dart';
 
-class UAppBarTheme{
+class UAppBarTheme {
   UAppBarTheme._();
 
   static const lightAppBarTheme = AppBarTheme(
@@ -13,8 +13,14 @@ class UAppBarTheme{
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: UColors.black, size: USizes.iconMd),
     actionsIconTheme: IconThemeData(color: UColors.black, size: USizes.iconMd),
-    titleTextStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600, color: UColors.black),
+    titleTextStyle: TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w600,
+      fontFamily: "OpenSans",
+      color: UColors.black,
+    ),
   );
+
   static const darkAppBarTheme = AppBarTheme(
     elevation: 0,
     centerTitle: false,
@@ -23,6 +29,11 @@ class UAppBarTheme{
     surfaceTintColor: Colors.transparent,
     iconTheme: IconThemeData(color: UColors.white, size: USizes.iconMd),
     actionsIconTheme: IconThemeData(color: UColors.white, size: USizes.iconMd),
-    titleTextStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600, color: UColors.white),
+    titleTextStyle: TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w600,
+      fontFamily: "OpenSans",
+      color: UColors.white,
+    ),
   );
 }

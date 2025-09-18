@@ -15,6 +15,7 @@ static const String menuIcon = "assets/images/menuIcon.svg";
   static const String userIcon = "assets/icons/user.svg";
   static const String homeIcon = "assets/icons/dashBoard.svg";
   static const String backIcon = "assets/icons/backIcon.svg";
+  static const String searchIcon = "assets/icons/search.svg";
 
   // Example for Lottie
   static const String loader = "assets/animations/loader.json";

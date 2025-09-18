@@ -1,50 +1,52 @@
 import 'package:travell_booking_app/models/otp/otp_modles.dart';
 
-import '../../../core/api/api_service.dart';
-import '../../../utlis/constents/api_constants.dart';
+import '../../../core/constants/api_constants.dart';
+import '../../../data/services/api_services.dart';
 
 class OtpRepository {
-  OtpRepository._();
+  static final _apiServices = ApiServices();
 
+  // Submit OTP
   static Future<OtpModles> submitOtp({
     required String email,
     required String code,
+    String type = "Forgot Password",
   }) async {
-    final response = await ApiService.request(
-      endpoint: ApiConstants.checkAuth,
-      method: "POST",
-      body: {
+    final response = await _apiServices.post<Map<String, dynamic>>(
+      ApiConstants1.checkAuth,
+          (json) => json as Map<String, dynamic>,
+      data: {
         "username": email,
-        "type": "Forgot Password",
+        "type": type,
         "code": code,
       },
-      isTokenRequired: false,
     );
 
-    if (response.isSuccess) {
-      return OtpModles.fromJson(response.data);
+    if (response.success && response.data != null) {
+      return OtpModles.fromJson(response.data!);
     } else {
-      throw Exception(response.errorMessage ?? "Request failed");
+      throw Exception(response.errors ?? "Submit OTP failed");
     }
   }
 
+  /// Resend OTP
   static Future<OtpModles> resendOtp({
     required String email,
+    String type = "Forgot Password",
   }) async {
-    final response = await ApiService.request(
-      endpoint: ApiConstants.auth,
-      method: "POST",
-      body: {
+    final response = await _apiServices.post<Map<String, dynamic>>(
+      ApiConstants1.auth,                      // endpoint
+          (json) => json as Map<String, dynamic>,  // response parse
+      data: {
         "username": email,
-        "type": "Forgot Password",
+        "type": type,
       },
-      isTokenRequired: false,
     );
 
-    if (response.isSuccess) {
-      return OtpModles.fromJson(response.data);
+    if (response.success && response.data != null) {
+      return OtpModles.fromJson(response.data!);
     } else {
-      throw Exception(response.errorMessage ?? "Resend OTP failed");
+      throw Exception(response.errors ?? "Resend OTP failed");
     }
   }
 }

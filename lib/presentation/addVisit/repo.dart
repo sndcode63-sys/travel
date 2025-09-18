@@ -1,33 +1,41 @@
-import 'package:get/get.dart';
-import 'package:travell_booking_app/models/scheme/scheme_list.dart';
-import 'package:travell_booking_app/utlis/constents/api_constants.dart';
 
-import '../../core/api/api_service.dart';
-import '../../core/api/base_response.dart';
+import 'package:dio/dio.dart';
+
+import '../../core/constants/api_constants.dart';
+import '../../core/response_model.dart';
+import '../../data/services/api_services.dart';
 import '../../models/scheme/scheme_list_data.dart';
 
 
 class SchemeRepository {
-  SchemeRepository._();
-  static final instance = SchemeRepository._();
+  final ApiServices _apiServices = ApiServices();
+  CancelToken? _cancelToken;
 
-  Future<List<SchemeListData>> getSchemeList() async {
-    final response = await ApiService.getApi(
-      ApiConstants.schemeList,
-      fromJson: (json) {
-        if (json['status'] == 200 && json['data'] != null) {
-          return (json['data'] as List)
-              .map((e) => SchemeListData.fromJson(e))
-              .toList();
-        }
-        return <SchemeListData>[];
-      },
+  // Get All Users
+  Future<ApiResponse<List<SchemeListData>>> getSch() async {
+    _cancelToken = CancelToken();
+
+    final queryParameters = <String, dynamic>{};
+
+    // return await _apiServices.getList<SchemeListData>(
+    //   ApiConstants.schemeList,
+    //   SchemeListData.fromJson,
+    //   queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
+    //   cancelToken: _cancelToken,
+    // );
+    return await _apiServices.getList<SchemeListData>(
+      ApiConstants1.schemeList,
+          (data) => SchemeListData.fromJson(data as Map<String, dynamic>),
+      queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
+      cancelToken: _cancelToken,
     );
 
-    if (response.isSuccess) {
-      return response.data ?? [];
-    } else {
-      throw Exception(response.errorMessage ?? 'Failed to fetch schemes');
-    }
   }
+
+
+  void cancelRequest(){
+    _cancelToken?.cancel("Request cancelled by the user");
+  }
+
 }
+

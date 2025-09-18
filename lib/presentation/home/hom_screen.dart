@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
-import 'package:travell_booking_app/utlis/constents/img_constants.dart';
 import 'package:travell_booking_app/utlis/constents/str_constants.dart';
-import 'package:travell_booking_app/utlis/ui/extension.dart';
+import 'package:travell_booking_app/utlis/constents/uHelper.dart';
 import 'wigets/home_slider_drawer.dart';
 
 class HomScreen extends StatelessWidget {
@@ -10,9 +9,10 @@ class HomScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = UHelperFunctions.isDarkMode(context);
     return Scaffold(
       drawer: HomeSliderDrawer(),
-      extendBodyBehindAppBar: true, // important
+      extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
@@ -81,59 +81,45 @@ class HomScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Positioned(
-            top: 90,
-            left: 0,
-            right: 0,
-
-            child: SizedBox(
-              child: Image.asset(AppImages.banner, fit: BoxFit.cover),
-            ),
-          ),
-          20.h,
-
-
-
-
+          // Stack(
+          //   children: [
+          //     Container(
+          //       height: 400,
+          //       decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.only(
+          //           bottomLeft: Radius.circular(20),
+          //           bottomRight: Radius.circular(20),
+          //         ),
+          //         color: UColors.primary,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // Stack(
+          //   children: [
+          //     Positioned(
+          //
+          //       bottom: -8,
+          //       child: SizedBox(
+          //         height: 60,
+          //         child: ListView.builder(scrollDirection: Axis.horizontal, itemCount: 4, itemBuilder: (context, index) {
+          //
+          //           return Column(
+          //             children: [
+          //               Container(height: 40,
+          //               width: 40,
+          //               color: Colors.red,)
+          //             ],
+          //           );
+          //         }),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
   }
-}
-
-/// Custom clipper for wave
-/// First wave clipper
-class WaveClipperOne extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, size.height - 50);
-
-    var firstControlPoint = Offset(size.width / 4, size.height);
-    var firstEndPoint = Offset(size.width / 2, size.height - 40);
-    path.quadraticBezierTo(
-      firstControlPoint.dx,
-      firstControlPoint.dy,
-      firstEndPoint.dx,
-      firstEndPoint.dy,
-    );
-
-    var secondControlPoint = Offset(3 * size.width / 4, size.height - 80);
-    var secondEndPoint = Offset(size.width, size.height - 50);
-    path.quadraticBezierTo(
-      secondControlPoint.dx,
-      secondControlPoint.dy,
-      secondEndPoint.dx,
-      secondEndPoint.dy,
-    );
-
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

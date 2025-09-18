@@ -1,39 +1,23 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../models/saveVisit/add_meeting_model.dart';
+import 'add_meeting_repository.dart';
+
 class AddMeetingController extends GetxController {
-  // Text controllers
   final numberOfUsersController = TextEditingController();
   final referenceController = TextEditingController();
-
-  // Form key
   final formKey = GlobalKey<FormState>();
 
-  // Image
   final ImagePicker picker = ImagePicker();
   Rx<File?> capturedImage = Rx<File?>(null);
 
-  /// Capture image
-  Future<void> captureImage(bool isFront) async {
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.camera,
-      preferredCameraDevice: isFront ? CameraDevice.front : CameraDevice.rear,
-      imageQuality: 80,
-    );
-    if (pickedFile != null) capturedImage.value = File(pickedFile.path);
-  }
+  final AddMeetingRepository _repository = AddMeetingRepository();
+  RxBool isLoading = false.obs;
 
-  /// Pick from gallery
-  Future<void> pickFromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
-    if (pickedFile != null) capturedImage.value = File(pickedFile.path);
-  }
-
-  /// Auto open camera
   Future<void> autoOpenCamera() async {
     final pickedFile = await picker.pickImage(
       source: ImageSource.camera,
@@ -43,7 +27,6 @@ class AddMeetingController extends GetxController {
     if (pickedFile != null) capturedImage.value = File(pickedFile.path);
   }
 
-  // Validators
   String? validateNumberOfUsers(String? value) {
     if (value == null || value.trim().isEmpty) return "Number of Users is required";
     if (!RegExp(r'^[0-9]+$').hasMatch(value)) return "Must be a number";
@@ -57,34 +40,50 @@ class AddMeetingController extends GetxController {
     return null;
   }
 
-  // Save form
-  void saveForm() {
-    if (formKey.currentState!.validate()) {
-      if (capturedImage.value == null) {
-        Get.snackbar(
-          "Error",
-          "Please capture or upload an image",
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
-        );
-        return;
-      }
+  Future<void> saveForm() async {
+    if (!formKey.currentState!.validate()) return;
 
-      String numberOfUsers = numberOfUsersController.text.trim();
-      String reference = referenceController.text.trim();
+    if (capturedImage.value == null) {
+      Get.snackbar(
+        "Error",
+        "Please capture or upload an image",
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
-      print("Number of Users: $numberOfUsers");
-      print("Reference: $reference");
-      print("Image Path: ${capturedImage.value!.path}");
+    // Convert image to Base64
+    final bytes = await capturedImage.value!.readAsBytes();
+    final base64Image = "data:image/jpeg;base64,${base64Encode(bytes)}";
 
+    final meeting = AddMeetingModel(
+      noOfUsers: numberOfUsersController.text.trim(),
+      reference: referenceController.text.trim(),
+      latitute: "28.6139",
+      longitude: "77.2090",
+      meetingImage: base64Image,
+    );
+
+    isLoading.value = true;
+    final response = await _repository.saveMeeting(meeting: meeting);
+    isLoading.value = false;
+
+    if (response.success) {
       Get.snackbar(
         "Success",
         "Meeting Information Saved",
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-
-      // TODO: Save data to API or database
+      Get.back();
+    } else {
+      Get.snackbar(
+        "Error",
+        response.message,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 

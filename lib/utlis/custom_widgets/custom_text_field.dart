@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constents/colors.dart';
-import '../sizes.dart';
 
 
 class AppTextField extends StatelessWidget {
@@ -80,10 +78,10 @@ class AppTextField extends StatelessWidget {
     final inputTheme = theme.inputDecorationTheme;
 
     return TextFormField(
-      obscuringCharacter: obscuringCharacter,
       controller: controller,
       initialValue: initialValue,
       obscureText: obscureText,
+      obscuringCharacter: obscuringCharacter,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       focusNode: focusNode,
@@ -94,7 +92,7 @@ class AppTextField extends StatelessWidget {
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,
       validator: validator,
-      style: textStyle ?? theme.textTheme.bodyLarge,
+      style: textStyle ?? theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface),
 
       decoration: InputDecoration(
         hintText: hintText,
@@ -103,15 +101,16 @@ class AppTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         contentPadding: contentPadding,
         counterText: '',
-        hintStyle: hintStyle ?? inputTheme.hintStyle,
-        labelStyle: labelStyle ?? inputTheme.labelStyle,
+        hintStyle: hintStyle ?? inputTheme.hintStyle?.copyWith(color: hintColor ?? theme.hintColor),
+        labelStyle: labelStyle ?? inputTheme.labelStyle?.copyWith(color: labelColor ?? theme.colorScheme.onSurface),
         errorStyle: errorStyle ?? inputTheme.errorStyle,
         filled: true,
-        fillColor: fillColor ?? inputTheme.fillColor,
+        fillColor: fillColor ?? inputTheme.fillColor ?? theme.cardColor,
+
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(
-            color: borderColor ?? theme.colorScheme.onSurface,
+            color: borderColor ?? theme.dividerColor,
             width: borderWidth,
           ),
         ),
@@ -119,7 +118,7 @@ class AppTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(
             color: focusedBorderColor ?? theme.primaryColor,
-            width: borderWidth + 0.5,
+            width: borderWidth + 0.1,
           ),
         ),
         errorBorder: OutlineInputBorder(
@@ -129,7 +128,6 @@ class AppTextField extends StatelessWidget {
             width: borderWidth,
           ),
         ),
-
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(
@@ -138,7 +136,6 @@ class AppTextField extends StatelessWidget {
           ),
         ),
       ),
-
     );
   }
 }

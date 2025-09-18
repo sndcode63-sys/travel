@@ -1,11 +1,7 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/api/api_service.dart';
 import '../../../utlis/app_routes.dart';
-import '../../../utlis/constents/api_constants.dart';
 import 'otp_repository.dart';
 
 class OtpVerificationController extends GetxController {
@@ -34,7 +30,7 @@ class OtpVerificationController extends GetxController {
     super.onClose();
   }
 
-  // OTP validation
+  /// OTP Validation
   String? validateOtp(String? value) {
     if (value == null || value.trim().isEmpty) return "OTP is required";
     if (value.length != 6) return "OTP must be 6 digits";
@@ -42,14 +38,14 @@ class OtpVerificationController extends GetxController {
     return null;
   }
 
-  // Timer display in MM:SS format
+  /// Timer text in MM:SS format
   String get timerText {
-    final minutes = (secondsRemaining.value ~/ 60).toString().padLeft(2, '0');
+    final minutes = (secondsRemaining.value ~/ 60); // integer division
     final seconds = (secondsRemaining.value % 60).toString().padLeft(2, '0');
-    return "$minutes:$seconds";
+    return "$minutes:$seconds"; // e.g., 4:05
   }
 
-  // Verify OTP
+  /// Verify OTP
   Future<void> onVerify() async {
     if (!formKey.currentState!.validate()) return;
 
@@ -61,31 +57,44 @@ class OtpVerificationController extends GetxController {
       );
 
       if (result.status == 200) {
-        Get.snackbar("Success", result.message ?? "OTP Verified",
-            snackPosition: SnackPosition.BOTTOM);
-        Get.toNamed(AppRoutes.resetPassword, arguments: {
-          "email": emailController.text.trim(),
-          "otp": otpController.text.trim(),
-        });
+        Get.snackbar(
+          "Success",
+          result.message ?? "OTP Verified",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+
+        Get.toNamed(
+          AppRoutes.resetPassword,
+          arguments: {
+            "email": emailController.text.trim(),
+            "otp": otpController.text.trim(),
+          },
+        );
       } else {
-        Get.snackbar("Error", result.message ?? "Invalid OTP",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.redAccent,
-            colorText: Colors.white);
-      }
-    } catch (e) {
-      Get.snackbar("Error", e.toString(),
+        Get.snackbar(
+          "Error",
+          result.message ?? "Invalid OTP",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Resend OTP
+  /// Resend OTP
   Future<void> onResendOtp() async {
-    if (secondsRemaining.value > 0) return; // prevent spamming
+    if (secondsRemaining.value > 0) return; // timer not finished
 
     try {
       final result = await OtpRepository.resendOtp(
@@ -93,27 +102,37 @@ class OtpVerificationController extends GetxController {
       );
 
       if (result.status == 200) {
-        Get.snackbar("Info", result.message ?? "OTP Resent Successfully",
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          "Info",
+          result.message ?? "OTP Resent Successfully",
+          snackPosition: SnackPosition.BOTTOM,
+        );
         _startTimer();
       } else {
-        Get.snackbar("Error", result.message ?? "Cannot resend OTP",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.redAccent,
-            colorText: Colors.white);
-      }
-    } catch (e) {
-      Get.snackbar("Error", e.toString(),
+        Get.snackbar(
+          "Error",
+          result.message ?? "Cannot resend OTP",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 
-  // Start countdown timer
-  void _startTimer() {
-    secondsRemaining.value = 5 * 60; // 5 minutes
+  /// Start countdown timer (default 5 minutes)
+  void _startTimer({int durationInSeconds = 300}) {
+    secondsRemaining.value = durationInSeconds;
     _timer?.cancel();
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (secondsRemaining.value > 0) {
         secondsRemaining.value--;
