@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+
+
+class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
   final String? labelText;
@@ -19,13 +21,23 @@ class CustomTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
   final String? Function(String?)? validator;
-  final Color borderColor;
-  final Color focusedBorderColor;
-  final Color errorBorderColor;
-  final Color fillColor;
+  final String obscuringCharacter;
 
-  const CustomTextField({
-    Key? key,
+  final Color? borderColor;
+  final Color? focusedBorderColor;
+  final Color? errorBorderColor;
+  final Color? fillColor;
+  final Color? hintColor;
+  final Color? labelColor;
+  final double borderRadius;
+  final double borderWidth;
+  final TextStyle? textStyle;
+  final TextStyle? hintStyle;
+  final TextStyle? labelStyle;
+  final TextStyle? errorStyle;
+
+  const AppTextField({
+    super.key,
     this.controller,
     this.hintText,
     this.labelText,
@@ -40,22 +52,36 @@ class CustomTextField extends StatelessWidget {
     this.enabled = true,
     this.readOnly = false,
     this.focusNode,
-    this.contentPadding = const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+    this.contentPadding =
+    const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
     this.onChanged,
     this.onSubmitted,
     this.validator,
-    this.borderColor = Colors.grey,
-    this.focusedBorderColor = Colors.blue,
-    this.errorBorderColor = Colors.red,
-    this.fillColor = Colors.white,
-  }) : super(key: key);
+    this.obscuringCharacter = '•',
+    this.borderColor,
+    this.focusedBorderColor,
+    this.errorBorderColor,
+    this.fillColor,
+    this.hintColor,
+    this.labelColor,
+    this.borderRadius = 12,
+    this.borderWidth = 1.2,
+    this.textStyle,
+    this.hintStyle,
+    this.labelStyle,
+    this.errorStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final inputTheme = theme.inputDecorationTheme;
+
     return TextFormField(
       controller: controller,
       initialValue: initialValue,
       obscureText: obscureText,
+      obscuringCharacter: obscuringCharacter,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       focusNode: focusNode,
@@ -66,30 +92,48 @@ class CustomTextField extends StatelessWidget {
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,
       validator: validator,
+      style: textStyle ?? theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface),
+
       decoration: InputDecoration(
         hintText: hintText,
         labelText: labelText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: fillColor,
         contentPadding: contentPadding,
-        counterText: '', // hide character counter
+        counterText: '',
+        hintStyle: hintStyle ?? inputTheme.hintStyle?.copyWith(color: hintColor ?? theme.hintColor),
+        labelStyle: labelStyle ?? inputTheme.labelStyle?.copyWith(color: labelColor ?? theme.colorScheme.onSurface),
+        errorStyle: errorStyle ?? inputTheme.errorStyle,
+        filled: true,
+        fillColor: fillColor ?? inputTheme.fillColor ?? theme.cardColor,
+
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: borderColor),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: BorderSide(
+            color: borderColor ?? theme.dividerColor,
+            width: borderWidth,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: focusedBorderColor, width: 2),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: BorderSide(
+            color: focusedBorderColor ?? theme.primaryColor,
+            width: borderWidth + 0.1,
+          ),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: errorBorderColor),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: BorderSide(
+            color: errorBorderColor ?? theme.colorScheme.error,
+            width: borderWidth,
+          ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: errorBorderColor, width: 2),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: BorderSide(
+            color: errorBorderColor ?? theme.colorScheme.error,
+            width: borderWidth + 0.5,
+          ),
         ),
       ),
     );

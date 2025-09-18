@@ -1,38 +1,21 @@
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
 
-class AppLogger {
-  AppLogger._();
+class Logger {
+  Logger._();
 
-  static bool enableLogging = !kReleaseMode;
-
-  /// Log debug messages
-  static void d(String tag, String message, [Object? error, StackTrace? stackTrace]) {
-    if (!enableLogging) return;
-    developer.log("[DEBUG] [$tag] $message", error: error, stackTrace: stackTrace);
+  static void info(String tag, dynamic message) {
+    print("\x1B[34m[INFO][$tag]: $message\x1B[0m"); // Blue text
   }
 
-  /// Log info messages
-  static void i(String tag, String message, [Object? error, StackTrace? stackTrace]) {
-    if (!enableLogging) return;
-    developer.log("[INFO] [$tag] $message", error: error, stackTrace: stackTrace);
+  static void success(String tag, dynamic message) {
+    print("\x1B[32m[SUCCESS][$tag]: $message\x1B[0m"); // Green text
   }
 
-  /// Log warnings
-  static void w(String tag, String message, [Object? error, StackTrace? stackTrace]) {
-    if (!enableLogging) return;
-    developer.log("[WARN] [$tag] $message", error: error, stackTrace: stackTrace);
+  static void error(String tag, dynamic message) {
+    print("\x1B[31m[ERROR][$tag]: $message\x1B[0m"); // Red text
   }
 
-  /// Log errors
-  static void e(String tag, String message, [Object? error, StackTrace? stackTrace]) {
-    if (!enableLogging) return;
-    developer.log("[ERROR] [$tag] $message", error: error, stackTrace: stackTrace);
+  static void warning(String tag, dynamic message) {
+    print("\x1B[33m[WARNING][$tag]: $message\x1B[0m"); // Yellow text
   }
-
-/// Optional: log to file/local storage
-// static Future<void> logToFile(String message) async {
-//   final file = await _getLogFile();
-//   await file.writeAsString("$message\n", mode: FileMode.append);
-// }
 }

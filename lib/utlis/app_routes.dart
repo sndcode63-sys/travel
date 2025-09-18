@@ -1,11 +1,17 @@
-class Routes {
-  static const splash = '/splash';
-  static const screen = '/screen';
-  static const home = '/home';
-  static const profile = '/profile';
-  static const settings = '/settings';
-  static const demo = '/demo';
-  static const myDemo = '/myDemo';
-  static const retailers = '/retailers';
-  static const list = '/list';
+class AppRoutes {
+  static const splash = '/splash-screen';
+  static const login = '/login-screen';
+  static const forgetPassword = '/forget-password_screen';
+  static const otpVerification = '/otp-verification';
+  static const resetPassword = '/reset-password';
+  static const dashBoard = '/dashBoard-screen';
+  static const home = '/home-screen';
+  static const addVisit = '/addVisit-screen';
+  static const library = '/library-screen';
+  static const libraryImageCollection = '/libraryImageCollection-screen';
+  static const videoLibrary = '/videoLibrary-screen';
+  static const addMember = '/addMember-screen';
+  static const addClientInformation = '/addClientInformation-screen';
+  static const meetingList = '/meetingList-screen';
+  static const teamScreen = '/teamScreen-screen';
 }

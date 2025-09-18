@@ -2,20 +2,20 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class FileHelper {
-  /// Get Application Documents Directory
+  // Get Application Documents Directory
   static Future<String> getAppDocumentsPath() async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
 
-  /// Save file in app documents
+  // Save file in app documents
   static Future<File> saveFile(String fileName, List<int> bytes) async {
     final path = await getAppDocumentsPath();
     final file = File("$path/$fileName");
     return await file.writeAsBytes(bytes);
   }
 
-  /// Read file from app documents
+  // Read file from app documents
   static Future<String?> readFile(String fileName) async {
     try {
       final path = await getAppDocumentsPath();
@@ -26,7 +26,7 @@ class FileHelper {
     }
   }
 
-  /// Delete file
+  // Delete file
   static Future<bool> deleteFile(String fileName) async {
     try {
       final path = await getAppDocumentsPath();

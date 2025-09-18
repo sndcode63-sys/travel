@@ -54,7 +54,7 @@ class CustomButton extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Align(
-      alignment: Alignment.center, // ✅ Always horizontally center
+      alignment: Alignment.center,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         height: height ?? screenSize.height * 0.065,
