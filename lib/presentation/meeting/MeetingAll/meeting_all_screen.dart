@@ -87,7 +87,7 @@ class MeetingAllScreen extends GetView<MeetingAllContoroller> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                allListVisit.name ?? "N/A",
+                                'Number of User: ${allListVisit.noOfUser}',
                                 style: TextStyle(
                                   color: UColors.black,
                                   fontWeight: FontWeight.w700,
@@ -124,7 +124,7 @@ class MeetingAllScreen extends GetView<MeetingAllContoroller> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Submit Date",
+                                        "Meeting Date",
                                         style: TextStyle(
                                           color: UColors.black,
                                           fontWeight: FontWeight.w700,
@@ -132,7 +132,7 @@ class MeetingAllScreen extends GetView<MeetingAllContoroller> {
                                         ),
                                       ),
                                       Text(
-                                        "${allListVisit.submitDate}${allListVisit.submitTime}",
+                                        "${allListVisit.submitDate} ${allListVisit.submitTime}",
                                         style: TextStyle(
                                           color: UColors.darkerGrey,
                                           fontWeight: FontWeight.w500,
@@ -258,7 +258,7 @@ class MeetingAllScreen extends GetView<MeetingAllContoroller> {
                           MainAxisAlignment.center,
                           children: [
                             Text(
-                              allListVisit.name ?? "N/A",
+                              'Number of User: ${allListVisit.noOfUser}',
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,

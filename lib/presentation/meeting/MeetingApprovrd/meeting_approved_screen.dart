@@ -86,7 +86,7 @@ class MeetingApprovedScreen extends GetView<MeetingApprovedController> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                allListVisit.name ?? "N/A",
+                                'Number of User: ${allListVisit.noOfUser}',
                                 style: TextStyle(
                                   color: UColors.black,
                                   fontWeight: FontWeight.w700,
@@ -123,7 +123,7 @@ class MeetingApprovedScreen extends GetView<MeetingApprovedController> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Submit Date",
+                                        "Meeting Date",
                                         style: TextStyle(
                                           color: UColors.black,
                                           fontWeight: FontWeight.w700,
@@ -258,7 +258,7 @@ class MeetingApprovedScreen extends GetView<MeetingApprovedController> {
                           MainAxisAlignment.center, // 👈 text vertically center hoga
                           children: [
                             Text(
-                              allListVisit.name ?? "N/A",
+                              'Number of User: ${allListVisit.noOfUser}',
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,

@@ -168,16 +168,20 @@ class OtpVerificationScreen extends StatelessWidget {
                           ? Text(
                         "Resend OTP in ${controller.secondsRemaining.value}s",
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.7), // adaptive color
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color!
+                              .withOpacity(0.7),
                           fontSize: 14.sp,
                         ),
                       )
                           : GestureDetector(
-                        onTap: controller.onResendOtp,
+                        onTap: () => controller.onResendOtp(), // 🔹 Important fix
                         child: Text(
                           "Resend OTP",
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary, // adaptive primary color
+                            color: Theme.of(context).colorScheme.primary,
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
                           ),

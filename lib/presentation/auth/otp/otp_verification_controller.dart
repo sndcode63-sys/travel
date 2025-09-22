@@ -41,9 +41,9 @@ class OtpVerificationController extends GetxController {
 
   /// Timer text in MM:SS format
   String get timerText {
-    final minutes = (secondsRemaining.value ~/ 60); // integer division
+    final minutes = (secondsRemaining.value ~/ 60);
     final seconds = (secondsRemaining.value % 60).toString().padLeft(2, '0');
-    return "$minutes:$seconds"; // e.g., 4:05
+    return "$minutes:$seconds";
   }
 
   /// Verify OTP
@@ -59,8 +59,6 @@ class OtpVerificationController extends GetxController {
 
       if (result.status == 200) {
         CustomNotifier.showSnackbar(message: "OTP Verified!");
-
-
         Get.toNamed(
           AppRoutes.resetPassword,
           arguments: {
@@ -70,7 +68,6 @@ class OtpVerificationController extends GetxController {
         );
       } else {
         CustomNotifier.showSnackbar(message: "Invalid OTP!", isSuccess: false);
-
       }
     } catch (e) {
       Get.snackbar(
@@ -87,9 +84,10 @@ class OtpVerificationController extends GetxController {
 
   /// Resend OTP
   Future<void> onResendOtp() async {
-    if (secondsRemaining.value > 0) return; // timer not finished
+    if (secondsRemaining.value > 0) return; // wait until timer ends
 
     try {
+      isLoading.value = true;
       final result = await OtpRepository.resendOtp(
         email: emailController.text.trim(),
       );
@@ -100,7 +98,7 @@ class OtpVerificationController extends GetxController {
           result.message ?? "OTP Resent Successfully",
           snackPosition: SnackPosition.BOTTOM,
         );
-        _startTimer();
+        _startTimer(); // restart countdown
       } else {
         Get.snackbar(
           "Error",
@@ -118,6 +116,8 @@ class OtpVerificationController extends GetxController {
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 

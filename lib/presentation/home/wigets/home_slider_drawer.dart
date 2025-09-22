@@ -45,39 +45,45 @@ class HomeSliderDrawer extends StatelessWidget {
               ),
             ),
 
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.r),
-                color: Colors.white.withAlpha(30),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 40.h,
-                    width: 40.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.r),
-                      color: Colors.blue.shade700,
-                    ),
-                    child: Icon(Icons.home_filled,size: 20.sp,color: UColors.white,),
-                  ),
-                  Text("Home",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 20.sp),),
-                  IconButton(
-                    onPressed: () {},
-                    icon:  Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: Colors.white,
-                      size: 16.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   margin: const EdgeInsets.only(bottom: 20),
+            //   padding: const EdgeInsets.all(5),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(15.r),
+            //     color: Colors.white.withAlpha(30),
+            //   ),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Container(
+            //         height: 40.h,
+            //         width: 40.w,
+            //         decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(15.r),
+            //           color: Colors.blue.shade700,
+            //         ),
+            //         child: Icon(Icons.home_filled,size: 20.sp,color: UColors.white,),
+            //       ),
+            //       Text("Home",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 20.sp),),
+            //       IconButton(
+            //         onPressed: () {},
+            //         icon:  Icon(
+            //           Icons.arrow_back_ios_rounded,
+            //           color: Colors.white,
+            //           size: 16.sp,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
 
-            // 🔹 Menu Items
+            DrawerMenuItem(
+              icon: Icons.person,
+              label: "Home",
+              onTap: () {
+                Get.toNamed(AppRoutes.addVisit);
+              },
+            ),
             DrawerMenuItem(
               icon: Icons.person,
               label: "Add Visit",

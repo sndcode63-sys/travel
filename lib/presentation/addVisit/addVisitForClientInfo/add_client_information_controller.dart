@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as img;
 import 'package:get/get.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 
@@ -9,14 +11,13 @@ import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'add_client_repository.dart';
 
 
+
 class AddClientInformationController extends GetxController {
   final ImagePicker picker = ImagePicker();
   Rx<File?> capturedImage = Rx<File?>(null);
 
-
   late final Map<String, dynamic> args;
   RxBool isLoading = false.obs;
-
 
   @override
   void onInit() {
@@ -25,7 +26,7 @@ class AddClientInformationController extends GetxController {
     print("⬅ Received args in AddClientInformationScreen: $args");
   }
 
-
+  /// Open camera
   Future<void> autoOpenCamera() async {
     final pickedFile = await picker.pickImage(
       source: ImageSource.camera,
@@ -38,6 +39,21 @@ class AddClientInformationController extends GetxController {
     }
   }
 
+  // Compress image and convert to Base64
+  Future<String> _compressAndConvertImage(File file) async {
+    final bytes = await file.readAsBytes();
+
+    img.Image? image = img.decodeImage(bytes);
+    if (image == null) throw Exception("Failed to decode image");
+
+    img.Image resized = img.copyResize(image, width: 800);
+
+    final compressedBytes = img.encodeJpg(resized, quality: 80);
+
+    return "data:image/jpeg;base64,${base64Encode(compressedBytes)}";
+  }
+
+  // Save visit
   Future<void> saveVisit() async {
     if (capturedImage.value == null) {
       CustomNotifier.showPopup(
@@ -50,8 +66,8 @@ class AddClientInformationController extends GetxController {
     try {
       isLoading.value = true;
 
-      final bytes = await capturedImage.value!.readAsBytes();
-      final base64Image = "data:image/jpeg;base64,${base64Encode(bytes)}";
+      // Compress image before sending
+      final base64Image = await _compressAndConvertImage(capturedImage.value!);
 
       final request = SaveVisitConte(
         clientFullName: args['clientName'] ?? "",
@@ -68,16 +84,12 @@ class AddClientInformationController extends GetxController {
       final response = await SaveVisitRepository().saveVisit(request);
 
       if (response.success) {
-        // Success popup
         CustomNotifier.showPopup(
           message: "Visit saved successfully",
           isSuccess: true,
         );
 
-        // Delay so popup is visible before navigation
         await Future.delayed(const Duration(seconds: 1));
-
-        // Navigate to next screen
         Get.offAllNamed(AppRoutes.dashBoard);
       } else {
         CustomNotifier.showPopup(
@@ -86,7 +98,7 @@ class AddClientInformationController extends GetxController {
         );
       }
     } finally {
-      isLoading.value = false; // loader hide
+      isLoading.value = false;
     }
   }
 }

@@ -117,7 +117,7 @@ class VisitApprovedScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "Submit Date",
+                                      "Visit Date",
                                       style: TextStyle(
                                         color: UColors.black,
                                         fontWeight: FontWeight.w700,

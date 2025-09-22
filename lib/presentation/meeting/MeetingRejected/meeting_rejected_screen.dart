@@ -88,7 +88,7 @@ class MeetingRejectedScreen
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                allListVisit.name ?? "N/A",
+                                'Number of User: ${allListVisit.noOfUser}',
                                 style: TextStyle(
                                   color: UColors.black,
                                   fontWeight: FontWeight.w700,
@@ -125,7 +125,7 @@ class MeetingRejectedScreen
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Submit Date",
+                                        "Meeting Date",
                                         style: TextStyle(
                                           color: UColors.black,
                                           fontWeight: FontWeight.w700,
@@ -133,7 +133,7 @@ class MeetingRejectedScreen
                                         ),
                                       ),
                                       Text(
-                                        "${allListVisit.submitDate}${allListVisit.submitTime}",
+                                        "${allListVisit.submitDate} ${allListVisit.submitTime}",
                                         style: TextStyle(
                                           color: UColors.darkerGrey,
                                           fontWeight: FontWeight.w500,
@@ -257,10 +257,10 @@ class MeetingRejectedScreen
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment:
-                          MainAxisAlignment.center, // 👈 text vertically center hoga
+                          MainAxisAlignment.center,
                           children: [
                             Text(
-                              allListVisit.name ?? "N/A",
+                              'Number of User: ${allListVisit.noOfUser}',
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,

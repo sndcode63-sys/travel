@@ -6,7 +6,7 @@ import '../../../data/services/api_services.dart';
 class OtpRepository {
   static final _apiServices = ApiServices();
 
-  // Submit OTP
+  /// Submit OTP
   static Future<OtpModles> submitOtp({
     required String email,
     required String code,
@@ -35,8 +35,8 @@ class OtpRepository {
     String type = "Forgot Password",
   }) async {
     final response = await _apiServices.post<Map<String, dynamic>>(
-      ApiConstants1.auth,                      // endpoint
-          (json) => json as Map<String, dynamic>,  // response parse
+      ApiConstants1.auth,
+          (json) => json as Map<String, dynamic>,
       data: {
         "username": email,
         "type": type,

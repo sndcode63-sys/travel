@@ -87,7 +87,7 @@ extends GetView<MeetingPendingController> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                allListVisit.name ?? "N/A",
+                                'Number of User: ${allListVisit.noOfUser}',
                                 style: TextStyle(
                                   color: UColors.black,
                                   fontWeight: FontWeight.w700,
@@ -99,7 +99,7 @@ extends GetView<MeetingPendingController> {
                                 borderRadius: BorderRadius.circular(10.r),
                                 child: CachedNetworkImage(
                                   imageUrl:
-                                  "${allListVisit.fullImageUrl}${allListVisit.photo}",
+                                  "${allListVisit.fullImageUrl} ${allListVisit.photo}",
                                   height: 320.h,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -124,7 +124,7 @@ extends GetView<MeetingPendingController> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Submit Date",
+                                        "Meeting Date",
                                         style: TextStyle(
                                           color: UColors.black,
                                           fontWeight: FontWeight.w700,

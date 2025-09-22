@@ -56,7 +56,6 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text("Meeting List", style: TextStyle(fontSize: 14.sp)),
                         ],
                       ),
                     ],

@@ -47,26 +47,26 @@ class ResetPassowrdController extends GetxController {
       isButtonEnabled.value = false;
       return;
     }
-    if (!RegExp(r'[A-Z]').hasMatch(newPass)) {
-      errorMessage.value = "Password must contain at least 1 uppercase letter";
-      isButtonEnabled.value = false;
-      return;
-    }
-    if (!RegExp(r'[a-z]').hasMatch(newPass)) {
-      errorMessage.value = "Password must contain at least 1 lowercase letter";
-      isButtonEnabled.value = false;
-      return;
-    }
-    if (!RegExp(r'[0-9]').hasMatch(newPass)) {
-      errorMessage.value = "Password must contain at least 1 number";
-      isButtonEnabled.value = false;
-      return;
-    }
-    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(newPass)) {
-      errorMessage.value = "Password must contain at least 1 special character";
-      isButtonEnabled.value = false;
-      return;
-    }
+    // if (!RegExp(r'[A-Z]').hasMatch(newPass)) {
+    //   errorMessage.value = "Password must contain at least 1 uppercase letter";
+    //   isButtonEnabled.value = false;
+    //   return;
+    // }
+    // if (!RegExp(r'[a-z]').hasMatch(newPass)) {
+    //   errorMessage.value = "Password must contain at least 1 lowercase letter";
+    //   isButtonEnabled.value = false;
+    //   return;
+    // }
+    // if (!RegExp(r'[0-9]').hasMatch(newPass)) {
+    //   errorMessage.value = "Password must contain at least 1 number";
+    //   isButtonEnabled.value = false;
+    //   return;
+    // }
+    // if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(newPass)) {
+    //   errorMessage.value = "Password must contain at least 1 special character";
+    //   isButtonEnabled.value = false;
+    //   return;
+    // }
     if (newPass != confirmPass) {
       errorMessage.value = "Passwords do not match";
       isButtonEnabled.value = false;
