@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_passowrd_controller.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/str_constants.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
-import 'package:travell_booking_app/utlis/ui/extension.dart';
-
 import '../../../utlis/constents/app_sizes.dart';
 import '../../../utlis/constents/color_constants.dart';
-import '../../../utlis/theme/widgets_theme/text_theme.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({super.key});
@@ -40,7 +38,7 @@ class ResetPasswordScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      20.h,
+                      SizedBox(height: 20.h,),
                       GestureDetector(
                         onTap: () {
                           Get.toNamed(AppRoutes.dashBoard);
@@ -48,8 +46,8 @@ class ResetPasswordScreen extends StatelessWidget {
                         child: RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(
-                            style: const TextStyle(
-                              fontSize: 20,
+                            style:  TextStyle(
+                              fontSize: 20.sp,
                               color: AppColors.primary,
                               fontWeight: FontWeight.w700,
                             ),
@@ -64,13 +62,13 @@ class ResetPasswordScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      8.h,
+                      SizedBox(height: 8.h,),
                       Text(
                         'Reset Your Password',
                         style: Theme.of(context).textTheme. titleLarge,
 
                       ),
-                      30.h,
+                      SizedBox(height: 35.h,),
                       Obx(
                         () => AppTextField(
                           controller: controller.newPasswordController,
@@ -85,9 +83,7 @@ class ResetPasswordScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      15.h,
-
-                      // Confirm Password Field
+                      SizedBox(height: 15.h,),
                       Obx(
                         () => AppTextField(
                           controller: controller.confirmPasswordController,
@@ -114,13 +110,13 @@ class ResetPasswordScreen extends StatelessWidget {
                                     controller.errorMessage.value,
                                     style: TextStyle(
                                       color: Colors.red,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                     ),
                                   ),
                                 )
                                 : SizedBox.shrink(),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                     ],
                   ),
                 ),
@@ -135,7 +131,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     textColor:
                         controller.isButtonEnabled.value
                             ? Colors.white
-                            : AppColors.primary, // 👈 yaha change kiya
+                            : AppColors.primary,
                     backgroundColor:
                         controller.isButtonEnabled.value
                             ? AppColors.primary
@@ -145,7 +141,7 @@ class ResetPasswordScreen extends StatelessWidget {
                             ? () {
                       controller.onSubmit();
                         }
-                            : null, // disabled state
+                            : null,
                   ),
                 ),
               ),

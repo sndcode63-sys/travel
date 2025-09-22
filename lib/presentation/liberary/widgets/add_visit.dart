@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:travell_booking_app/utlis/ui/extension.dart';
-
 import '../../../utlis/app_routes.dart';
 import '../../../utlis/constents/color_constants.dart';
 
@@ -47,7 +46,7 @@ class AddVisitList extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        10.w,
+                        SizedBox(height: 10.w),
                         const Text(
                           'Aero Residency',
                           style: TextStyle(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:flutter/services.dart';
 
 class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -22,6 +21,9 @@ class AppTextField extends StatelessWidget {
   final Function(String)? onSubmitted;
   final String? Function(String?)? validator;
   final String obscuringCharacter;
+
+  /// New parameter for custom input formatters
+  final List<TextInputFormatter>? inputFormatters;
 
   final Color? borderColor;
   final Color? focusedBorderColor;
@@ -58,6 +60,7 @@ class AppTextField extends StatelessWidget {
     this.onSubmitted,
     this.validator,
     this.obscuringCharacter = '•',
+    this.inputFormatters,
     this.borderColor,
     this.focusedBorderColor,
     this.errorBorderColor,
@@ -92,8 +95,9 @@ class AppTextField extends StatelessWidget {
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,
       validator: validator,
-      style: textStyle ?? theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface),
-
+      inputFormatters: inputFormatters,
+      style: textStyle ??
+          theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurface),
       decoration: InputDecoration(
         hintText: hintText,
         labelText: labelText,
@@ -101,12 +105,15 @@ class AppTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         contentPadding: contentPadding,
         counterText: '',
-        hintStyle: hintStyle ?? inputTheme.hintStyle?.copyWith(color: hintColor ?? theme.hintColor),
-        labelStyle: labelStyle ?? inputTheme.labelStyle?.copyWith(color: labelColor ?? theme.colorScheme.onSurface),
+        hintStyle: hintStyle ??
+            inputTheme.hintStyle?.copyWith(color: hintColor ?? theme.hintColor),
+        labelStyle: labelStyle ??
+            inputTheme.labelStyle?.copyWith(
+              color: labelColor ?? theme.colorScheme.onSurface,
+            ),
         errorStyle: errorStyle ?? inputTheme.errorStyle,
         filled: true,
         fillColor: fillColor ?? inputTheme.fillColor ?? theme.cardColor,
-
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(

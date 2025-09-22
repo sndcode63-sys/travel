@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../constents/colors.dart';
 
@@ -10,29 +11,29 @@ class UTextTheme {
   UTextTheme._();
 
   static TextTheme lightTextTheme = TextTheme(
-    titleSmall: const TextStyle(
-      fontSize: 14,
+    titleSmall:  TextStyle(
+      fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       fontFamily: "OpenSans",
       color: UColors.black,
     ), // Regular
 
-    titleMedium: const TextStyle(
-      fontSize: 16,
+    titleMedium:  TextStyle(
+      fontSize: 16.sp,
       fontWeight: FontWeight.w500,
       fontFamily: "OpenSans",
       color: UColors.black,
     ), // Medium
 
-    bodyLarge: const TextStyle(
-      fontSize: 20,
+    bodyLarge:  TextStyle(
+      fontSize: 20.sp,
       fontWeight: FontWeight.w600,
       fontFamily: "OpenSans",
       color: UColors.black,
     ), // SemiBold
 
-    titleLarge: const TextStyle(
-      fontSize: 24,
+    titleLarge:  TextStyle(
+      fontSize: 24.sp,
       fontWeight: FontWeight.w700,
       fontFamily: "OpenSans",
       color: UColors.black,
@@ -40,29 +41,29 @@ class UTextTheme {
   );
 
   static TextTheme darkTextTheme = TextTheme(
-    titleSmall: const TextStyle(
+    titleSmall:  TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w400,
       fontFamily: "OpenSans",
       color: UColors.white,
     ),
 
-    titleMedium: const TextStyle(
-      fontSize: 16,
+    titleMedium:  TextStyle(
+      fontSize: 16.sp,
       fontWeight: FontWeight.w500,
       fontFamily: "OpenSans",
       color: UColors.grey,
     ),
 
-    bodyLarge: const TextStyle(
-      fontSize: 20,
+    bodyLarge:  TextStyle(
+      fontSize: 20.sp,
       fontWeight: FontWeight.w600,
       fontFamily: "OpenSans",
       color: UColors.white,
     ),
 
-    titleLarge: const TextStyle(
-      fontSize: 24,
+    titleLarge:  TextStyle(
+      fontSize: 24.sp,
       fontWeight: FontWeight.w700,
       fontFamily: "OpenSans",
       color: UColors.white,

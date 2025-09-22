@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_pass_repo.dart';
 import '../../../utlis/app_routes.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 
 class ResetPassowrdController extends GetxController {
   RxBool obscureNew = true.obs;
@@ -22,7 +23,6 @@ class ResetPassowrdController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // 👇 arguments me email + otp expect karenge
     if (Get.arguments != null) {
       emailController.text = Get.arguments['email'] ?? "";
       otpController.text = Get.arguments['otp'] ?? "";
@@ -90,11 +90,9 @@ class ResetPassowrdController extends GetxController {
       );
 
       if (result.status == 200) {
-        Get.snackbar(
-          "Success",
-          result.message ?? "Password changed",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+
+        CustomNotifier.showSnackbar(message: "Password changed successfully!");
+
         Get.offAllNamed(AppRoutes.login);
       } else {
         Get.snackbar(
@@ -104,16 +102,20 @@ class ResetPassowrdController extends GetxController {
           backgroundColor: Colors.redAccent,
           colorText: Colors.white,
         );
+        CustomNotifier.showSnackbar(message: "Failed to reset password!",isSuccess: false);
+
       }
-    } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
-    } finally {
+    }
+    // catch (e) {
+    //   Get.snackbar(
+    //     "Error",
+    //     e.toString(),
+    //     snackPosition: SnackPosition.BOTTOM,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: Colors.white,
+    //   );
+    // }
+    finally {
       isLoading.value = false;
     }
   }

@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../models/saveVisit/add_meeting_model.dart';
+import '../../utlis/app_routes.dart';
+import '../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'add_meeting_repository.dart';
 
 class AddMeetingController extends GetxController {
@@ -44,11 +46,9 @@ class AddMeetingController extends GetxController {
     if (!formKey.currentState!.validate()) return;
 
     if (capturedImage.value == null) {
-      Get.snackbar(
-        "Error",
-        "Please capture or upload an image",
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+      CustomNotifier.showSnackbar(
+        message: "Please capture or upload an image",
+        isSuccess: false,
       );
       return;
     }
@@ -70,19 +70,21 @@ class AddMeetingController extends GetxController {
     isLoading.value = false;
 
     if (response.success) {
-      Get.snackbar(
-        "Success",
-        "Meeting Information Saved",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
+      CustomNotifier.showPopup(
+        message: "Meeting Information Saved",
+        isSuccess: true,
       );
-      Get.back();
+
+      Future.delayed(const Duration(seconds: 2), () {
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+        Get.offAllNamed(AppRoutes.dashBoard);
+      });
     } else {
-      Get.snackbar(
-        "Error",
-        response.message,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+      CustomNotifier.showPopup(
+        message: response.message,
+        isSuccess: false,
       );
     }
   }

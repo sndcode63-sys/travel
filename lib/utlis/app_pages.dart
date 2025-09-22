@@ -5,28 +5,36 @@ import 'package:travell_booking_app/presentation/addVisit/add_visit_binding.dart
 import 'package:travell_booking_app/presentation/addVisit/add_visit_screen.dart';
 import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_info_screen.dart';
 import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_infro_binding.dart';
-import 'package:travell_booking_app/presentation/addmetting/meetingList/meeting_list_binding.dart';
-import 'package:travell_booking_app/presentation/addmetting/meetingList/meeting_screen.dart';
+import 'package:travell_booking_app/presentation/addmetting/add_meeting_binding.dart';
+import 'package:travell_booking_app/presentation/addmetting/add_meeting_screen.dart';
 import 'package:travell_booking_app/presentation/auth/login/login_binding.dart';
 import 'package:travell_booking_app/presentation/auth/login/login_screen.dart';
 import 'package:travell_booking_app/presentation/auth/otp/otp_verification_binding.dart';
 import 'package:travell_booking_app/presentation/auth/otp/otp_verification_screen.dart';
 import 'package:travell_booking_app/presentation/auth/password/forget_password_binding.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_password_binding.dart';
-import 'package:travell_booking_app/presentation/dashBoard/bottom_navigation_bar.dart';
+import 'package:travell_booking_app/bottom_navigation_bar.dart';
 import 'package:travell_booking_app/presentation/dashBoard/dash_board_screen.dart';
 import 'package:travell_booking_app/presentation/home/home_binding.dart';
 import 'package:travell_booking_app/presentation/liberary/library_binding.dart';
 import 'package:travell_booking_app/presentation/liberary/library_screen.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_binding.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_screen.dart';
+import 'package:travell_booking_app/presentation/meeting/meeting.dart';
 import 'package:travell_booking_app/presentation/splash/splash_binding.dart';
 import 'package:travell_booking_app/presentation/splash/splash_screen.dart';
+import 'package:travell_booking_app/presentation/teams/allDownline/all_downline_binding.dart';
+import 'package:travell_booking_app/presentation/teams/allDownline/all_downline_screen.dart';
+import 'package:travell_booking_app/presentation/teams/self_download/self_downline_binding.dart';
+import 'package:travell_booking_app/presentation/teams/self_download/self_download_screen.dart';
 import 'package:travell_booking_app/presentation/teams/team_binding.dart';
 import 'package:travell_booking_app/presentation/teams/team_screen.dart';
+import '../presentation/addmetting/visitList/visit_list_binding.dart';
+import '../presentation/addmetting/visitList/visit_screen.dart';
 import '../presentation/auth/password/forget_password_screen.dart';
 import '../presentation/auth/reset_password/reset_password_screen.dart';
 import '../presentation/dashBoard/dash_board_binding.dart';
+import '../presentation/meeting/meeting_binding.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -73,12 +81,12 @@ class AppPages {
       binding: DashBoardBinding(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
-      name: AppRoutes.home,
-      page: () => HomeScreen(),
-      binding: HomeBinding(),
-      transition: Transition.rightToLeft,
-    ),
+    // GetPage(
+    //   name: AppRoutes.home,
+    //   page: () => HomeScreen(),
+    //   binding: HomeBinding(),
+    //   transition: Transition.rightToLeft,
+    // ),
     GetPage(
       name: AppRoutes.addVisit,
       page: () => AddVisitScreen(),
@@ -111,14 +119,44 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.meetingList,
-      page: () => MeetingScreen(),
-      binding: MeetingListBinding(),
+      page: () => VisitScreen(),
+      binding: VisitListBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
       name: AppRoutes.teamScreen,
       page: () => TeamScreen(),
       binding: TeamBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.selfDownline,
+      page: () => SelfDownloadScreen(),
+      binding: SelfDownlineBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.meeting,
+      page: () => Meeting(),
+      binding: MeetingBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.visitList,
+      page: () => VisitScreen(),
+      binding: VisitListBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.allDowline,
+      page: () => AllDownlineScreen(),
+      binding: AllDownlineBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.addMeeting,
+      page: () => AddMeetingScreen(),
+      binding: AddMeetingBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

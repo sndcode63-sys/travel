@@ -8,6 +8,7 @@ import 'package:travell_booking_app/utlis/app_routes.dart';
 import '../../core/constants/api_constants.dart';
 import '../services/storage_services.dart';
 
+// --------------------- ApiProvider.dart ---------------------
 class ApiProvider {
   static ApiProvider? _instance;
   late Dio _dio;
@@ -26,16 +27,12 @@ class ApiProvider {
   void _initializeInterceptors() {
     _dio.options = BaseOptions(
       baseUrl: ApiConstants1.baseUrl,
-      connectTimeout: Duration(milliseconds: ApiConstants1.connectTimerOutsMs),
-      receiveTimeout: Duration(milliseconds: ApiConstants1.receiveTimerOutsMs),
-      sendTimeout: Duration(milliseconds: ApiConstants1.sendTimerOutsMs),
       headers: {
         'Content-Type': ApiConstants1.contentType,
         'Accept': ApiConstants1.contentType,
       },
     );
 
-    // 🔹 Request Interceptor
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -50,8 +47,7 @@ class ApiProvider {
             options.headers["basicauthorizationkey"] = authToken;
           }
 
-
-          // --- Add language headers ---
+          // --- Language headers ---
           final language = _storageService.getLanguage() ?? 'en';
           options.headers[ApiConstants1.acceptLanguage] = language;
 
@@ -67,19 +63,31 @@ class ApiProvider {
 
           handler.next(options);
         },
-        onResponse: (response, handler) {
+        onResponse: (response, handler) async {
+          // --- Check for token expired in response body ---
+          if (response.data is Map<String, dynamic>) {
+            final body = response.data as Map<String, dynamic>;
+            if ((body['status'] == 401 || body['status'] == 404) &&
+                body['message']?.toString().toLowerCase().contains("unauthorized") == true) {
+              // Use StorageServices logout method
+              StorageServices.to.logout();
+              return; // stop further response processing
+            }
+          }
           handler.next(response);
         },
         onError: (error, handler) async {
+          // --- Handle HTTP 401 ---
           if (error.response?.statusCode == 401) {
-            await _handleTokenExpiration();
+            StorageServices.to.logout();
+            return;
           }
           handler.next(error);
         },
       ),
     );
 
-    // 🔹 Logger Interceptor (only for debug mode)
+    // --- Logger Interceptor ---
     if (getx.Get.isLogEnable) {
       _dio.interceptors.add(
         PrettyDioLogger(
@@ -94,43 +102,11 @@ class ApiProvider {
     }
   }
 
-  Future<void> _handleTokenExpiration() async {
-    _storageService.removeUniqueKey();
-    _storageService.removeAuthorizationToken();
-    getx.Get.offAllNamed(AppRoutes.login);
-  }
-
-  // -----------------------------
-  // Generic API Methods
-  // -----------------------------
-  Future<Response> postMultipart(
-      String path, {
-        required FormData formData,
-        Map<String, dynamic>? queryParameters,
-        CancelToken? cancelToken,
-      }) async {
-    try {
-      return await _dio.post(
-        path,
-        data: formData,
-        queryParameters: queryParameters,
-        options: Options(
-          contentType: 'multipart/form-data',
-        ),
-        cancelToken: cancelToken,
-      );
-    } catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-
-  Future<Response> get(
-      String path, {
-        Map<String, dynamic>? queryParameters,
+  // ----------------------------- Generic API Methods -----------------------------
+  Future<Response> get(String path,
+      {Map<String, dynamic>? queryParameters,
         Options? options,
-        CancelToken? cancelToken,
-      }) async {
+        CancelToken? cancelToken}) async {
     try {
       return await _dio.get(
         path,
@@ -143,13 +119,11 @@ class ApiProvider {
     }
   }
 
-  Future<Response> post(
-      String path, {
-        dynamic data,
+  Future<Response> post(String path,
+      {dynamic data,
         Map<String, dynamic>? queryParameters,
         Options? options,
-        CancelToken? cancelToken,
-      }) async {
+        CancelToken? cancelToken}) async {
     try {
       return await _dio.post(
         path,
@@ -163,13 +137,11 @@ class ApiProvider {
     }
   }
 
-  Future<Response> put(
-      String path, {
-        dynamic data,
+  Future<Response> put(String path,
+      {dynamic data,
         Map<String, dynamic>? queryParameters,
         Options? options,
-        CancelToken? cancelToken,
-      }) async {
+        CancelToken? cancelToken}) async {
     try {
       return await _dio.put(
         path,
@@ -183,13 +155,11 @@ class ApiProvider {
     }
   }
 
-  Future<Response> delete(
-      String path, {
-        dynamic data,
+  Future<Response> delete(String path,
+      {dynamic data,
         Map<String, dynamic>? queryParameters,
         Options? options,
-        CancelToken? cancelToken,
-      }) async {
+        CancelToken? cancelToken}) async {
     try {
       return await _dio.delete(
         path,
@@ -203,9 +173,24 @@ class ApiProvider {
     }
   }
 
-  // -----------------------------
-  // Error Handling
-  // -----------------------------
+  Future<Response> postMultipart(String path,
+      {required FormData formData,
+        Map<String, dynamic>? queryParameters,
+        CancelToken? cancelToken}) async {
+    try {
+      return await _dio.post(
+        path,
+        data: formData,
+        queryParameters: queryParameters,
+        options: Options(contentType: 'multipart/form-data'),
+        cancelToken: cancelToken,
+      );
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  // ----------------------------- Error Handling -----------------------------
   Exception _handleError(dynamic error) {
     if (error is DioException) {
       switch (error.type) {

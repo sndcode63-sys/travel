@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:travell_booking_app/utlis/app_routes.dart';
 
 import '../../../models/saveVisit/save_visit_conte.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'add_client_repository.dart';
 
 
@@ -25,10 +25,6 @@ class AddClientInformationController extends GetxController {
     print("⬅ Received args in AddClientInformationScreen: $args");
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   Future<void> autoOpenCamera() async {
     final pickedFile = await picker.pickImage(
@@ -36,6 +32,7 @@ class AddClientInformationController extends GetxController {
       preferredCameraDevice: CameraDevice.front,
       imageQuality: 80,
     );
+
     if (pickedFile != null) {
       capturedImage.value = File(pickedFile.path);
     }
@@ -43,11 +40,9 @@ class AddClientInformationController extends GetxController {
 
   Future<void> saveVisit() async {
     if (capturedImage.value == null) {
-      Get.snackbar(
-        "Error",
-        "Please capture an image",
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+      CustomNotifier.showPopup(
+        message: "Please capture an image",
+        isSuccess: false,
       );
       return;
     }
@@ -69,37 +64,29 @@ class AddClientInformationController extends GetxController {
         schemeName: args['schemeName'] ?? "",
         visitImage: base64Image,
       );
-      print("----- $request");
 
       final response = await SaveVisitRepository().saveVisit(request);
 
-      isLoading.value = false;
-
       if (response.success) {
-        Get.snackbar(
-          "Success",
-          "Visit saved successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
+        // Success popup
+        CustomNotifier.showPopup(
+          message: "Visit saved successfully",
+          isSuccess: true,
         );
-        Get.back();
+
+        // Delay so popup is visible before navigation
+        await Future.delayed(const Duration(seconds: 1));
+
+        // Navigate to next screen
+        Get.offAllNamed(AppRoutes.dashBoard);
       } else {
-        Get.snackbar(
-          "Error",
-          response.message,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
+        CustomNotifier.showPopup(
+          message: response.message,
+          isSuccess: false,
         );
       }
-    } catch (e) {
-      isLoading.value = false;
-      print("❌ Exception: $e");
-      Get.snackbar(
-        "Error",
-        "Unexpected error occurred",
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+    } finally {
+      isLoading.value = false; // loader hide
     }
   }
 }

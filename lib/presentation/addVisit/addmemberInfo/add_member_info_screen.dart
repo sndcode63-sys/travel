@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_info_controller.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
-import 'package:travell_booking_app/utlis/ui/extension.dart';
 import '../../../utlis/constents/color_constants.dart';
 import '../../../utlis/custom_widgets/custom_button.dart';
 import '../../../utlis/custom_widgets/custom_text_field.dart';
@@ -14,12 +15,10 @@ class AddMemberInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AddMemberInfoController());
-    // Receive scheme arguments
     final args = Get.arguments as Map<String, dynamic>?;
     final schemeId = args?['id'] ?? '';
     final schemeName = args?['name'] ?? '';
 
-    // Print to terminal
     print('➡ Received Scheme -> ID: $schemeId, Name: $schemeName');
 
 
@@ -27,7 +26,7 @@ class AddMemberInfoScreen extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(70),
+          preferredSize:  Size.fromHeight(70.h),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: const BoxDecoration(
@@ -52,17 +51,17 @@ class AddMemberInfoScreen extends StatelessWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children:  [
                           Text(
                             "Add Visit",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             "Add Client Information",
-                            style: TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: 14.sp),
                           ),
                         ],
                       ),
@@ -93,8 +92,7 @@ class AddMemberInfoScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          20.h,
-
+                          SizedBox(height: 20.h,),
                           /// Show location status
                           Obx(() {
                             if (controller.currentPosition.value == null) {
@@ -103,9 +101,9 @@ class AddMemberInfoScreen extends StatelessWidget {
                                 child: Text(
                                   "Location is disabled or not detected.\nPlease enable location to continue.",
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     color: Colors.red,
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -117,9 +115,9 @@ class AddMemberInfoScreen extends StatelessWidget {
                                   "Location Detected: \nLat: ${controller.currentPosition.value!.latitude}, "
                                       "Lng: ${controller.currentPosition.value!.longitude}",
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     color: Colors.green,
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -127,16 +125,16 @@ class AddMemberInfoScreen extends StatelessWidget {
                             }
                           }),
 
-                          20.h,
+                          SizedBox(height: 20.h,),
                           CustomButton(
                             text: "SCHEME: $schemeName",
                             backgroundColor: AppColors.primary,
                             fontWeight: FontWeight.w400,
                             borderRadius: 15,
-                            fontSize: 16,
-                            height: 50,
+                            fontSize: 16.sp,
+                            height: 50.h,
                           ),
-                          20.h,
+                          SizedBox(height: 20.h,),
 
                           /// Client Name
                           AppTextField(
@@ -155,7 +153,7 @@ class AddMemberInfoScreen extends StatelessWidget {
                             },
                           ),
 
-                          20.h,
+                          SizedBox(height: 20.h,),
                           AppTextField(
 
                             controller: controller.fatherName,
@@ -171,7 +169,7 @@ class AddMemberInfoScreen extends StatelessWidget {
                             },
                           ),
 
-                          20.h,
+                          SizedBox(height: 20.h,),
                           AppTextField(
 
                             controller: controller.email,
@@ -189,24 +187,24 @@ class AddMemberInfoScreen extends StatelessWidget {
                             },
                           ),
 
-                          20.h,
+                          SizedBox(height: 20.h,),
                           AppTextField(
-
                             controller: controller.contactNo,
                             hintText: "Contact No.",
                             keyboardType: TextInputType.phone,
+                            maxLength: 10,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(10),
+                            ],
                             validator: (val) {
-                              if (val == null || val.trim().isEmpty) {
-                                return "Contact No. required";
-                              }
-                              if (!RegExp(r"^[0-9]{10}$").hasMatch(val.trim())) {
-                                return "Enter 10 digit number";
-                              }
+                              if (val == null || val.trim().isEmpty) return "Contact No. required";
+                              if (!RegExp(r"^[0-9]{10}$").hasMatch(val.trim())) return "Enter 10 digit number";
                               return null;
                             },
                           ),
 
-                          20.h,
+                          SizedBox(height: 20.h,),
                           AppTextField(
 
                             controller: controller.remark,
@@ -219,9 +217,7 @@ class AddMemberInfoScreen extends StatelessWidget {
                               return null;
                             },
                           ),
-
-                          100.h,
-
+                          SizedBox(height: 100.h,),
                           /// CONTINUE Button
                           CustomButton(
                             backgroundColor: UColors.primary,
@@ -229,17 +225,7 @@ class AddMemberInfoScreen extends StatelessWidget {
                             onPressed: () {
 
                               if (controller.formKey.currentState!.validate()) {
-                                // Get scheme info from previous screen arguments
                                 final schemeArgs = Get.arguments as Map<String, dynamic>?;
-                                print("--------kkkkk----------");
-                                print("--------kkkkk----------");
-                                print("--------kkkkk----------");
-                                print("➡ Sending data to AddClientInformationScreen: $schemeArgs");
-                                print("--------kkkkk----------");
-                                print("--------kkkkk----------");
-                                print("--------kkkkk----------");
-                                print("--------kkkkk----------");
-
 
                                 final args = {
                                   'clientName': controller.clientName.text.trim(),

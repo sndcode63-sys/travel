@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/teams/self_download/self_download_screen.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_listview_builder.dart';
-import 'package:travell_booking_app/utlis/ui/extension.dart';
 
 import '../../utlis/app_routes.dart';
+import 'allDownline/all_downline_screen.dart';
 
 class TeamScreen extends StatelessWidget {
   const TeamScreen({super.key});
@@ -14,7 +15,7 @@ class TeamScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
+        preferredSize:  Size.fromHeight(70.h),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
@@ -39,11 +40,11 @@ class TeamScreen extends StatelessWidget {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children:  [
                         Text(
                           "Team",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -55,7 +56,6 @@ class TeamScreen extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.settings),
                   onPressed: () {
-                    Get.to(SelfDownloadScreen());
 
                   },
                 ),
@@ -66,63 +66,88 @@ class TeamScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          20.h,
-          Expanded(
-            child: CustomListView(
-              physics: ScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              itemCount: 3,
-              itemBuilder: (context, index, item) {
-                return Container(
-                  padding: EdgeInsets.all(15),
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: UColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
+          SizedBox(height: 10.h,),
+      Expanded(
+        child: CustomListView(
+          physics: const ScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          itemCount: 2,
+          itemBuilder: (context, index, item) {
+            final titles = [
+              "Self Downline",
+              "All Downline",
+            ];
+            final subtitles = [
+              [
+                "Group of associate who have been ",
+                "sponsored by a single individual directly",
+              ],
+              [
+                "All associates connected in the",
+                "complete downline network",
+              ],
+            ];
 
-                    border: Border.all(color: UColors.grey),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Self Downline",
-                        style: TextStyle(
-                          color: UColors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        "Group of associate who have been ",
-                        style: TextStyle(
-                          color: UColors.primary,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        "sponsored by a single individual directly",
-                        style: TextStyle(
-                          color: UColors.primary,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+            return InkWell(
+              onTap: () {
+                switch (index) {
+                  case 0:
+                    Get.toNamed(AppRoutes.selfDownline);
+                    break;
+                  case 1:
+                    Get.to(() => AllDownlineScreen());
+                    break;
+                }
               },
-            ),
-          ),
-        ],
+              borderRadius: BorderRadius.circular(10.r),
+              child: Container(
+                padding: EdgeInsets.all(15),
+                margin: EdgeInsets.symmetric(vertical: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: UColors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(color: UColors.grey),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Title
+                    Text(
+                      titles[index],
+                      style: TextStyle(
+                        color: UColors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20.sp,
+                      ),
+                    ),
+
+                    /// Subtitle Lines
+                    ...subtitles[index].map(
+                          (line) => Text(
+                        line,
+                        style: TextStyle(
+                          color: UColors.primary,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      )
+
+      ],
       ),
     );
   }

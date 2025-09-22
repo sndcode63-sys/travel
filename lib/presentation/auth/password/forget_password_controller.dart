@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../utlis/app_routes.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'forget_password_repository.dart';
 
 class ForgetPasswordController extends GetxController {
@@ -24,16 +25,19 @@ class ForgetPasswordController extends GetxController {
       );
 
       if (response.status == 200) {
-        Get.snackbar("Success", response.message ?? "OTP sent successfully!");
+        CustomNotifier.showSnackbar(message: "OTP sent successfully!");
+
         Get.toNamed(
           AppRoutes.otpVerification,
           arguments: emailController.text.trim(),
         );
       } else {
-        Get.snackbar("Error", response.message ?? "Something went wrong");
+        CustomNotifier.showSnackbar(message: "Something went wrong!", isSuccess: false);
+
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("Error", e.toString(),backgroundColor:Colors.red );
+
     }
   }
 }

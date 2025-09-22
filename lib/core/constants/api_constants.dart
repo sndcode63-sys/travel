@@ -18,6 +18,8 @@ class ApiConstants1{
   static const String getVisitList = "/get-visit-list?page_no=1&per_page=10";
   static const String selfList = "/self-Affilated-List";
   static const String allDownlineList = "/all-Affilated-List";
+  static const String homeSlider = "/get-home-slider";
+  static const String meeting = "/get-meeting-list?page_no=1&per_page=10";
 
   // Headers
   static const String contentType = 'application/json';

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../../core/helpers.dart';
 import '../../../models/team/all_downline_list_model.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'all_downline_repository.dart';
 
 class AllDownlineController extends GetxController {
@@ -20,9 +21,11 @@ class AllDownlineController extends GetxController {
   }
 
   String getFirstAndLastLetter(String? name) {
-    if (name == null || name.isEmpty) return '';
+    if (name == null || name.isEmpty) return "";
+
     if (name.length == 1) return name;
-    return '${name[0]}${name[name.length - 9]}';
+
+    return "${name[0]}${name[name.length - 1]}";
   }
 
 
@@ -32,21 +35,21 @@ class AllDownlineController extends GetxController {
       hasError.value = false;
       errorMessage.value = "";
 
-      final responce = await _allDownlineRepository.getSefList();
+      final response = await _allDownlineRepository.getSefList();
 
-      if (responce.success && responce.data != null) {
-        allDownline.assignAll(responce.data!);
+      if (response.success && response.data != null) {
+        allDownline.assignAll(response.data!);
       } else {
         hasError.value = true;
-        errorMessage.value = responce.message;
-        AppHelpers.showSnackBar(
-            title: "Error", message: responce.message, isError: true);
+        errorMessage.value = response.message;
+        CustomNotifier.showPopup(message: response.message, isSuccess: false);
+
       }
     } catch (e) {
       hasError.value = true;
       errorMessage.value = 'An unexpected error occurred';
-      AppHelpers.showSnackBar(
-          title: "Error", message: errorMessage.value, isError: true);
+      CustomNotifier.showPopup(message: errorMessage.value, isSuccess: false);
+
     } finally {
       isLoading.value = false;
     }

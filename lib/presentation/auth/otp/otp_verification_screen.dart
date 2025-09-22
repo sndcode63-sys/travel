@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
-import 'package:travell_booking_app/utlis/ui/extension.dart';
 import '../../../utlis/constents/app_sizes.dart';
 import '../../../utlis/constents/color_constants.dart';
 import '../../../utlis/constents/img_constants.dart';
 import '../../../utlis/custom_widgets/custom_button.dart';
-import '../../../utlis/theme/widgets_theme/text_theme.dart';
 import 'otp_verification_controller.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
@@ -28,10 +27,10 @@ class OtpVerificationScreen extends StatelessWidget {
           obscuringCharacter: '*',
 
           defaultPinTheme: PinTheme(
-            width: 56,
-            height: 56,
+            width: 56.w,
+            height: 56.h,
             textStyle: TextStyle(
-              fontSize: 20,
+              fontSize: 20.sp,
               color: isDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.w600,
             ),
@@ -44,10 +43,10 @@ class OtpVerificationScreen extends StatelessWidget {
           ),
 
           submittedPinTheme: PinTheme(
-            width: 56,
-            height: 56,
+            width: 56.w,
+            height: 56.h,
             textStyle: TextStyle(
-              fontSize: 20,
+              fontSize: 20.sp,
               color: isDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.w600,
             ),
@@ -55,7 +54,7 @@ class OtpVerificationScreen extends StatelessWidget {
               border: Border.all(
                 color: isDarkMode ? Colors.white : Colors.green,
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
           ),
 
@@ -84,7 +83,7 @@ class OtpVerificationScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  70.h,
+                  SizedBox(height: 70.h,),
                   Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -93,7 +92,7 @@ class OtpVerificationScreen extends StatelessWidget {
 
                     ),
                   ),
-                  5.h,
+                  SizedBox(height: 5.h,),
                   Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -103,12 +102,12 @@ class OtpVerificationScreen extends StatelessWidget {
 
                     ),
                   ),
-                  35.h,
+                  SizedBox(height: 35.h,),
                   Align(
                     alignment: Alignment.center,
                     child: Image.asset(AppImages.strongPassword),
                   ),
-                  20.h,
+                  SizedBox(height: 20.h,),
 
                   /// OTP Input
                   Padding(
@@ -123,8 +122,8 @@ class OtpVerificationScreen extends StatelessWidget {
                         obscuringCharacter: '*',
 
                         defaultPinTheme: PinTheme(
-                          width: 56,
-                          height: 56,
+                          width: 56.w,
+                          height: 56.h,
                           textStyle: TextStyle(
                             fontSize: 20,
                             color: Theme.of(context).textTheme.bodyLarge!.color,
@@ -139,10 +138,10 @@ class OtpVerificationScreen extends StatelessWidget {
                         ),
 
                         submittedPinTheme: PinTheme(
-                          width: 56,
-                          height: 56,
+                          width: 56.w,
+                          height: 56.h,
                           textStyle: TextStyle(
-                            fontSize: 20,
+                            fontSize: 20.sp,
                             color: Theme.of(context).colorScheme.primary, // adaptive submit color
                             fontWeight: FontWeight.w600,
                           ),
@@ -161,7 +160,7 @@ class OtpVerificationScreen extends StatelessWidget {
                     ),
                   ),
 
-                  22.h,
+                  SizedBox(height: 22.h,),
                   Obx(
                         () => Align(
                       alignment: Alignment.center,
@@ -170,7 +169,7 @@ class OtpVerificationScreen extends StatelessWidget {
                         "Resend OTP in ${controller.secondsRemaining.value}s",
                         style: TextStyle(
                           color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.7), // adaptive color
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       )
                           : GestureDetector(
@@ -179,28 +178,27 @@ class OtpVerificationScreen extends StatelessWidget {
                           "Resend OTP",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.primary, // adaptive primary color
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  20.h,
-
+                  SizedBox(height: 20.h,),
                   /// Verify Button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Obx(() => CustomButton(
                       backgroundColor: AppColors.primary,
                       text: controller.isLoading.value ? "VERIFYING..." : "VERIFY",
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       isLoading: controller.isLoading.value,
                       onPressed: controller.onVerify,
                     )),
                   ),
-                  20.h,
+                  SizedBox(height: 20.h,),
                 ],
               ),
             ),

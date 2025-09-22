@@ -1,12 +1,10 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/addmetting/add_meeting_controller.dart';
-import 'package:travell_booking_app/presentation/addmetting/widgets/add_meeting_widgets.dart';
-import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/app_sizes.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
-import 'package:travell_booking_app/utlis/ui/extension.dart';
 import '../../utlis/constents/color_constants.dart';
 import '../../utlis/custom_widgets/custom_text_field.dart';
 
@@ -25,7 +23,7 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
       onTap: () => hideKeyboard(),
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(70),
+          preferredSize:  Size.fromHeight(70.h),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: const BoxDecoration(
@@ -50,15 +48,15 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children:  [
                           Text(
                             "Add Meeting",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text("Meeting List", style: TextStyle(fontSize: 14)),
+                          Text("Meeting List", style: TextStyle(fontSize: 14.sp)),
                         ],
                       ),
                     ],
@@ -80,7 +78,7 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                 key: controller.formKey,
                 child: Column(
                   children: [
-                    30.h,
+                    SizedBox(height: 30.h,),
                     AppTextField(
                       hintText: 'Number Of Users',
                       labelText: 'Number Of Users',
@@ -88,7 +86,7 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                       validator: controller.validateNumberOfUsers,
                       keyboardType: TextInputType.number,
                     ),
-                    20.h,
+                    SizedBox(height: 20.h,),
                     AppTextField(
                       hintText: 'Reference',
                       labelText: 'Reference',
@@ -97,7 +95,7 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                       keyboardType: TextInputType.text,
                     ),
 
-                    30.h,
+                    SizedBox(height: 30.h,),
                     Obx(() {
                       return DottedBorder(
                         color: Colors.grey,
@@ -106,14 +104,14 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                         borderType: BorderType.RRect,
                         radius: const Radius.circular(12),
                         child: Container(
-                          height: 310,
+                          height: 310.h,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child:
                               controller.capturedImage.value == null
-                                  ? const Center(
+                                  ?  Center(
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -121,9 +119,9 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                                         Icon(
                                           Icons.image,
                                           color: Colors.grey,
-                                          size: 40,
+                                          size: 40.sp,
                                         ),
-                                        SizedBox(height: 8),
+                                        SizedBox(height: 8.h),
                                         Text(
                                           "Click or Upload Selfie here",
                                           style: TextStyle(color: Colors.grey),
@@ -142,15 +140,15 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                         ),
                       );
                     }),
-                    25.h,
-                    CustomButton(
+                    SizedBox(height: 25.h,),
+                    Obx(() => CustomButton(
                       text: 'SAVE',
                       backgroundColor: AppColors.primary,
-                      onPressed: (){
+                      onPressed: () {
                         controller.saveForm();
                       },
                       isLoading: controller.isLoading.value,
-                    ),
+                    )),
                   ],
                 ),
               ),

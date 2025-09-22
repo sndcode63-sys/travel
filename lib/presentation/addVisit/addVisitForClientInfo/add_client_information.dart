@@ -1,10 +1,10 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/addVisit/addVisitForClientInfo/add_client_information_controller.dart';
 import 'package:travell_booking_app/utlis/constents/color_constants.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
-import 'package:travell_booking_app/utlis/ui/extension.dart';
 
 class AddClientInformation extends GetView<AddClientInformationController> {
   const AddClientInformation({super.key});
@@ -16,7 +16,7 @@ class AddClientInformation extends GetView<AddClientInformationController> {
     });
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
+        preferredSize:  Size.fromHeight(70.h),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
@@ -38,15 +38,15 @@ class AddClientInformation extends GetView<AddClientInformationController> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.grey),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => Get.back(),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children:  [
                         Text(
                           "Add Visit",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -54,7 +54,7 @@ class AddClientInformation extends GetView<AddClientInformationController> {
                         Text(
                           "Add Client Information",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: Colors.black,
                           ),
                         ),
@@ -81,16 +81,16 @@ class AddClientInformation extends GetView<AddClientInformationController> {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
-            20.h,
+            SizedBox(height: 20.h,),
             CustomButton(
               text: "SCHEME: AERO RESIDENCY",
               backgroundColor: AppColors.primary,
               fontWeight: FontWeight.w400,
               borderRadius: 15,
-              fontSize: 16,
-              height: 50,
+              fontSize: 16.sp,
+              height: 50.h,
             ),
-            20.h,
+            SizedBox(height: 20.h,),
             Obx(() {
               return DottedBorder(
                 color: Colors.grey,
@@ -99,18 +99,18 @@ class AddClientInformation extends GetView<AddClientInformationController> {
                 borderType: BorderType.RRect,
                 radius: const Radius.circular(12),
                 child: Container(
-                  height: 310,
+                  height: 310.h,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: controller.capturedImage.value == null
-                      ? const Center(
+                      ?  Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.image, color: Colors.grey, size: 40),
-                        SizedBox(height: 8),
+                        Icon(Icons.image, color: Colors.grey, size: 40.sp),
+                        SizedBox(height: 8.h),
                         Text(
                           "Click or Upload Selfie here",
                           style: TextStyle(color: Colors.grey),
@@ -119,7 +119,7 @@ class AddClientInformation extends GetView<AddClientInformationController> {
                     ),
                   )
                       : ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                     child: Image.file(
                       controller.capturedImage.value!,
                       fit: BoxFit.cover,
@@ -130,15 +130,18 @@ class AddClientInformation extends GetView<AddClientInformationController> {
               );
             }),
 
-            20.h,
-            CustomButton(
-              text: "SAVE",
-              backgroundColor: AppColors.primary,
-              onPressed: () {
-                controller.saveVisit();
-              },
-            ),
-            50.h,
+            SizedBox(height: 20.h,),
+            Obx(() {
+              return CustomButton(
+                text: "SAVE",
+                isLoading: controller.isLoading.value,
+                backgroundColor: AppColors.primary,
+                onPressed: () {
+                  controller.saveVisit();
+                },
+              );
+            }),
+            SizedBox(height: 50.h,),
           ],
         ),
       ),

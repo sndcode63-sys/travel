@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../constents/colors.dart';
 import '../../sizes.dart';
@@ -15,23 +16,19 @@ class UTextFormFieldTheme {
 
     labelStyle: const TextStyle(
       fontSize: USizes.fontSizeMd,
-      fontFamily: "OpenSans", // ✅ font family added
       color: UColors.black,
     ),
 
     hintStyle: const TextStyle(
       fontSize: USizes.fontSizeSm,
-      fontFamily: "OpenSans", // ✅ font family added
       color: UColors.black,
     ),
 
     errorStyle: const TextStyle(
       fontStyle: FontStyle.normal,
-      fontFamily: "OpenSans", // ✅
     ),
 
     floatingLabelStyle: TextStyle(
-      fontFamily: "OpenSans", // ✅
       color: UColors.black.withValues(alpha: 0.4),
     ),
 
@@ -47,17 +44,17 @@ class UTextFormFieldTheme {
 
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(USizes.inputFieldRadius),
-      borderSide: const BorderSide(width: 1, color: UColors.primary),
+      borderSide:  BorderSide(width: 1.r, color: UColors.primary),
     ),
 
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(USizes.inputFieldRadius),
-      borderSide: const BorderSide(width: 1, color: UColors.warning),
+      borderSide:  BorderSide(width: 1.w, color: UColors.warning),
     ),
 
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(USizes.inputFieldRadius),
-      borderSide: const BorderSide(width: 2, color: UColors.warning),
+      borderSide:  BorderSide(width: 2.r, color: UColors.warning),
     ),
   );
 
@@ -69,24 +66,21 @@ class UTextFormFieldTheme {
 
     labelStyle: const TextStyle(
       fontSize: USizes.fontSizeMd,
-      fontFamily: "OpenSans", // ✅
       color: UColors.white,
     ),
 
     hintStyle: const TextStyle(
       fontSize: USizes.fontSizeSm,
-      fontFamily: "OpenSans", // ✅
       color: UColors.grey,
     ),
 
     floatingLabelStyle: TextStyle(
-      fontFamily: "OpenSans", // ✅
       color: UColors.white.withValues(alpha: 0.4),
     ),
 
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(USizes.inputFieldRadius),
-      borderSide: const BorderSide(width: 1, color: UColors.darkGrey),
+      borderSide:  BorderSide(width: 1.r, color: UColors.darkGrey),
     ),
 
     enabledBorder: OutlineInputBorder(

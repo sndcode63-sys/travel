@@ -11,12 +11,30 @@ class SelfController extends GetxController {
   final RxBool hasError = false.obs;
   final RxString errorMessage = "".obs;
   final RxList<TeamSelfModel>selfListGEt = <TeamSelfModel>[].obs;
+  final RxList<TeamSelfModel> filteredSelf = <TeamSelfModel>[].obs;
+  final RxString searchQuery = "".obs;
+
+
 
   @override
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
+    ever(searchQuery, (_) => applySearch());
+
+  }
+  void applySearch() {
+    if (searchQuery.value.isEmpty) {
+      filteredSelf.assignAll(selfListGEt);
+    } else {
+      final query = searchQuery.value.toLowerCase();
+      filteredSelf.assignAll(
+        selfListGEt.where(
+              (s) => s.name.toLowerCase().contains(query) ?? false,
+        ),
+      );
+    }
   }
 
   String getFirstAndLastLetter(String? name) {
@@ -50,6 +68,8 @@ class SelfController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+
+
 
     void retry() {
       fetchUsers();

@@ -31,7 +31,7 @@ class SplashScreen extends StatelessWidget {
               opacity: controller.opacity.value,
               duration: Duration(milliseconds: 800),
               child: Text(
-                "Demo App",
+                "Visit App",
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utlis/app_routes.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'otp_repository.dart';
 
 class OtpVerificationController extends GetxController {
@@ -57,11 +58,8 @@ class OtpVerificationController extends GetxController {
       );
 
       if (result.status == 200) {
-        Get.snackbar(
-          "Success",
-          result.message ?? "OTP Verified",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        CustomNotifier.showSnackbar(message: "OTP Verified!");
+
 
         Get.toNamed(
           AppRoutes.resetPassword,
@@ -71,13 +69,8 @@ class OtpVerificationController extends GetxController {
           },
         );
       } else {
-        Get.snackbar(
-          "Error",
-          result.message ?? "Invalid OTP",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
-        );
+        CustomNotifier.showSnackbar(message: "Invalid OTP!", isSuccess: false);
+
       }
     } catch (e) {
       Get.snackbar(
