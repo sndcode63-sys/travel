@@ -2,16 +2,13 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:travell_booking_app/presentation/home/wigets/other_activity.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
+import 'package:travell_booking_app/utlis/constents/img_constants.dart';
 import 'package:travell_booking_app/utlis/constents/str_constants.dart';
-import '../../utlis/custom_widgets/custom_text.dart';
 import 'home_controller.dart';
-import 'wigets/downline_list.dart';
-import 'wigets/home_list.dart';
 import 'wigets/home_slider_drawer.dart';
-import 'wigets/report_list.dart';
 
 class HomScreen extends StatelessWidget {
   const HomScreen({super.key});
@@ -20,6 +17,7 @@ class HomScreen extends StatelessWidget {
     final HomeController controller = Get.put(HomeController());
 
     return Scaffold(
+      backgroundColor: Colors.blue.withOpacity(0.08),
       drawer: const HomeSliderDrawer(),
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
@@ -28,10 +26,6 @@ class HomScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             color: UColors.primary,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -45,17 +39,9 @@ class HomScreen extends StatelessWidget {
             elevation: 0,
             leading: Builder(
               builder:
-                  (context) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: UColors.white,
-                    ),
-                    height: 48.h,
-                    width: 48.w,
-                    child: IconButton(
-                      icon: Icon(Icons.menu, color: UColors.primary),
-                      onPressed: () => Scaffold.of(context).openDrawer(),
-                    ),
+                  (context) => IconButton(
+                    icon: Icon(Icons.menu, color: UColors.white, size: 20),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
                   ),
             ),
             title: Column(
@@ -142,13 +128,10 @@ class HomScreen extends StatelessWidget {
                         itemCount: sliderImages.length,
                         itemBuilder: (context, index) {
                           return Container(
-                            margin: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.r),
                               color: Colors.grey.shade200,
                             ),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16.r),
                               child: CachedNetworkImage(
                                 imageUrl: sliderImages[index],
                                 fit: BoxFit.cover,
@@ -203,43 +186,597 @@ class HomScreen extends StatelessWidget {
                   ),
                 );
               }),
-              HomeList(),
+              SizedBox(height: 10.h),
+
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: CustomText(
-                  text: "Report List",
-                  color: Colors.black,
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w600,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: UColors.primary,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4.r,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SvgPicture.asset(AppImages.addVisit,height: 35,width: 35,),
+                        ),
+                        SizedBox(height: 5.h),
+                        Text(
+                          "Add Visit",
+                          style: TextStyle(
+                            color: UColors.black,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: UColors.primary,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4.r,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SvgPicture.asset(AppImages.meeting,height: 35,width: 35,),
+                        ),
+                        SizedBox(height: 5.h),
+                        Text(
+                          "Add Meeting",
+                          style: TextStyle(
+                            color: UColors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                        padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: UColors.primary,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4.r,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SvgPicture.asset(AppImages.library,height: 35,width: 35,),
+                        ),
+                        SizedBox(height: 5.h),
+                        Text(
+                          "Library",
+                          style: TextStyle(
+                            color: UColors.black,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: UColors.primary,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4.r,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SvgPicture.asset(AppImages.addVisit),
+                        ),
+                        SizedBox(height: 5.h),
+                        Text(
+                          "Plot",
+                          style: TextStyle(
+                            color: UColors.black,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 20.sp),
-              ReportList(),
-              SizedBox(height: 20.sp),
+              SizedBox(height: 20.h),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: CustomText(
-                  text: "Downline Team",
-                  color: Colors.black,
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w600,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text("Repot List",style: TextStyle(color: UColors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+              ),
+
+              SizedBox(height: 10.h),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4.r,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                         padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UColors.primary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4.r,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: SvgPicture.asset(AppImages.addVisit,height: 35,width: 35,),
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            "Visit",
+                            style: TextStyle(
+                              color: UColors.black,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                        padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UColors.primary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4.r,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child:SvgPicture.asset(AppImages.selfDownline,height: 35,width: 35,),
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            "Meeting",
+                            style: TextStyle(
+                              color: UColors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UColors.primary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4.r,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: SvgPicture.asset(AppImages.addVisit,height: 35,width: 35,),
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            "Sales",
+                            style: TextStyle(
+                              color: UColors.black,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                           padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UColors.primary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4.r,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: SvgPicture.asset(AppImages.addVisit),
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            "Plot Activity",
+                            style: TextStyle(
+                              color: UColors.black,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 20.sp),
-              DownlineList(),
-              SizedBox(height: 20.sp),
+              SizedBox(height: 20.h),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: CustomText(
-                  text: "Other Activity",
-                  color: Colors.black,
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w600,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text("Downline",style: TextStyle(color: UColors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+              ),
+
+              SizedBox(height: 10.h),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4.r,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                       padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UColors.primary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4.r,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: SvgPicture.asset(AppImages.teams,height: 35,width: 35,),
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            "Team",
+                            style: TextStyle(
+                              color: UColors.black,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                          padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UColors.primary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4.r,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: SvgPicture.asset(AppImages.selfDownline,height: 35,width: 35,),
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            "Self Downline",
+                            style: TextStyle(
+                              color: UColors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                         padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UColors.primary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4.r,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child:SvgPicture.asset(AppImages.addVisit,height: 35,width: 35,),
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            "All Downline",
+                            style: TextStyle(
+                              color: UColors.black,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 20.sp),
-              OtherActivity(),
-              SizedBox(height: 20.sp),
+              SizedBox(height: 20.h),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text("Other Activity",style: TextStyle(color: UColors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+              ),
+              SizedBox(height: 10.h),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4.r,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                   padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: UColors.primary,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4.r,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child:SvgPicture.asset(AppImages.addVisit,height: 35,width: 35,),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "Add Associate",
+                                    style: TextStyle(
+                                      color: UColors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: UColors.primary,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4.r,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: SvgPicture.asset(AppImages.addVisit,height: 35,width: 35,),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "Add Meeting",
+                                    style: TextStyle(
+                                      color: UColors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                  padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: UColors.primary,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4.r,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: SvgPicture.asset(AppImages.addVehicle,height: 35,width: 35,),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    " Add Vehicle",
+                                    style: TextStyle(
+                                      color: UColors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16.h,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                 padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: UColors.primary,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4.r,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: SvgPicture.asset(AppImages.vehicleList,height: 35,width: 35,),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "Vehicle List",
+                                    style: TextStyle(
+                                      color: UColors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                               padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: UColors.primary,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4.r,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: SvgPicture.asset(AppImages.searchVehicle,height: 35,width: 35,),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "Search vehicle",
+                                    style: TextStyle(
+                                      color: UColors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 48,
+                                    width: 48,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: UColors.primary,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4.r,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: SvgPicture.asset(AppImages.addVehicle),
+
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    "Add Suggestion",
+                                    style: TextStyle(
+                                      color: UColors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -247,3 +784,5 @@ class HomScreen extends StatelessWidget {
     );
   }
 }
+
+

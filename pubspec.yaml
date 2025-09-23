@@ -27,7 +27,13 @@ dependencies:
   dotted_border: ^2.1.0
   geolocator: ^14.0.2
   flutter_screenutil: ^5.9.3
-  image: ^4.1.15
+  image: ^4.1.1
+  location: ^8.0.1
+  geocoding: ^2.0.5
+flutter_map: ^8.2.2
+latlong2: ^0.9.1
+
+
 
 
 dev_dependencies:

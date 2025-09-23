@@ -6,29 +6,25 @@ import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/app_sizes.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 
+
 class AddVisitScreen extends StatelessWidget {
-  final AddVisitController controller = Get.put(AddVisitController());
+  AddVisitScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Controller will already be initialized by DashboardController
+    final AddVisitController controller = Get.find<AddVisitController>();
+
     return GestureDetector(
-      onTap: () {
-        hideKeyboard();
-      },
+      onTap: () => hideKeyboard(),
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4.r,
-                  offset: Offset(0, 2),
-                ),
-              ],
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
             ),
             child: SafeArea(
               child: Row(
@@ -36,31 +32,17 @@ class AddVisitScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () => Get.back(),
-                      ),
+                      IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Get.back()),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children:  [
-                          Text(
-                            "Add Visit",
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                        children: [
+                          Text("Add Visit", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
                           Text("Scheme List", style: TextStyle(fontSize: 14)),
                         ],
                       ),
                     ],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.meetingList);
-                    },
-                  ),
+                  IconButton(icon: const Icon(Icons.settings), onPressed: () => Get.toNamed(AppRoutes.meetingList)),
                 ],
               ),
             ),
@@ -71,40 +53,37 @@ class AddVisitScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
-                SizedBox(height: 15.h,),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: UColors.white,
-                    border: Border.all(color: UColors.grey),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search...",
-                      hintStyle: TextStyle(
-                        color: Colors.black.withAlpha(75),
-                        fontSize: 14.sp,
-                      ),
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      prefixIcon: Icon(Icons.search, color: UColors.primary),
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 12),
+                Obx(() {
+                  if (controller.currentAddress.value.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Text("Detecting location..."),
+                    );
+                  }
+                  return Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withAlpha(30),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.green),
                     ),
-                    style: TextStyle(fontSize: 14.sp, color: UColors.primary),
-                    onChanged: (value) {
-                      controller.searchQuery.value = value;
-                    },
-                  ),
-                ),
-                SizedBox(height: 10.h,),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.location_on, color: Colors.green),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            controller.currentAddress.value,
+                            style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                // ... rest of your search & scheme list UI
                 Expanded(child: SchemeList(controller: controller)),
               ],
             ),

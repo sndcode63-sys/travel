@@ -65,7 +65,7 @@ class CustomBottomNavBar extends StatelessWidget {
               ],
             ),
             Positioned.fill(
-              top: -44.h,
+              top: -40.h,
               child: Align(
                 alignment: Alignment.topCenter,
                 child: GestureDetector(

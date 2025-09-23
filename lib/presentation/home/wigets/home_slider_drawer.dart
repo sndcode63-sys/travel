@@ -14,7 +14,7 @@ class HomeSliderDrawer extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.65,
       child: Drawer(
-        backgroundColor: Colors.blue,
+        backgroundColor: UColors.primary,
         child: ListView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20),

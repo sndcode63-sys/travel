@@ -12,6 +12,7 @@ class AddMemberInfoController extends GetxController {
   final contactNo = TextEditingController();
   final remark = TextEditingController();
 
+  RxString currentAddress = "".obs;
   RxBool isFormValid = false.obs;
   Rx<Position?> currentPosition = Rx<Position?>(null);
 
@@ -44,7 +45,21 @@ class AddMemberInfoController extends GetxController {
   }
 
   Future<void> getLocationOnStart() async {
-    currentPosition.value = await LocationService.getCurrentLocation();
+    var result = await LocationService.getCurrentLocationWithAddress();
+
+    if (result != null) {
+      currentPosition.value = result['position'];
+      currentAddress.value = result['address'];
+    } else {
+      // Retry once after a short delay
+      Future.delayed(Duration(milliseconds: 500), () async {
+        result = await LocationService.getCurrentLocationWithAddress();
+        if (result != null) {
+          currentPosition.value = result?['position'];
+          currentAddress.value = result?['address'];
+        }
+      });
+    }
   }
 
   @override

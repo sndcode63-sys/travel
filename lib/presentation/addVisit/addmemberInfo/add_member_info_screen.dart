@@ -70,7 +70,6 @@ class AddMemberInfoScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.settings,),
                     onPressed: () {
-                      Get.toNamed(AppRoutes.addClientInformation);
                     },
                   ),
                 ],
@@ -94,36 +93,6 @@ class AddMemberInfoScreen extends StatelessWidget {
                         children: [
                           SizedBox(height: 20.h,),
                           /// Show location status
-                          Obx(() {
-                            if (controller.currentPosition.value == null) {
-                              return Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Location is disabled or not detected.\nPlease enable location to continue.",
-                                  textAlign: TextAlign.center,
-                                  style:  TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Location Detected: \nLat: ${controller.currentPosition.value!.latitude}, "
-                                      "Lng: ${controller.currentPosition.value!.longitude}",
-                                  textAlign: TextAlign.center,
-                                  style:  TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              );
-                            }
-                          }),
 
                           SizedBox(height: 20.h,),
                           CustomButton(
@@ -135,7 +104,6 @@ class AddMemberInfoScreen extends StatelessWidget {
                             height: 50.h,
                           ),
                           SizedBox(height: 20.h,),
-
                           /// Client Name
                           AppTextField(
                             controller: controller.clientName,
@@ -234,8 +202,8 @@ class AddMemberInfoScreen extends StatelessWidget {
                                   'contactNo': controller.contactNo.text.trim(),
                                   'remark': controller.remark.text.trim(),
                                   'schemeName': schemeArgs?['id'] ?? '',
-                                  'lat': controller.currentPosition.value?.latitude.toString(),
-                                  'lng': controller.currentPosition.value?.longitude.toString(),
+                                  // 'lat': controller.currentPosition.value?.latitude.toString(),
+                                  // 'lng': controller.currentPosition.value?.longitude.toString(),
                                 };
 
                                 print("➡ Sending data to AddClientInformationScreen: $args");

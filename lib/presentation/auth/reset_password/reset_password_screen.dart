@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_passowrd_controller.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
+import 'package:travell_booking_app/utlis/constents/colors.dart';
+import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/constents/str_constants.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
@@ -24,128 +26,142 @@ class ResetPasswordScreen extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blue.withOpacity(0.08),
           leading: IconButton(
             onPressed: () => Get.back(),
-            icon: Icon(Icons.adaptive.arrow_back,),
+            icon: Icon(Icons.adaptive.arrow_back),
           ),
         ),
         body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 20.h,),
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(AppRoutes.dashBoard);
-                        },
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style:  TextStyle(
-                              fontSize: 20.sp,
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            children: [
-                              const TextSpan(text: "Visit App "),
-                              TextSpan(
-                                text: AppStrings.demoTesting,
-                                style: Theme.of(context).textTheme. bodyLarge,
-
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8.h,),
-                      Text(
-                        'Reset Your Password',
-                        style: Theme.of(context).textTheme. titleLarge,
-
-                      ),
-                      SizedBox(height: 35.h,),
-                      Obx(
-                        () => AppTextField(
-                          controller: controller.newPasswordController,
-                          hintText: "New Password",
-                          obscureText: controller.obscureNew.value,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              Icons.visibility,
-                              color: AppColors.primary,
-                            ),
-                            onPressed: controller.toggleNew,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 15.h,),
-                      Obx(
-                        () => AppTextField(
-                          controller: controller.confirmPasswordController,
-                          hintText: "Confirm New Password",
-                          obscureText: controller.obscureConfirm.value,
-                          obscuringCharacter: '*',
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              controller.obscureConfirm.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.grey,
-                            ),
-                            onPressed: controller.toggleConfirm,
-                          ),
-                        ),
-                      ),
-                      Obx(
-                        () =>
-                            controller.errorMessage.value.isNotEmpty
-                                ? Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    controller.errorMessage.value,
+          child: SizedBox.expand(
+            child: Container(
+              color: Colors.blue.withOpacity(0.08),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 20.h),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(AppRoutes.dashBoard);
+                            },
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontSize: 20.sp,
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: "Visit App ",
                                     style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 12.sp,
+                                      color: UColors.primary,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                )
-                                : SizedBox.shrink(),
-                      ),
-                      SizedBox(height: 20.h),
-                    ],
-                  ),
-                ),
-              ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            'Reset Your Password',
+                            style: TextStyle(
+                              color: UColors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(height: 35.h),
+                          Obx(
+                            () => AppTextField(
+                              controller: controller.newPasswordController,
+                              hintText: "New Password",
+                              labelText:"New Password",
+                              obscureText: controller.obscureNew.value,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.visibility,
+                                  color: AppColors.primary,
+                                ),
+                                onPressed: controller.toggleNew,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 15.h),
+                          Obx(
+                            () => AppTextField(
+                              controller: controller.confirmPasswordController,
+                              hintText: "Confirm New Password",
+                              labelText:"Confirm New Password",
 
-              // Save Button
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Obx(
-                  () => CustomButton(
-                    text: "SAVE",
-                    textColor:
-                        controller.isButtonEnabled.value
-                            ? Colors.white
-                            : AppColors.primary,
-                    backgroundColor:
-                        controller.isButtonEnabled.value
-                            ? AppColors.primary
-                            : Colors.grey.withAlpha(100),
-                    onPressed:
-                        controller.isButtonEnabled.value
-                            ? () {
-                      controller.onSubmit();
-                        }
-                            : null,
+                              obscureText: controller.obscureConfirm.value,
+                              obscuringCharacter: '*',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.obscureConfirm.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: controller.toggleConfirm,
+                              ),
+                            ),
+                          ),
+                          Obx(
+                            () =>
+                                controller.errorMessage.value.isNotEmpty
+                                    ? Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        controller.errorMessage.value,
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                    )
+                                    : SizedBox.shrink(),
+                          ),
+                          SizedBox(height: 20.h),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+
+                  // Save Button
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Obx(
+                      () => CustomButton(
+                        text: "SAVE",
+                        textColor:
+                            controller.isButtonEnabled.value
+                                ? Colors.white
+                                : AppColors.primary,
+                        backgroundColor:
+                            controller.isButtonEnabled.value
+                                ? AppColors.primary
+                                : Colors.grey.withAlpha(100),
+                        onPressed:
+                            controller.isButtonEnabled.value
+                                ? () {
+                                  controller.onSubmit();
+                                }
+                                : null,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

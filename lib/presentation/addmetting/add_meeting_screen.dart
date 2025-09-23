@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/addmetting/add_meeting_controller.dart';
 import 'package:travell_booking_app/utlis/constents/app_sizes.dart';
+import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import '../../utlis/constents/color_constants.dart';
 import '../../utlis/custom_widgets/custom_text_field.dart';
@@ -50,10 +51,18 @@ class AddMeetingScreen extends GetView<AddMeetingController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children:  [
                           Text(
-                            "Add Meeting",
+                            "Meeting",
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "Add Meeting",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                              color: UColors.greyDark
                             ),
                           ),
                         ],

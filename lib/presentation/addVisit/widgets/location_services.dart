@@ -1,12 +1,9 @@
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
-
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
-class LocationService {
-  LocationService._();
+class LocationServices {
+  LocationServices._();
 
   static Future<Map<String, dynamic>?> getCurrentLocationWithAddress() async {
     bool serviceEnabled;
@@ -36,20 +33,22 @@ class LocationService {
           "Location permission is permanently denied. Please enable from settings.");
       return null;
     }
+    return null;
 
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+    // Position position = await Geolocator.getCurrentPosition(
+    //   desiredAccuracy: LocationAccuracy.high,
+    // );
+    // return null;
 
-    List<Placemark> placemarks =
-    await placemarkFromCoordinates(position.latitude, position.longitude);
+    // List<Placemark> placemarks =
+    // await placemarkFromCoordinates(position.latitude, position.longitude);
+    //
+    // String address = "${placemarks.first.street}, ${placemarks.first.locality}, "
+    //     "${placemarks.first.administrativeArea}, ${placemarks.first.country}";
 
-    String address = "${placemarks.first.street}, ${placemarks.first.locality}, "
-        "${placemarks.first.administrativeArea}, ${placemarks.first.country}";
-
-    return {
-      "position": position,
-      "address": address,
-    };
+    // return {
+    //   "position": position,
+    //   "address": address,
+    // };
   }
 }

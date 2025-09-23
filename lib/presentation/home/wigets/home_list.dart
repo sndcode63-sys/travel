@@ -11,7 +11,7 @@ class HomeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height:80.h,
+      height:70.h,
       child: CustomListView(
         physics: BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,

@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/addVisit/repo.dart';
 import '../../models/scheme/scheme_list_data.dart';
 import '../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
+import 'package:geolocator/geolocator.dart';
+import 'addmemberInfo/widgets/location_detection.dart';
 
 class AddVisitController extends GetxController {
   final SchemeRepository _schemeRepository = SchemeRepository();
@@ -14,11 +16,14 @@ class AddVisitController extends GetxController {
   final RxList<SchemeListData> filteredScheme = <SchemeListData>[].obs;
   final RxString searchQuery = "".obs;
 
+  final RxString currentAddress = "".obs;
+  final Rxn<Position> currentPosition = Rxn<Position>();
+
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
+    detectLocation();
     fetchUsers();
-    ever(searchQuery, (_) => applySearch());
   }
 
   Future<void> fetchUsers() async {
@@ -52,9 +57,7 @@ class AddVisitController extends GetxController {
     } else {
       final query = searchQuery.value.toLowerCase();
       filteredScheme.assignAll(
-        scheme.where(
-              (s) => s.schemeName?.toLowerCase().contains(query) ?? false,
-        ),
+        scheme.where((s) => s.schemeName?.toLowerCase().contains(query) ?? false),
       );
     }
   }
@@ -63,5 +66,13 @@ class AddVisitController extends GetxController {
     if (name == null || name.isEmpty) return '';
     if (name.length == 1) return name;
     return '${name[0]}${name[name.length - 1]}';
+  }
+
+  Future<void> detectLocation() async {
+    final locationData = await LocationService.getCurrentLocationWithAddress();
+    if (locationData != null) {
+      currentPosition.value = locationData['position'] as Position;
+      currentAddress.value = locationData['address'] as String;
+    }
   }
 }
