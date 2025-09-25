@@ -87,7 +87,11 @@ class OtpVerificationScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 70.h,),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Image.asset(AppImages.otoBanner),
+                      ),
+                      SizedBox(height: 20.h,),
                       Align(
                         alignment: Alignment.center,
                         child: Text(
@@ -106,12 +110,8 @@ class OtpVerificationScreen extends StatelessWidget {
 
                         ),
                       ),
-                      SizedBox(height: 35.h,),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Image.asset(AppImages.strongPassword),
-                      ),
-                      SizedBox(height: 20.h,),
+                      SizedBox(height: 30.h,),
+
 
                       /// OTP Input
                       Padding(
@@ -170,7 +170,7 @@ class OtpVerificationScreen extends StatelessWidget {
                           alignment: Alignment.center,
                           child: controller.secondsRemaining.value > 0
                               ? Text(
-                            "Resend OTP in ${controller.secondsRemaining.value}s",
+                            "Resend OTP in ${controller.timerText}",
                             style: TextStyle(
                               color: Theme.of(context)
                                   .textTheme
@@ -180,6 +180,7 @@ class OtpVerificationScreen extends StatelessWidget {
                               fontSize: 14.sp,
                             ),
                           )
+
                               : GestureDetector(
                             onTap: () => controller.onResendOtp(), // 🔹 Important fix
                             child: Text(

@@ -36,7 +36,7 @@ class ForgetPasswordController extends GetxController {
 
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString(),backgroundColor:Colors.red );
+      CustomNotifier.showSnackbar(message: "Otp invalid!", isSuccess: false);
 
     }
   }

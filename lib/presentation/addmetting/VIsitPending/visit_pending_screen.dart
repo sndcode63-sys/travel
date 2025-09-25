@@ -14,6 +14,7 @@ class VisitPendingScreen extends StatelessWidget {
     final controller = Get.put(VisitPendingController());
 
     return Scaffold(
+      backgroundColor: Colors.blue.withOpacity(0.08),
       body: Obx(() {
         if (controller.isLoading.value && controller.pendingMeetingList.isEmpty) {
           return const Center(child: CircularProgressIndicator());

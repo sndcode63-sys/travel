@@ -15,6 +15,8 @@ extends StatelessWidget {
     final controller = Get.put(RejectedController());
 
     return Scaffold(
+      backgroundColor: Colors.blue.withOpacity(0.08),
+
       body: Obx(() {
         if (controller.isLoading.value && controller.pendingMeetingList.isEmpty) {
           return const Center(child: CircularProgressIndicator());

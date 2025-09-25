@@ -22,18 +22,19 @@ class DashBoardScreen extends StatelessWidget {
         return PageView(
           controller: controller.pageController,
           onPageChanged: controller.onPageChanged,
+          physics: const NeverScrollableScrollPhysics(), // 👈 disable swipe
           children: controller.views.map((screen) {
-            // Show empty Container if not initialized yet
-            return screen ?? Container();
+            return screen ?? const SizedBox.shrink();
           }).toList(),
         );
       }),
       bottomNavigationBar: Obx(
             () => CustomBottomNavBar(
           selectedIndex: controller.selectedIndex.value,
-          onItemTapped: controller.onItemTapped,
+          onItemTapped: (index) =>
+              controller.onItemTapped(index, context), // 👈 pass context
         ),
-      ) );
-
+      ),
+    );
   }
 }

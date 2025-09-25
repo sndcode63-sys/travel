@@ -41,7 +41,7 @@ class OtpVerificationController extends GetxController {
 
   /// Timer text in MM:SS format
   String get timerText {
-    final minutes = (secondsRemaining.value ~/ 60);
+    final minutes = (secondsRemaining.value ~/ 60).toString().padLeft(2, '0');
     final seconds = (secondsRemaining.value % 60).toString().padLeft(2, '0');
     return "$minutes:$seconds";
   }

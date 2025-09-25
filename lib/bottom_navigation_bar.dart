@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'utlis/constents/colors.dart';
 import 'utlis/constents/img_constants.dart';
 import 'utlis/constents/uHelper.dart';
-
 
 class CustomBottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -19,7 +19,7 @@ class CustomBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = UHelperFunctions.isDarkMode(context);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    final navBarHeight = 80.h;
+    final navBarHeight = 70.h;
 
     return Container(
       decoration: BoxDecoration(
@@ -48,32 +48,33 @@ class CustomBottomNavBar extends StatelessWidget {
         padding: EdgeInsets.only(
           left: 20.w,
           right: 20.w,
-          top: 15.h,
-          bottom: 15.h + bottomPadding,
+          top: 12.h,
+          bottom: 12.h + bottomPadding,
         ),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildNavItem(context, 0, Icons.home, 'Home'),
-                _buildNavItem(context, 1, Icons.add_circle_outline, 'Add Visit'),
-                SizedBox(width: 60.w),
-                _buildNavItem(context, 3, Icons.people_outline, 'Meeting'),
-                _buildNavItem(context, 4, Icons.settings, 'Setting'),
+                Expanded(child: _buildNavItem(context, 0, Icons.home, 'Home')),
+                Expanded(child: _buildNavItem(context, 1, Icons.add_circle_outline, 'Add Visit')),
+
+                const Spacer(flex: 1),
+
+                Expanded(child: _buildNavItem(context, 3, Icons.people_outline, 'Meeting')),
+                Expanded(child: _buildNavItem(context, 4, Icons.settings, 'Setting')),
               ],
             ),
             Positioned.fill(
-              top: -40.h,
+              top: -40.h, 
               child: Align(
                 alignment: Alignment.topCenter,
                 child: GestureDetector(
                   onTap: () => onItemTapped(2),
-                  child: SizedBox(
-                    width: 60.w,
-                    height: 60.h,
-                    child: Image.asset(AppImages.menu, fit: BoxFit.contain),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.w),
+                    child: SvgPicture.asset(AppImages.menus)
                   ),
                 ),
               ),
@@ -90,28 +91,24 @@ class CustomBottomNavBar extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => onItemTapped(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: iconColor,
-            size: 24.sp,
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            label,
-            style: TextStyle(
-              color: iconColor,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
+      child: Padding(
+        padding: EdgeInsets.only(top: 4.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: iconColor, size: 24.sp),
+            SizedBox(height: 4.h),
+            Text(
+              label,
+              style: TextStyle(
+                color: iconColor,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
-
-

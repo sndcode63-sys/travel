@@ -14,6 +14,7 @@ import 'package:travell_booking_app/presentation/auth/otp/otp_verification_scree
 import 'package:travell_booking_app/presentation/auth/password/forget_password_binding.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_password_binding.dart';
 import 'package:travell_booking_app/bottom_navigation_bar.dart';
+import 'package:travell_booking_app/presentation/bankVerification/bank_verification_binding.dart';
 import 'package:travell_booking_app/presentation/dashBoard/dash_board_screen.dart';
 import 'package:travell_booking_app/presentation/home/home_binding.dart';
 import 'package:travell_booking_app/presentation/liberary/library_binding.dart';
@@ -21,6 +22,16 @@ import 'package:travell_booking_app/presentation/liberary/library_screen.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_binding.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_screen.dart';
 import 'package:travell_booking_app/presentation/meeting/meeting.dart';
+import 'package:travell_booking_app/presentation/profileCenter/picProfile/profile_pic_binding.dart';
+import 'package:travell_booking_app/presentation/profileCenter/picProfile/profile_pic_screen.dart';
+import 'package:travell_booking_app/presentation/profileCenter/profileInfo/profile_info_binding.dart';
+import 'package:travell_booking_app/presentation/profileCenter/profileInfo/profile_info_screen.dart';
+import 'package:travell_booking_app/presentation/profileCenter/profile_center_binding.dart';
+import 'package:travell_booking_app/presentation/profileCenter/profile_center_screen.dart';
+import 'package:travell_booking_app/presentation/profileCenter/profilgeneral/general_information.dart';
+import 'package:travell_booking_app/presentation/profileCenter/profilgeneral/general_information_binding.dart';
+import 'package:travell_booking_app/presentation/relationInformation/relation_information_binding.dart';
+import 'package:travell_booking_app/presentation/relationInformation/relation_information_screen.dart';
 import 'package:travell_booking_app/presentation/splash/splash_binding.dart';
 import 'package:travell_booking_app/presentation/splash/splash_screen.dart';
 import 'package:travell_booking_app/presentation/teams/allDownline/all_downline_binding.dart';
@@ -29,12 +40,15 @@ import 'package:travell_booking_app/presentation/teams/self_download/self_downli
 import 'package:travell_booking_app/presentation/teams/self_download/self_download_screen.dart';
 import 'package:travell_booking_app/presentation/teams/team_binding.dart';
 import 'package:travell_booking_app/presentation/teams/team_screen.dart';
+import 'package:travell_booking_app/presentation/vefificationDucuments/verification_doc_binding.dart';
 import '../presentation/addmetting/visitList/visit_list_binding.dart';
 import '../presentation/addmetting/visitList/visit_screen.dart';
 import '../presentation/auth/password/forget_password_screen.dart';
 import '../presentation/auth/reset_password/reset_password_screen.dart';
+import '../presentation/bankVerification/bank_verification.dart';
 import '../presentation/dashBoard/dash_board_binding.dart';
 import '../presentation/meeting/meeting_binding.dart';
+import '../presentation/vefificationDucuments/verification_doc_screen.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -119,8 +133,8 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.meetingList,
-      page: () => VisitScreen(),
-      binding: VisitListBinding(),
+      page: () => Meeting(),
+      binding: MeetingBinding(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
@@ -157,6 +171,48 @@ class AppPages {
       name: AppRoutes.addMeeting,
       page: () => AddMeetingScreen(),
       binding: AddMeetingBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.profileCenter,
+      page: () => ProfileCenterScreen(),
+      binding: ProfileCenterBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.generalInformation,
+      page: () => GeneralInformation(),
+      binding: GeneralInformationBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.profilePic,
+      page: () => ProfilePicScreen(),
+      binding: ProfilePicBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.profileInfo,
+      page: () => ProfileInfoScreen(),
+      binding: ProfileInfoBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.verificationDocuments,
+      page: () => VerificationDocScreen(),
+      binding: VerificationDocBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.relationInfo,
+      page: () => RelationInformationScreen(),
+      binding: RelationInformationBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.bankInfo,
+      page: () => BankVerification(),
+      binding: BankVerificationBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

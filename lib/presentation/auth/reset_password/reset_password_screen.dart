@@ -10,6 +10,7 @@ import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
 import '../../../utlis/constents/app_sizes.dart';
 import '../../../utlis/constents/color_constants.dart';
+import '../../../utlis/constents/img_constants.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({super.key});
@@ -38,6 +39,11 @@ class ResetPasswordScreen extends StatelessWidget {
               color: Colors.blue.withOpacity(0.08),
               child: Column(
                 children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(AppImages.resetPassword),
+                  ),
+
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -59,7 +65,7 @@ class ResetPasswordScreen extends StatelessWidget {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: "Visit App ",
+                                    text: "Set Your Password ",
                                     style: TextStyle(
                                       color: UColors.primary,
                                       fontSize: 20,

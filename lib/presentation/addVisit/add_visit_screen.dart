@@ -8,11 +8,10 @@ import 'package:travell_booking_app/utlis/constents/colors.dart';
 
 
 class AddVisitScreen extends StatelessWidget {
-  AddVisitScreen({super.key});
+  const AddVisitScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Controller will already be initialized by DashboardController
     final AddVisitController controller = Get.find<AddVisitController>();
 
     return GestureDetector(
@@ -49,45 +48,65 @@ class AddVisitScreen extends StatelessWidget {
           ),
         ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              children: [
-                Obx(() {
-                  if (controller.currentAddress.value.isEmpty) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      child: Text("Detecting location..."),
-                    );
-                  }
-                  return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withAlpha(30),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.green),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.location_on, color: Colors.green),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            controller.currentAddress.value,
-                            style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+          child: SizedBox.expand(
+            child: Container(
+              color: Colors.blue.withOpacity(0.08),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  children: [
+                    SizedBox(height: 15.h,),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: UColors.white,
+                        border: Border.all(color: UColors.grey),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
                           ),
+                        ],
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Search...",
+                          hintStyle: TextStyle(
+                            color: Colors.black.withAlpha(75),
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          prefixIcon: Icon(Icons.search, color: UColors.primary),
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 12),
                         ),
-                      ],
+                        style: TextStyle(fontSize: 14, color: UColors.primary),
+                      ),
                     ),
-                  );
-                }),
-                // ... rest of your search & scheme list UI
-                Expanded(child: SchemeList(controller: controller)),
-              ],
+                    SizedBox(height: 15.h,),
+                    Obx(() {
+                      if (controller.currentAddress.value.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            "Detecting location...",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
+                    Expanded(child: SchemeList(controller: controller)),
+                  ],
+                ),
+              ),
             ),
-          ),
+          )
+
         ),
       ),
     );
@@ -117,19 +136,34 @@ class SchemeList extends StatelessWidget {
           final scheme = controller.filteredScheme[index];
           return InkWell(
             onTap: () {
+              final pos = controller.currentPosition.value;
+              final addr = controller.currentAddress.value;
+
+              if (pos == null || addr.isEmpty) {
+               controller.detectLocation();
+                return;
+              }
+
               Get.toNamed(
                 AppRoutes.addMember,
-                arguments: {'id': scheme.id, 'name': scheme.schemeName},
+                arguments: {
+                  'id': scheme.id,
+                  'name': scheme.schemeName,
+                  'lat': pos.latitude,
+                  'lng': pos.longitude,
+                  'address': addr,
+                },
               );
+
               print(
-                '➡ Selected Scheme -> ID: ${scheme.id}, Name: ${scheme.schemeName}',
+                '➡ Selected Scheme -> ID: ${scheme.id}, '
+                    'Name: ${scheme.schemeName}, '
+                    'Lat: ${pos.latitude}, Lng: ${pos.longitude}, Address: $addr',
               );
             },
             child: Container(
               padding: EdgeInsets.all(12),
-              margin: EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.r),
                 color: UColors.white,
                 border: Border.all(color: UColors.grey, width: 1),
               ),
@@ -146,14 +180,7 @@ class SchemeList extends StatelessWidget {
                           width: 50,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.greenAccent.withAlpha(180),
-                                Colors.green.withAlpha(120),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
+                            color: UColors.primary,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.greenAccent.withAlpha(60),
@@ -168,7 +195,7 @@ class SchemeList extends StatelessWidget {
                                 scheme.schemeName,
                               ),
                               style: TextStyle(
-                                color: UColors.primary,
+                                color: UColors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.sp,
                               ),

@@ -1,14 +1,13 @@
-import '../login_models/data.dart';
 import 'data.dart';
 
-class UserModels {
+class CommonResponse {
   int? status;
   String? message;
   Data? data;
 
-  UserModels({this.status, this.message, this.data});
+  CommonResponse({this.status, this.message, this.data});
 
-  UserModels.fromJson(Map<String, dynamic> json) {
+  CommonResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
@@ -24,4 +23,6 @@ class UserModels {
     return data;
   }
 }
+
+
 

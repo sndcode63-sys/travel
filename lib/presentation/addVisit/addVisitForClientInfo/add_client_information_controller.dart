@@ -4,18 +4,18 @@ import 'dart:ui' as img;
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 
 import '../../../models/saveVisit/save_visit_conte.dart';
 import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
+import '../../addmetting/add_meeting_screen.dart';
 import 'add_client_repository.dart';
 
 
 
 class AddClientInformationController extends GetxController {
-  final ImagePicker picker = ImagePicker();
   Rx<File?> capturedImage = Rx<File?>(null);
-
   late final Map<String, dynamic> args;
   RxBool isLoading = false.obs;
 
@@ -26,47 +26,41 @@ class AddClientInformationController extends GetxController {
     print("⬅ Received args in AddClientInformationScreen: $args");
   }
 
-  /// Open camera
+  /// Open full-screen camera
   Future<void> autoOpenCamera() async {
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.camera,
-      preferredCameraDevice: CameraDevice.front,
-      imageQuality: 80,
-    );
-
-    if (pickedFile != null) {
-      capturedImage.value = File(pickedFile.path);
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      status = await Permission.camera.request();
+      if (!status.isGranted) {
+        CustomNotifier.showSnackbar(message: "Camera permission is required", isSuccess: false);
+        return;
+      }
     }
+
+    // Open CameraScreen
+    final file = await Get.to<File?>(() => const CameraScreen());
+    if (file != null) capturedImage.value = file;
   }
 
   // Compress image and convert to Base64
   Future<String> _compressAndConvertImage(File file) async {
     final bytes = await file.readAsBytes();
-
-    img.Image? image = img.decodeImage(bytes);
+    final image = img.decodeImage(bytes);
     if (image == null) throw Exception("Failed to decode image");
-
-    img.Image resized = img.copyResize(image, width: 800);
-
+    final resized = img.copyResize(image, width: 800);
     final compressedBytes = img.encodeJpg(resized, quality: 80);
-
     return "data:image/jpeg;base64,${base64Encode(compressedBytes)}";
   }
 
   // Save visit
   Future<void> saveVisit() async {
     if (capturedImage.value == null) {
-      CustomNotifier.showPopup(
-        message: "Please capture an image",
-        isSuccess: false,
-      );
+      CustomNotifier.showPopup(message: "Please capture an image", isSuccess: false);
       return;
     }
 
+    isLoading.value = true;
     try {
-      isLoading.value = true;
-
-      // Compress image before sending
       final base64Image = await _compressAndConvertImage(capturedImage.value!);
 
       final request = SaveVisitConte(
@@ -81,21 +75,17 @@ class AddClientInformationController extends GetxController {
         visitImage: base64Image,
       );
 
+
+
+
       final response = await SaveVisitRepository().saveVisit(request);
 
       if (response.success) {
-        CustomNotifier.showPopup(
-          message: "Visit saved successfully",
-          isSuccess: true,
-        );
-
+        CustomNotifier.showPopup(message: "Visit saved successfully", isSuccess: true);
         await Future.delayed(const Duration(seconds: 1));
         Get.offAllNamed(AppRoutes.dashBoard);
       } else {
-        CustomNotifier.showPopup(
-          message: response.message,
-          isSuccess: false,
-        );
+        CustomNotifier.showPopup(message: response.message, isSuccess: false);
       }
     } finally {
       isLoading.value = false;

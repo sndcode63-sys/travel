@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:travell_booking_app/utlis/constents/colors.dart';
 
 class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
   final String? labelText;
   final bool obscureText;
-  final String obscuringCharacter; // ✅ added
+  final String obscuringCharacter;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final Widget? suffixIcon;
@@ -18,13 +17,15 @@ class AppTextField extends StatelessWidget {
   final int maxLines;
   final List<TextInputFormatter>? inputFormatters;
 
+  final bool showStar;
+
   const AppTextField({
     super.key,
     this.controller,
     this.hintText,
     this.labelText,
     this.obscureText = false,
-    this.obscuringCharacter = "•", // ✅ default
+    this.obscuringCharacter = "•",
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.done,
     this.suffixIcon,
@@ -33,6 +34,7 @@ class AppTextField extends StatelessWidget {
     this.maxLength,
     this.maxLines = 1,
     this.inputFormatters,
+    this.showStar = false,
   });
 
   @override
@@ -40,7 +42,7 @@ class AppTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
-      obscuringCharacter: obscuringCharacter, // ✅ added
+      obscuringCharacter: obscuringCharacter,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       onChanged: onChanged,
@@ -50,11 +52,31 @@ class AppTextField extends StatelessWidget {
       inputFormatters: inputFormatters,
       style: const TextStyle(fontSize: 16),
       decoration: InputDecoration(
-        labelText: labelText,
+        label: labelText != null
+            ? RichText(
+          text: TextSpan(
+            text: labelText,
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
+            ),
+            children: showStar
+                ? const [
+              TextSpan(
+                text: " *",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                ),
+              ),
+            ]
+                : [],
+          ),
+        )
+            : null,
         hintText: hintText,
         counterText: "",
-        hintStyle: TextStyle(color:UColors.black, fontSize: 14),
-        labelStyle: TextStyle(color: Colors.grey.shade700, fontSize: 14),
+        hintStyle: const TextStyle(color: Colors.black, fontSize: 14),
         suffixIcon: suffixIcon,
         contentPadding: const EdgeInsets.symmetric(vertical: 14),
         enabledBorder: UnderlineInputBorder(

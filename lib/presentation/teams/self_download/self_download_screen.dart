@@ -70,190 +70,195 @@ class SelfDownloadScreen extends StatelessWidget {
           ),
         ),
         body: SafeArea(
-          child: Column(
-            children: [
-              SizedBox(height: 10.h),
-              /// 🔍 Search Box
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.r),
-                  color: UColors.white,
-                  border: Border.all(color: UColors.grey),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search...",
-                    hintStyle: TextStyle(
-                      color: Colors.black.withAlpha(75),
-                      fontSize: 14.sp,
-                    ),
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    prefixIcon: Icon(Icons.search, color: UColors.primary),
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  style: TextStyle(fontSize: 14.sp, color: UColors.primary),
-                  onChanged: (value) {
-                    controller.searchQuery.value = value;
-                  },
-                ),
-              ),
-              SizedBox(height: 5.h),
+          child: Container(
+            color: Colors.blue.withOpacity(0.08),
 
-              /// 🔄 Loader / Error / List
-              Expanded(
-                child: Obx(() {
-                  if (controller.isLoading.value) {
-                    /// Loader
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  if (controller.hasError.value) {
-                    /// Error
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            controller.errorMessage.value,
-                            style: TextStyle(color: Colors.red, fontSize: 14.sp),
-                          ),
-                          SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: () => controller.fetchUsers(),
-                            child: const Text("Retry"),
-                          ),
-                        ],
+            child: Column(
+              children: [
+                SizedBox(height: 10.h),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.r),
+                    color: UColors.white,
+                    border: Border.all(color: UColors.grey),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
                       ),
-                    );
-                  }
+                    ],
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search...",
+                      hintStyle: TextStyle(
+                        color: Colors.black.withAlpha(75),
+                        fontSize: 14.sp,
+                      ),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      prefixIcon: Icon(Icons.search, color: UColors.primary),
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    style: TextStyle(fontSize: 14.sp, color: UColors.primary),
+                    onChanged: (value) {
+                      controller.searchQuery.value = value;
+                    },
+                  ),
+                ),
+                SizedBox(height: 5.h),
 
-                  if (controller.selfListGEt.isEmpty) {
-                    /// Empty list case
-                    return const Center(
-                      child: Text("No associates found"),
-                    );
-                  }
+                /// 🔄 Loader / Error / List
+                Expanded(
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      /// Loader
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
-                  /// ✅ Data Loaded
-                  return CustomListView(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    scrollDirection: Axis.vertical,
-                    itemCount: controller.selfListGEt.length,
-                    itemBuilder: (context, index, item) {
-                      final selfList = controller.selfListGEt[index];
-                      return Container(
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          color: UColors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 6,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                          border: Border.all(color: UColors.grey),
-                        ),
-                        child: Row(
+                    if (controller.hasError.value) {
+                      /// Error
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            /// Avatar
-                            Container(
-                              height: 50.h,
-                              width: 50.w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: UColors.grey,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  controller.getFirstAndLastLetter(selfList.name),
-                                ),
-                              ),
+                            Text(
+                              controller.errorMessage.value,
+                              style: TextStyle(color: Colors.red, fontSize: 14.sp),
                             ),
-                            SizedBox(width: 10.w),
-
-                            /// Labels
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Name",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: UColors.black)),
-                                Text("Code",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: UColors.black)),
-                                Text("Rera No.",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: UColors.black)),
-                              ],
-                            ),
-                            SizedBox(width: 30.w),
-
-                            /// Colon
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [Text(":"), Text(":"), Text(":")],
-                            ),
-                            SizedBox(width: 10.w),
-
-                            /// Values
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    selfList.name ?? "",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: UColors.black),
-                                  ),
-                                  Text(
-                                    selfList.associateCode ?? "",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: UColors.primary),
-                                  ),
-                                  Text(
-                                    selfList.reraNo ?? "N/A",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: UColors.black),
-                                  ),
-                                ],
-                              ),
+                            SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () => controller.fetchUsers(),
+                              child: const Text("Retry"),
                             ),
                           ],
                         ),
                       );
-                    },
-                  );
-                }),
-              ),
-            ],
+                    }
+
+                    if (controller.selfListGEt.isEmpty) {
+                      /// Empty list case
+                      return const Center(
+                        child: Text("No associates found"),
+                      );
+                    }
+
+                    /// ✅ Data Loaded
+                    return CustomListView(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      scrollDirection: Axis.vertical,
+                      itemCount: controller.selfListGEt.length,
+                      itemBuilder: (context, index, item) {
+                        final selfList = controller.selfListGEt[index];
+                        return Container(
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.symmetric(vertical: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                            color: UColors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 6,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                            border: Border.all(color: UColors.grey),
+                          ),
+                          child: Row(
+                            children: [
+                              /// Avatar
+                              Container(
+                                height: 50.h,
+                                width: 50.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: UColors.primary,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    controller.getFirstAndLastLetter(selfList.name),
+                                    style: TextStyle(color: UColors.white),
+
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10.w),
+
+                              /// Labels
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Name",
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: UColors.black)),
+                                  Text("Code",
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: UColors.black)),
+                                  Text("Rera No.",
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: UColors.black)),
+                                ],
+                              ),
+                              SizedBox(width: 30.w),
+
+                              /// Colon
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [Text(":"), Text(":"), Text(":")],
+                              ),
+                              SizedBox(width: 10.w),
+
+                              /// Values
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      selfList.name ?? "",
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: UColors.black),
+                                    ),
+                                    Text(
+                                      selfList.associateCode ?? "",
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: UColors.primary),
+                                    ),
+                                    Text(
+                                      selfList.reraNo ?? "N/A",
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: UColors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                ),
+              ],
+            ),
           )
 
         ),

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../utlis/constents/colors.dart';
 import '../../../utlis/custom_widgets/custom_listview_builder.dart';
+import '../widgets/common_bottom_sheet.dart';
 import 'meeting_approved_controller.dart';
 
 class MeetingApprovedScreen extends GetView<MeetingApprovedController> {
@@ -14,6 +15,8 @@ class MeetingApprovedScreen extends GetView<MeetingApprovedController> {
     final MeetingApprovedController controller = Get.put(MeetingApprovedController());
 
     return Scaffold(
+      backgroundColor: Colors.blue.withOpacity(0.08),
+
       body: Obx(() {
         if (controller.isLoading.value && controller.approvedMeeting.isEmpty) {
           return const Center(child: CircularProgressIndicator());
@@ -56,160 +59,25 @@ class MeetingApprovedScreen extends GetView<MeetingApprovedController> {
 
 
               return GestureDetector(
-                onTap: () {
-                  Get.bottomSheet(
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration:  BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20.r),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Center(
-                            child: Container(
-                              width: 40.w,
-                              height: 5.h,
-                              margin: const EdgeInsets.only(bottom: 12),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[400],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Number of User: ${allListVisit.noOfUser}',
-                                style: TextStyle(
-                                  color: UColors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 20.sp,
-                                ),
-                              ),
-                              SizedBox(height: 15.h,),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10.r),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                  "${allListVisit.fullImageUrl}${allListVisit.photo}",
-                                  height: 320.h,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                  placeholder:
-                                      (context, url) => const Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                  errorWidget:
-                                      (context, url, error) =>
-                                  const Icon(Icons.error),
-                                ),
-                              ),
-                              SizedBox(height: 20.h,),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Meeting Date",
-                                        style: TextStyle(
-                                          color: UColors.black,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${allListVisit.submitDate}${allListVisit.submitTime}",
-                                        style: TextStyle(
-                                          color: UColors.darkerGrey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-
-                                    ],
-                                  ),
-                                  SizedBox(height: 8.h,),
-                                  Divider(height: 0,thickness: 1,color:UColors.grey,),
-                                  SizedBox(height: 8.h,),
-
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Status",
-                                        style: TextStyle(
-                                          color: UColors.black,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.green.withOpacity(0.2),
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          allListVisit.visitStatus ?? "",
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      )                                    ],
-                                  ),
-                                  SizedBox(height: 8.h,),
-                                  Divider(height: 0,thickness: 1,color:UColors.grey,),
-                                  SizedBox(height: 8.h,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Description ",
-                                        style: TextStyle(
-                                          color: UColors.black,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-                                      Text(
-                                        allListVisit.reference ?? "",
-                                        style: TextStyle(
-                                          color: UColors.darkerGrey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8.h,),
-                                  Divider(height: 0,thickness: 1,color:UColors.grey,),
-                                  SizedBox(height: 20.h,),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                  );
-                },
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      barrierColor: UColors.primary.withOpacity(0.3),
+                      builder: (context) {
+                        return buildBottomSheet(
+                          title: "Visit",
+                          imageUrl: "${allListVisit.fullImageUrl}${allListVisit.photo}",
+                          date: allListVisit.submitDate ?? "",
+                          time: allListVisit.submitTime ?? "",
+                          status: allListVisit.visitStatus ?? "",
+                          statusColor: Colors.green,
+                          description: allListVisit.reference ?? "",
+                          numberOfUsers: allListVisit.noOfUser ?? 0,
+                        );
+                      },
+                    );
+                  },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   padding: const EdgeInsets.all(10),
@@ -272,9 +140,9 @@ class MeetingApprovedScreen extends GetView<MeetingApprovedController> {
                             ),
                             SizedBox(height: 2.h),
                             Text(
-                              "Visit Date: ${allListVisit.submitDate ?? ""} ${allListVisit.submitTime}",
+                              "Meeting Date: ${allListVisit.submitDate ?? ""} ${allListVisit.submitTime}",
                               style: TextStyle(
-                                fontSize: 12.sp,
+                                fontSize: 11.sp,
                                 color: UColors.greyDark.withAlpha(150),
                               ),
                             ),

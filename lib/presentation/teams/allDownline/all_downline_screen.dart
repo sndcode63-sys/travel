@@ -65,129 +65,131 @@ class AllDownlineScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 10.h,),
-            Container(
-                margin: EdgeInsets.symmetric(horizontal: 15),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30.r),
-                    color: UColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                    border: Border.all(color: UColors.grey)
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.search, color: UColors.grey,),
-                    SizedBox(width: 20.w,),
-                    Text('Search Associate Name',
-                        style: TextStyle(color: UColors.grey)),
-                  ],
-                )
-            ),
-            SizedBox(height: 5.h,),
-            Expanded(
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  /// Loader jab tak data load ho raha hai
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (controller.hasError.value) {
-                  /// Error state
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          controller.errorMessage.value,
-                          style: TextStyle(color: Colors.red, fontSize: 14.sp),
-                        ),
-                        SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: () => controller.fetchUsers(),
-                          child: const Text("Retry"),
+        child: Container(
+          color: Colors.blue.withOpacity(0.08),
+          child: Column(
+            children: [
+              SizedBox(height: 10.h,),
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.r),
+                      color: UColors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          offset: Offset(0, 2),
                         ),
                       ],
-                    ),
-                  );
-                }
+                      border: Border.all(color: UColors.grey)
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.search, color: UColors.grey,),
+                      SizedBox(width: 20.w,),
+                      Text('Search Associate Name',
+                          style: TextStyle(color: UColors.grey)),
+                    ],
+                  )
+              ),
+              SizedBox(height: 5.h,),
+              Expanded(
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    /// Loader jab tak data load ho raha hai
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-                if (controller.allDownline.isEmpty) {
-                  /// No data case
-                  return const Center(
-                    child: Text("No associates found"),
-                  );
-                }
-
-                /// Data successfully load ho gaya
-                return CustomListView(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  scrollDirection: Axis.vertical,
-                  itemCount: controller.allDownline.length,
-                  itemBuilder: (context, index, item) {
-                    final allListD = controller.allDownline[index];
-                    return Container(
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                        color: UColors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 6,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                        border: Border.all(color: UColors.grey),
-                      ),
-                      child: Row(
+                  if (controller.hasError.value) {
+                    /// Error state
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          /// Avatar
-                          Container(
-                            height: 50.h,
-                            width: 50.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: UColors.grey,
-                            ),
-                            child: Center(
-                              child: Text(
-                                controller.getFirstAndLastLetter(allListD.name),
-                              ),
-                            ),
+                          Text(
+                            controller.errorMessage.value,
+                            style: TextStyle(color: Colors.red, fontSize: 14.sp),
                           ),
-                          SizedBox(width: 10.w),
-
-                          /// Info
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildRow("Name", allListD.name ?? ""),
-                                _buildRow("Code", allListD.associateCode ?? ""),
-                                _buildRow("Rera No.", allListD.reraNo ?? ""),
-                              ],
-                            ),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () => controller.fetchUsers(),
+                            child: const Text("Retry"),
                           ),
                         ],
                       ),
                     );
-                  },
-                );
-              }),
-            )
-          ],
+                  }
+
+                  if (controller.allDownline.isEmpty) {
+                    /// No data case
+                    return const Center(
+                      child: Text("No associates found"),
+                    );
+                  }
+
+                  /// Data successfully load ho gaya
+                  return CustomListView(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    scrollDirection: Axis.vertical,
+                    itemCount: controller.allDownline.length,
+                    itemBuilder: (context, index, item) {
+                      final allListD = controller.allDownline[index];
+                      return Container(
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: UColors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 6,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                          border: Border.all(color: UColors.grey),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 50.h,
+                              width: 50.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: UColors.primary,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  controller.getFirstAndLastLetter(allListD.name),
+                                  style: TextStyle(color: UColors.white),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10.w),
+
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildRow("Name", allListD.name ?? ""),
+                                  _buildRow("Code", allListD.associateCode ?? ""),
+                                  _buildRow("Rera No.", allListD.reraNo ?? "N/A"),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }),
+              )
+            ],
+          ),
         ),
       ),
     );
