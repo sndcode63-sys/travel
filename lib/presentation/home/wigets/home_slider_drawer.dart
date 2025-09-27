@@ -124,10 +124,131 @@ class HomeSliderDrawer extends StatelessWidget {
               label: "App Settings",
               onTap: () {},
             ),
-            DrawerMenuItem(icon: Icons.logout, label: "Logout", onTap: () {
-              StorageServices.to.logout();
+            DrawerMenuItem(
+              icon: Icons.logout,
+              label: "Logout",
+              onTap: () {
+                Get.dialog(
+                  Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: ScaleTransition(
+                        scale: CurvedAnimation(
+                          parent: AnimationController(
+                            vsync: Navigator.of(Get.context!),
+                            duration: const Duration(milliseconds: 300),
+                          )..forward(),
+                          curve: Curves.easeOutBack,
+                        ),
+                        child: Container(
+                          width: Get.width * 0.8,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white.withOpacity(0.95),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(18),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient:  LinearGradient(
+                                    colors: [Colors.blue, UColors.primary],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:UColors.primary.withOpacity(0.4),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 6),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(Icons.logout, color: Colors.white, size: 36),
+                              ),
+                              const SizedBox(height: 18),
 
-            }),
+                              // Title
+                              const Text(
+                                "Logout",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+
+                              // Subtitle
+                              const Text(
+                                "Are you sure you want to logout?",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Buttons
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.grey.shade200,
+                                        foregroundColor: Colors.black87,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(14),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: 14),
+                                      ),
+                                      onPressed: () => Get.back(),
+                                      child: const Text("Cancel"),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: UColors.primary,
+                                        foregroundColor: Colors.white,
+                                        elevation: 2,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(14),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: 14),
+                                      ),
+                                      onPressed: () {
+                                        Get.back();
+                                        StorageServices.to.logout();
+                                      },
+                                      child: const Text("Yes, Logout"),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  barrierDismissible: true,
+                );
+              },
+            ),
 
              Divider(height: 30.h, thickness: 1, color: Colors.white30),
 

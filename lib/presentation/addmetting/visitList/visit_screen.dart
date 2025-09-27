@@ -43,7 +43,7 @@ class VisitScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(" List", style: TextStyle(fontSize: 14)),
+                        Text(" Visit List", style: TextStyle(fontSize: 14)),
                       ],
                     ),
                   ],

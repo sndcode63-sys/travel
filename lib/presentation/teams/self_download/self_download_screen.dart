@@ -142,7 +142,7 @@ class SelfDownloadScreen extends StatelessWidget {
                       );
                     }
 
-                    if (controller.selfListGEt.isEmpty) {
+                    if (controller.filteredSelf.isEmpty) {
                       /// Empty list case
                       return const Center(
                         child: Text("No associates found"),
@@ -153,9 +153,9 @@ class SelfDownloadScreen extends StatelessWidget {
                     return CustomListView(
                       padding: EdgeInsets.symmetric(horizontal: 15),
                       scrollDirection: Axis.vertical,
-                      itemCount: controller.selfListGEt.length,
+                      itemCount: controller.filteredSelf.length,
                       itemBuilder: (context, index, item) {
-                        final selfList = controller.selfListGEt[index];
+                        final selfList = controller.filteredSelf[index];
                         return Container(
                           padding: EdgeInsets.all(10),
                           margin: EdgeInsets.symmetric(vertical: 5),
@@ -185,7 +185,6 @@ class SelfDownloadScreen extends StatelessWidget {
                                   child: Text(
                                     controller.getFirstAndLastLetter(selfList.name),
                                     style: TextStyle(color: UColors.white),
-
                                   ),
                                 ),
                               ),
@@ -227,14 +226,14 @@ class SelfDownloadScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      selfList.name ?? "",
+                                      selfList.name,
                                       style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w500,
                                           color: UColors.black),
                                     ),
                                     Text(
-                                      selfList.associateCode ?? "",
+                                      selfList.associateCode,
                                       style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w400,

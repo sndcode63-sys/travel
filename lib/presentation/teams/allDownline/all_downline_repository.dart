@@ -10,30 +10,17 @@ class AllDownlineRepository {
   final ApiServices _apiServices = ApiServices();
   CancelToken? _cancelToken;
 
-  // Get All Users
-  Future<ApiResponse<List<AllDownlineListModel>>> getSefList() async {
+  Future<List<AllDownlineListModel>> getSefList() async {
     _cancelToken = CancelToken();
 
-    final queryParameters = <String, dynamic>{};
-
-    // return await _apiServices.getList<SchemeListData>(
-    //   ApiConstants.schemeList,
-    //   SchemeListData.fromJson,
-    //   queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
-    //   cancelToken: _cancelToken,
-    // );
     return await _apiServices.getList<AllDownlineListModel>(
       ApiConstants1.allDownlineList,
-          (data) => AllDownlineListModel.fromJson(data as Map<String, dynamic>),
-      queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
+          (data) => AllDownlineListModel.fromJson(data),
       cancelToken: _cancelToken,
     );
-
   }
 
-
-  void cancelRequest(){
+  void cancelRequest() {
     _cancelToken?.cancel("Request cancelled by the user");
   }
-
 }

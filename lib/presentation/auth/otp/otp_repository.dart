@@ -12,21 +12,15 @@ class OtpRepository {
     required String code,
     String type = "Forgot Password",
   }) async {
-    final response = await _apiServices.post<Map<String, dynamic>>(
+    return await _apiServices.post<OtpModles>(
       ApiConstants1.checkAuth,
-          (json) => json as Map<String, dynamic>,
+          (json) => OtpModles.fromJson(json),
       data: {
         "username": email,
         "type": type,
         "code": code,
       },
     );
-
-    if (response.success && response.data != null) {
-      return OtpModles.fromJson(response.data!);
-    } else {
-      throw Exception(response.errors ?? "Submit OTP failed");
-    }
   }
 
   /// Resend OTP
@@ -34,19 +28,14 @@ class OtpRepository {
     required String email,
     String type = "Forgot Password",
   }) async {
-    final response = await _apiServices.post<Map<String, dynamic>>(
+    return await _apiServices.post<OtpModles>(
       ApiConstants1.auth,
-          (json) => json as Map<String, dynamic>,
+          (json) => OtpModles.fromJson(json),
       data: {
         "username": email,
         "type": type,
       },
     );
-
-    if (response.success && response.data != null) {
-      return OtpModles.fromJson(response.data!);
-    } else {
-      throw Exception(response.errors ?? "Resend OTP failed");
-    }
   }
 }
+

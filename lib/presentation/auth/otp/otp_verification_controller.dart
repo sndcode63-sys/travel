@@ -31,7 +31,7 @@ class OtpVerificationController extends GetxController {
     super.onClose();
   }
 
-  /// OTP Validation
+  // OTP Validation
   String? validateOtp(String? value) {
     if (value == null || value.trim().isEmpty) return "OTP is required";
     if (value.length != 6) return "OTP must be 6 digits";
@@ -39,14 +39,14 @@ class OtpVerificationController extends GetxController {
     return null;
   }
 
-  /// Timer text in MM:SS format
+  // Timer text in MM:SS format
   String get timerText {
     final minutes = (secondsRemaining.value ~/ 60).toString().padLeft(2, '0');
     final seconds = (secondsRemaining.value % 60).toString().padLeft(2, '0');
     return "$minutes:$seconds";
   }
 
-  /// Verify OTP
+  // Verify OTP
   Future<void> onVerify() async {
     if (!formKey.currentState!.validate()) return;
 
@@ -58,7 +58,9 @@ class OtpVerificationController extends GetxController {
       );
 
       if (result.status == 200) {
-        CustomNotifier.showSnackbar(message: "OTP Verified!");
+        CustomNotifier.showSnackbar(
+          message: result.message.toString(),
+        );
         Get.toNamed(
           AppRoutes.resetPassword,
           arguments: {
@@ -67,7 +69,10 @@ class OtpVerificationController extends GetxController {
           },
         );
       } else {
-        CustomNotifier.showSnackbar(message: "Invalid OTP!", isSuccess: false);
+        CustomNotifier.showSnackbar(
+          message: result.message.toString(),
+          isSuccess: false,
+        );
       }
     } catch (e) {
       Get.snackbar(
@@ -82,7 +87,7 @@ class OtpVerificationController extends GetxController {
     }
   }
 
-  /// Resend OTP
+  // Resend OTP
   Future<void> onResendOtp() async {
     if (secondsRemaining.value > 0) return; // wait until timer ends
 
@@ -93,19 +98,14 @@ class OtpVerificationController extends GetxController {
       );
 
       if (result.status == 200) {
-        Get.snackbar(
-          "Info",
-          result.message ?? "OTP Resent Successfully",
-          snackPosition: SnackPosition.BOTTOM,
+        CustomNotifier.showSnackbar(
+          message: result.message.toString(),
         );
         _startTimer(); // restart countdown
       } else {
-        Get.snackbar(
-          "Error",
-          result.message ?? "Cannot resend OTP",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
+        CustomNotifier.showSnackbar(
+          message: result.message.toString(),
+          isSuccess: false,
         );
       }
     } catch (e) {
@@ -114,12 +114,13 @@ class OtpVerificationController extends GetxController {
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+        colorText: Colors.red,
       );
     } finally {
       isLoading.value = false;
     }
   }
+
 
   /// Start countdown timer (default 5 minutes)
   void _startTimer({int durationInSeconds = 300}) {
@@ -135,3 +136,5 @@ class OtpVerificationController extends GetxController {
     });
   }
 }
+
+

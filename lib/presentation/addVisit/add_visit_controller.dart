@@ -27,30 +27,30 @@ class AddVisitController extends GetxController {
   }
 
   Future<void> fetchUsers() async {
-    try {
-      isLoading.value = true;
-      hasError.value = false;
-      errorMessage.value = "";
+    isLoading.value = true;
+    hasError.value = false;
+    errorMessage.value = "";
 
-      final response = await _schemeRepository.getSch();
+    final response = await _schemeRepository.getSch();
 
-      if (response.success && response.data != null) {
-        scheme.assignAll(response.data!);
-        filteredScheme.assignAll(response.data!);
-      } else {
-        hasError.value = true;
-        errorMessage.value = response.message;
-        CustomNotifier.showPopup(message: response.message, isSuccess: false);
-      }
-    } catch (e) {
+    if (response.isNotEmpty) {
+      scheme.assignAll(response);
+      filteredScheme.assignAll(response);
+    } else {
       hasError.value = true;
-      errorMessage.value = 'An unexpected error occurred';
-      CustomNotifier.showPopup(message: errorMessage.value, isSuccess: false);
-    } finally {
-      isLoading.value = false;
+      errorMessage.value = "No schemes found";
+      CustomNotifier.showPopup(
+        message: errorMessage.value,
+        isSuccess: false,
+      );
     }
+
+    isLoading.value = false;
   }
 
+  void retry() {
+    fetchUsers();
+  }
   void applySearch() {
     if (searchQuery.value.isEmpty) {
       filteredScheme.assignAll(scheme);

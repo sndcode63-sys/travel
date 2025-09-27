@@ -8,60 +8,42 @@ import '../providers/api_provider.dart';
 class ApiServices {
   final ApiProvider _apiProvider = ApiProvider();
 
-  // Generic method for single object
-  Future<ApiResponse<T>> handleApiCall<T>(
-      Future<Response> Function() apiCall, T Function(dynamic) fromJson) async {
+  Future<T> handleApiCall<T>(
+      Future<Response> Function() apiCall,
+      T Function(dynamic) fromJson,
+      ) async {
     try {
       final response = await apiCall();
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return ApiResponse.success(fromJson(response.data));
-      } else {
-        return ApiResponse.error(
-          'Request failed with status : ${response.statusCode}',
-        );
-      }
-    } on DioException catch (e) {
-      return ApiResponse.error(
-        e.message ?? "Network error occurred",
-        statusCode: e.response?.statusCode,
-      );
+      return fromJson(response.data);
     } catch (e) {
-      return ApiResponse.error('Unexpected error : $e');
+      rethrow;
     }
   }
 
-  // Generic method for list
-  Future<ApiResponse<List<T>>> handleListApiCall<T>(
-      Future<Response> Function() apiCall, T Function(dynamic) fromJson) async {
+  // List response
+  Future<List<T>> handleListApiCall<T>(
+      Future<Response> Function() apiCall,
+      T Function(dynamic) fromJson,
+      ) async {
     try {
       final response = await apiCall();
+      final body = response.data;
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final body = response.data;
-        if (body is Map<String, dynamic> && body['data'] is List) {
-          final List<dynamic> jsonList = body['data'];
-          final List<T> dataList =
-          jsonList.map((json) => fromJson(json as Map<String, dynamic>)).toList();
-          return ApiResponse.success(dataList);
-        } else {
-          return ApiResponse.success(<T>[]);
-        }
+      if (body is Map<String, dynamic> && body['data'] is List) {
+        final List<dynamic> jsonList = body['data'];
+        return jsonList.map((json) => fromJson(json)).toList();
+      } else if (body is List) {
+        return body.map((json) => fromJson(json)).toList();
       } else {
-        return ApiResponse.error('Request failed with status : ${response.statusCode}');
+        return [];
       }
-    } on DioException catch (e) {
-      return ApiResponse.error(
-        e.message ?? "Network error occurred",
-        statusCode: e.response?.statusCode,
-      );
     } catch (e) {
-      return ApiResponse.error('Unexpected error : $e');
+      rethrow;
     }
   }
 
   // ---------------- API Wrappers ----------------
-  Future<ApiResponse<T>> get<T>(
+  Future<T> get<T>(
       String endPoint,
       T Function(dynamic) fromJson, {
         Map<String, dynamic>? queryParameters,
@@ -73,7 +55,7 @@ class ApiServices {
         cancelToken: cancelToken,
       ), fromJson);
 
-  Future<ApiResponse<List<T>>> getList<T>(
+  Future<List<T>> getList<T>(
       String endPoint,
       T Function(dynamic) fromJson, {
         Map<String, dynamic>? queryParameters,
@@ -85,7 +67,7 @@ class ApiServices {
         cancelToken: cancelToken,
       ), fromJson);
 
-  Future<ApiResponse<T>> post<T>(
+  Future<T> post<T>(
       String endPoint,
       T Function(dynamic) fromJson, {
         dynamic data,
@@ -99,7 +81,7 @@ class ApiServices {
         cancelToken: cancelToken,
       ), fromJson);
 
-  Future<ApiResponse<T>> put<T>(
+  Future<T> put<T>(
       String endPoint,
       T Function(dynamic) fromJson, {
         dynamic data,
@@ -113,7 +95,7 @@ class ApiServices {
         cancelToken: cancelToken,
       ), fromJson);
 
-  Future<ApiResponse<T>> delete<T>(
+  Future<T> delete<T>(
       String endPoint,
       T Function(dynamic) fromJson, {
         dynamic data,
@@ -127,7 +109,7 @@ class ApiServices {
         cancelToken: cancelToken,
       ), fromJson);
 
-  Future<ApiResponse<T>> postMultipart<T>(
+  Future<T> postMultipart<T>(
       String endPoint,
       T Function(dynamic) fromJson, {
         required Map<String, dynamic> data,

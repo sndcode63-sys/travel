@@ -99,7 +99,7 @@ class VisitAllScreen extends GetView<VisitAllController> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                allListVisit.name ?? "",
+                                'Client Name: ${allListVisit.name}',
                                 style: TextStyle(
                                   color: UColors.black,
                                   fontWeight: FontWeight.w700,
@@ -144,7 +144,7 @@ class VisitAllScreen extends GetView<VisitAllController> {
                                         ),
                                       ),
                                       Text(
-                                        "${allListVisit.visitDate}${allListVisit.submitTime}",
+                                        "${allListVisit.visitDate} ${allListVisit.submitTime}",
                                         style: TextStyle(
                                           color: UColors.darkerGrey,
                                           fontWeight: FontWeight.w500,

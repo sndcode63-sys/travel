@@ -10,9 +10,9 @@ class ResetPassRepo {
     required String password,
     required String confirmPassword,
   }) async {
-    final response = await _apiServices.post<Map<String, dynamic>>(
+    return await _apiServices.post<ChangePassword>(
       ApiConstants1.setPass,
-          (json) => json as Map<String, dynamic>,
+          (json) => ChangePassword.fromJson(json),
       data: {
         "username": email,
         "type": "Forgot Password",
@@ -21,11 +21,5 @@ class ResetPassRepo {
         "confirmPassword": confirmPassword,
       },
     );
-
-    if (response.success && response.data != null) {
-      return ChangePassword.fromJson(response.data!);
-    } else {
-      throw Exception(response.errors ?? "Reset password failed");
-    }
   }
 }

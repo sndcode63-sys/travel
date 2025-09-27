@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:travell_booking_app/models/meetingList/meeting_list.dart';
 import 'package:travell_booking_app/presentation/meeting/meeting_repository.dart';
 
-import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
+import '../../../core/helpers.dart';
+
 
 class MeetingAllContoroller extends GetxController {
   final MeetingRepository _meetingRepository = MeetingRepository();
@@ -18,6 +19,7 @@ class MeetingAllContoroller extends GetxController {
   final RxBool isMoreDataAvailable = true.obs;
   int _currentPage = 1;
   final int _pageSize = 10;
+  bool _isFetching = false;
 
   @override
   void onInit() {
@@ -25,58 +27,53 @@ class MeetingAllContoroller extends GetxController {
     fetchUsers();
   }
 
-  Future<void> fetchUsers({bool isRefresh = false}) async {
-    if (isLoading.value || !isMoreDataAvailable.value) return;
+  Future<void> fetchUsers({bool loadMore = false}) async {
+    if (_isFetching) return;
 
-    if (isRefresh) {
+    _isFetching = true;
+    if (!loadMore) {
+      isLoading.value = true;
+      hasError.value = false;
+      errorMessage.value = "";
       _currentPage = 1;
-      allMeeting.clear();
       isMoreDataAvailable.value = true;
     }
 
     try {
-      isLoading.value = true;
-      hasError.value = false;
-      errorMessage.value = "";
-
       final response = await _meetingRepository.getVisitList(
         page: _currentPage,
         pageSize: _pageSize,
       );
 
-      if (response.success && response.data != null && response.data!.isNotEmpty) {
-        // Duplicate prevention using ID check
-        final newItems = response.data!
-            .where((item) => !allMeeting.any((e) => e.id == item.id))
-            .toList();
-
-        allMeeting.addAll(newItems);
-
-        if (newItems.isEmpty || newItems.length < _pageSize) {
-          isMoreDataAvailable.value = false;
-        } else {
-          _currentPage++;
-        }
+      if (loadMore) {
+        allMeeting.addAll(response);
       } else {
+        allMeeting.assignAll(response);
+      }
+
+      // Check if more data is available
+      if (response.length < _pageSize) {
         isMoreDataAvailable.value = false;
+      } else {
+        _currentPage++;
       }
     } catch (e) {
       hasError.value = true;
       errorMessage.value = 'An unexpected error occurred';
-      CustomNotifier.showPopup(message: errorMessage.value, isSuccess: false);
+      AppHelpers.showSnackBar(
+        title: "Error",
+        message: errorMessage.value,
+        isError: true,
+      );
     } finally {
       isLoading.value = false;
+      _isFetching = false;
     }
-  }
-
-  void retry() {
-    fetchUsers(isRefresh: true);
   }
 
   void cancelRequest() {
     _meetingRepository.cancelRequest();
   }
-
 
   Color getStatusColor(String? status) {
     switch (status?.toLowerCase()) {
@@ -92,5 +89,4 @@ class MeetingAllContoroller extends GetxController {
         return Colors.grey;
     }
   }
-
 }

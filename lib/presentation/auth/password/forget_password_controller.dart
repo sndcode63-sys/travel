@@ -9,35 +9,36 @@ import 'forget_password_repository.dart';
 class ForgetPasswordController extends GetxController {
   final formKey = GlobalKey<FormState>();
 
-  // text editor controller
+  // text editing controller
   final emailController = TextEditingController();
 
   RxBool isLoading = false.obs;
 
-
-  // On Verify OTP
-  void verifyOtp() async {
+  Future<void> verifyOtp() async {
     if (!formKey.currentState!.validate()) return;
 
-    try {
-      final response = await ForgetPasswordRepository.requestOtp(
-        email: emailController.text.trim(),
-      );
+    isLoading.value = true;
 
-      if (response.status == 200) {
-        CustomNotifier.showSnackbar(message: "OTP sent successfully!");
+    final loginData = await ForgetPasswordRepository.requestOtp(
+      email: emailController.text.trim(),
+      selectType: '',
+      type: '',
+    );
+    print(loginData.status);
+    print(loginData.message);
 
-        Get.toNamed(
-          AppRoutes.otpVerification,
-          arguments: emailController.text.trim(),
-        );
-      } else {
-        CustomNotifier.showSnackbar(message: "Something went wrong!", isSuccess: false);
+    final msg = loginData.message ?? "Something went wrong";
+    CustomNotifier.showSnackbar(
+      message: msg,
+      isSuccess: loginData.status == 200,
+    );
 
-      }
-    } catch (e) {
-      CustomNotifier.showSnackbar(message: "Otp invalid!", isSuccess: false);
-
+    if (loginData.status == 200) {
+      Get.toNamed(AppRoutes.otpVerification,
+          arguments: emailController.text.trim());
     }
+
+    isLoading.value = false;
   }
 }
+

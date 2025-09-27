@@ -11,7 +11,7 @@ import '../../models/saveVisit/add_meeting_model.dart';
 class AddMeetingRepository {
   final ApiServices _apiServices = ApiServices();
 
-  Future<ApiResponse<AddMeetingModel>> saveMeeting({
+  Future<AddMeetingModel> saveMeeting({
     required AddMeetingModel meeting,
   }) async {
     return await _apiServices.post<AddMeetingModel>(
@@ -21,3 +21,4 @@ class AddMeetingRepository {
     );
   }
 }
+

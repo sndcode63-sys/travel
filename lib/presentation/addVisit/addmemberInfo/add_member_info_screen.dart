@@ -19,7 +19,7 @@ class AddMemberInfoScreen extends StatelessWidget {
     final controller = Get.put(AddMemberInfoController());
     // Receive scheme arguments
     final args = Get.arguments as Map<String, dynamic>?;
-    final schemeId = args?['id'] ?? '';
+    // final schemeId = args?['id'] ?? '';
     final schemeName = args?['name'] ?? '';
 
 
@@ -195,6 +195,35 @@ class AddMemberInfoScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 20.h,),
 
+                            // CONTINUE Button
+                            CustomButton(
+                              backgroundColor: UColors.primary,
+                              text: "CONTINUE",
+                              onPressed: () {
+
+                                if (controller.formKey.currentState!.validate()) {
+                                  final schemeArgs = Get.arguments as Map<String, dynamic>?;
+
+                                  final args = {
+                                    'clientName': controller.clientName.text.trim(),
+                                    'fatherName': controller.fatherName.text.trim(),
+                                    'email': controller.email.text.trim(),
+                                    'contactNo': controller.contactNo.text.trim(),
+                                    'remark': controller.remark.text.trim(),
+                                    'schemeName': schemeArgs?['id'] ?? '',
+                                    'name': schemeArgs?['name'] ?? '',
+                                    'lat': controller.currentPosition.value?.latitude.toString(),
+                                    'lng': controller.currentPosition.value?.longitude.toString(),
+                                  };
+
+                                  print("➡ Sending data to AddClientInformationScreen: $args");
+
+                                  Get.toNamed(AppRoutes.addClientInformation, arguments: args);
+                                }
+                              },
+                            ),
+                            SizedBox(height: 20.h,),
+                            //
                             Obx(() {
                               final pos = controller.currentPosition.value;
                               if (pos == null) {
@@ -247,33 +276,8 @@ class AddMemberInfoScreen extends StatelessWidget {
                                 ),
                               );
                             }),
-                            /// CONTINUE Button
-                            CustomButton(
-                              backgroundColor: UColors.primary,
-                              text: "CONTINUE",
-                              onPressed: () {
 
-                                if (controller.formKey.currentState!.validate()) {
-                                  final schemeArgs = Get.arguments as Map<String, dynamic>?;
-
-                                  final args = {
-                                    'clientName': controller.clientName.text.trim(),
-                                    'fatherName': controller.fatherName.text.trim(),
-                                    'email': controller.email.text.trim(),
-                                    'contactNo': controller.contactNo.text.trim(),
-                                    'remark': controller.remark.text.trim(),
-                                    'schemeName': schemeArgs?['id'] ?? '',
-                                    'lat': controller.currentPosition.value?.latitude.toString(),
-                                    'lng': controller.currentPosition.value?.longitude.toString(),
-                                  };
-
-                                  print("➡ Sending data to AddClientInformationScreen: $args");
-
-                                  Get.toNamed(AppRoutes.addClientInformation, arguments: args);
-                                }
-                              },
-                            ),
-                            SizedBox(height: 30.h,)
+                            SizedBox(height: 10.h,)
                           ],
                         ),
                       ),

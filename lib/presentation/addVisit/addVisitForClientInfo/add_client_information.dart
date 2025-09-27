@@ -16,7 +16,7 @@ class AddClientInformation extends GetView<AddClientInformationController> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.autoOpenCamera();
+      controller.openCamera();
     });
     return Scaffold(
       appBar: PreferredSize(
@@ -89,7 +89,7 @@ class AddClientInformation extends GetView<AddClientInformationController> {
             children: [
               SizedBox(height: 20.h,),
               CustomButton(
-                text: "SCHEME: ${controller.args['schemeName'] ?? ''}",
+                text: "SCHEME: ${controller.args['name'] ?? ''}",
                 backgroundColor: AppColors.primary,
                 fontWeight: FontWeight.w400,
                 borderRadius: 15,
@@ -107,7 +107,7 @@ class AddClientInformation extends GetView<AddClientInformationController> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
-                      controller.autoOpenCamera();
+                      controller.openCamera();
                     },
                     child: Container(
                       height: 310.h,

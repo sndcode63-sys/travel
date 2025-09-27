@@ -78,6 +78,7 @@ class ResetPassowrdController extends GetxController {
   }
 
   Future<void> onSubmit() async {
+
     if (!isButtonEnabled.value) return;
 
     isLoading.value = true;
@@ -90,31 +91,30 @@ class ResetPassowrdController extends GetxController {
       );
 
       if (result.status == 200) {
+        print("----------");
+        print("----------");
+        print("----------");
+        print(result.message);
+        print("----------");
+        print("----------");
+        print("----------");
+        print("----------");
 
-        CustomNotifier.showSnackbar(message: "Password changed successfully!");
+        CustomNotifier.showSnackbar(message: result.message.toString());
 
         Get.offAllNamed(AppRoutes.login);
       } else {
         Get.snackbar(
           "Error",
-          result.message ?? "Failed to reset password",
+          result.message.toString(),
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
+          colorText: Colors.orangeAccent,
         );
-        CustomNotifier.showSnackbar(message: "Failed to reset password!",isSuccess: false);
+        CustomNotifier.showSnackbar(message: result.message.toString(),isSuccess: false);
 
       }
     }
-    // catch (e) {
-    //   Get.snackbar(
-    //     "Error",
-    //     e.toString(),
-    //     snackPosition: SnackPosition.BOTTOM,
-    //     backgroundColor: Colors.redAccent,
-    //     colorText: Colors.white,
-    //   );
-    // }
     finally {
       isLoading.value = false;
     }

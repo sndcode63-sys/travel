@@ -9,20 +9,20 @@ class AllRepository {
   final ApiServices _apiServices = ApiServices();
   CancelToken? _cancelToken;
 
-  Future<ApiResponse<List<VisitList>>> getVisitList({
+  Future<List<VisitList>> getVisitList({
     int page = 1,
     int pageSize = 10,
   }) async {
     _cancelToken = CancelToken();
 
-    final queryParameters = <String, dynamic>{
+    final queryParameters = {
       'page': page,
       'page_size': pageSize,
     };
 
     return await _apiServices.getList<VisitList>(
       ApiConstants1.getVisitList,
-          (data) => VisitList.fromJson(data as Map<String, dynamic>),
+          (data) => VisitList.fromJson(data),
       queryParameters: queryParameters,
       cancelToken: _cancelToken,
     );

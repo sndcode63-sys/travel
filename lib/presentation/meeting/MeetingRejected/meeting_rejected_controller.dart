@@ -17,6 +17,7 @@ class MeetingRejectedController extends GetxController {
   final RxBool isMoreDataAvailable = true.obs;
   int _currentPage = 1;
   final int _pageSize = 20;
+  bool _isFetching = false;
 
   @override
   void onInit() {
@@ -25,12 +26,21 @@ class MeetingRejectedController extends GetxController {
   }
 
   Future<void> fetchPendingMeetings({bool isRefresh = false}) async {
-    if (isLoading.value || !isMoreDataAvailable.value) return;
+    if (_isFetching) return;
+
+    _isFetching = true;
 
     if (isRefresh) {
       _currentPage = 1;
       rejectedMeeting.clear();
       isMoreDataAvailable.value = true;
+      hasError.value = false;
+      errorMessage.value = "";
+    }
+
+    if (!isRefresh && !isMoreDataAvailable.value) {
+      _isFetching = false;
+      return;
     }
 
     try {
@@ -43,35 +53,33 @@ class MeetingRejectedController extends GetxController {
         pageSize: _pageSize,
       );
 
-      if (response.success && response.data != null && response.data!.isNotEmpty) {
-        final newPending = response.data!
-            .where((item) =>
-        item.visitStatus?.toLowerCase() == "rejected" &&
-            !rejectedMeeting.any((e) => e.id == item.id))
-            .toList();
+      // Filter only approved meetings
+      final newApproved = response
+          .where((item) =>
+      item.visitStatus?.toLowerCase() == "pending" &&
+          !rejectedMeeting.any((e) => e.id == item.id))
+          .toList();
 
-        rejectedMeeting.addAll(newPending);
+      // Add new items
+      rejectedMeeting.addAll(newApproved);
 
-        if (newPending.length < _pageSize) {
-          isMoreDataAvailable.value = false;
-        } else {
-          _currentPage++;
-        }
-      } else {
+      // Check if more data is available
+      if (newApproved.length < _pageSize) {
         isMoreDataAvailable.value = false;
+      } else {
+        _currentPage++;
       }
     } catch (e) {
       hasError.value = true;
       errorMessage.value = 'An unexpected error occurred';
       CustomNotifier.showPopup(message: errorMessage.value, isSuccess: false);
-
     } finally {
       isLoading.value = false;
+      _isFetching = false;
     }
   }
 
   void retry() {
-    fetchPendingMeetings(isRefresh: true);
   }
 
   void cancelRequest() {

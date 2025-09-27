@@ -19,7 +19,6 @@ class AddMeetingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(AddMeetingController());
 
-    // Screen open hote hi camera automatically open
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.openCamera();
     });
@@ -68,9 +67,44 @@ class AddMeetingScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Form(
                   key: controller.formKey,
-                  child: Column(
+                  child:Column(
                     children: [
-                      SizedBox(height: 30.h),
+
+                      SizedBox(height: 20.h),
+                      Obx(() {
+                        if (controller.detectingLocation.value) {
+                          return const SizedBox.shrink();
+                        }
+
+                        if (!controller.locationAllowed.value) {
+                          return InkWell(
+                            onTap: () => controller.requestLocationAgain(),
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12),
+                              margin: const EdgeInsets.only(bottom: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.location_off, color: Colors.red),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      "Location is not enabled. Tap here to turn on.",
+                                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      }),
+
                       AppTextField(
                         hintText: 'Number Of Users',
                         labelText: 'Number Of Users',
@@ -86,7 +120,9 @@ class AddMeetingScreen extends StatelessWidget {
                         validator: controller.validateReference,
                         keyboardType: TextInputType.text,
                       ),
-                      SizedBox(height: 30.h),
+                      SizedBox(height: 20.h),
+
+
                       Obx(() => DottedBorder(
                         color: Colors.grey,
                         strokeWidth: 1,
@@ -121,14 +157,17 @@ class AddMeetingScreen extends StatelessWidget {
                         ),
                       )),
                       SizedBox(height: 25.h),
+
                       Obx(() => CustomButton(
                         text: 'SAVE',
                         backgroundColor: AppColors.primary,
                         onPressed: () => controller.saveForm(),
                         isLoading: controller.isLoading.value,
                       )),
+                      SizedBox(height: 30.h,),
                     ],
                   ),
+
                 ),
               ),
             ),

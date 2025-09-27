@@ -32,27 +32,33 @@ class HomeController extends GetxController {
       hasError.value = false;
       errorMessage.value = "";
 
-      final responce = await _homeRepository.getSch();
+      final response = await _homeRepository.getSch();
 
-      if (responce.success && responce.data != null) {
-        slider.assignAll(responce.data!);
+      if (response.isNotEmpty) {
+        slider.assignAll(response);
       } else {
         hasError.value = true;
-        errorMessage.value = responce.message;
+        errorMessage.value = "No data found";
         AppHelpers.showSnackBar(
-            title: "Error", message: responce.message, isError: true);
+          title: "Error",
+          message: errorMessage.value,
+          isError: true,
+        );
       }
     } catch (e) {
       hasError.value = true;
-      errorMessage.value = 'An unexpected error occurred';
+      errorMessage.value = e.toString();
       AppHelpers.showSnackBar(
-          title: "Error", message: errorMessage.value, isError: true);
+        title: "Error",
+        message: errorMessage.value,
+        isError: true,
+      );
     } finally {
       isLoading.value = false;
     }
+  }
 
-    void retry() {
-      fetchUsers();
-    }
+  void retry() {
+    fetchUsers();
   }
 }

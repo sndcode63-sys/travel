@@ -29,10 +29,6 @@ class MeetingAllScreen extends GetView<MeetingAllContoroller> {
               children: [
                 Text(controller.errorMessage.value),
                 SizedBox(height: 10.h),
-                ElevatedButton(
-                  onPressed: controller.retry,
-                  child: const Text("Retry"),
-                ),
               ],
             ),
           );

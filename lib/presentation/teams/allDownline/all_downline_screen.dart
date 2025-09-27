@@ -98,14 +98,13 @@ class AllDownlineScreen extends StatelessWidget {
               Expanded(
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    /// Loader jab tak data load ho raha hai
                     return const Center(
                       child: CircularProgressIndicator(),
+
                     );
                   }
 
                   if (controller.hasError.value) {
-                    /// Error state
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -125,13 +124,11 @@ class AllDownlineScreen extends StatelessWidget {
                   }
 
                   if (controller.allDownline.isEmpty) {
-                    /// No data case
                     return const Center(
                       child: Text("No associates found"),
                     );
                   }
 
-                  /// Data successfully load ho gaya
                   return CustomListView(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     scrollDirection: Axis.vertical,

@@ -50,7 +50,7 @@ class MeetingRejectedScreen
                 scrollNotification.metrics.maxScrollExtent &&
                 !controller.isLoading.value &&
                 controller.isMoreDataAvailable.value) {
-              controller.fetchPendingMeetings();
+              // controller.fetchPendingMeetings();
             }
             return false;
           },

@@ -110,6 +110,20 @@ class OtpVerificationScreen extends StatelessWidget {
 
                         ),
                       ),
+                      // Obx(() {
+                      //   if (controller.otpMessage.value.isEmpty) return SizedBox();
+                      //   return Padding(
+                      //     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      //     child: Text(
+                      //       controller.otpMessage.value,
+                      //       textAlign: TextAlign.center,
+                      //       style: TextStyle(
+                      //           color: Colors.green,
+                      //           fontSize: 14,
+                      //           fontWeight: FontWeight.w500),
+                      //     ),
+                      //   );
+                      // }),
                       SizedBox(height: 30.h,),
 
 
@@ -194,6 +208,8 @@ class OtpVerificationScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+
+
                       SizedBox(height: 20.h,),
                       /// Verify Button
                       Padding(

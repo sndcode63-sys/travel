@@ -10,20 +10,20 @@ class MeetingRepository {
   final ApiServices _apiServices = ApiServices();
   CancelToken? _cancelToken;
 
-  Future<ApiResponse<List<MeetingList>>> getVisitList({
+  Future<List<MeetingList>> getVisitList({
     int page = 1,
     int pageSize = 10,
   }) async {
     _cancelToken = CancelToken();
 
-    final queryParameters = <String, dynamic>{
+    final queryParameters = {
       'page': page,
       'page_size': pageSize,
     };
 
     return await _apiServices.getList<MeetingList>(
       ApiConstants1.meeting,
-          (data) => MeetingList.fromJson(data as Map<String, dynamic>),
+          (data) => MeetingList.fromJson(data),
       queryParameters: queryParameters,
       cancelToken: _cancelToken,
     );
