@@ -12,6 +12,7 @@ class ApiConstants1{
   static const String login = "/login-authenticate";
   static const String checkAuth = "/check-authentication-code";
   static const String setPass = "/setPassword";
+  static const String changePassword = "/changePassword";
   static const String schemeList = "/scheme-List";
   static const String saveVisit = "/save-visit-data";
   static const String saveMeeting = "/save-meeting-data";
@@ -20,6 +21,9 @@ class ApiConstants1{
   static const String allDownlineList = "/all-Affilated-List";
   static const String homeSlider = "/get-home-slider";
   static const String meeting = "/get-meeting-list?page_no=1&per_page=10";
+  static const String supportDetails = "/get-Support-Details";
+  static const String libraryList = "/library-scheme-List";
+  static const String libraryHeadList = "/library-head-List";
 
   // Headers
   static const String contentType = 'application/json';

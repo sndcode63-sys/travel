@@ -6,7 +6,6 @@ import '../../../models/team/team_self_model.dart';
 
 
 
-// 🎯 Controller
 class SelfController extends GetxController {
   final SelfRepository _selfRepository = SelfRepository();
 

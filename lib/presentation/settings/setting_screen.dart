@@ -86,7 +86,7 @@ body: Column(
               svgPath:AppImages.lock ,
               text: 'Reset Password',
               onTap: () {
-
+                Get.toNamed(AppRoutes.passwordChangeScreen);
               },
             ),
             _buildCard(
@@ -100,6 +100,7 @@ body: Column(
               svgPath:AppImages.helps ,
               text: 'Help & Support',
               onTap: () {
+                Get.toNamed(AppRoutes.supportDetails);
 
               },
             ),

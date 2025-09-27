@@ -32,7 +32,7 @@ class OtpRepository {
       ApiConstants1.auth,
           (json) => OtpModles.fromJson(json),
       data: {
-        "username": email,
+        "email": email,
         "type": type,
       },
     );

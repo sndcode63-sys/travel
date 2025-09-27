@@ -114,13 +114,17 @@ class AddMeetingController extends GetxController {
 
     if (!locationAllowed.value) {
       CustomNotifier.showSnackbar(
-          message: "Location is required. Please enable location.", isSuccess: false);
+        message: "Location is required. Please enable location.",
+        isSuccess: false,
+      );
       return;
     }
 
     if (capturedImage.value == null) {
       CustomNotifier.showSnackbar(
-          message: "Please capture or upload an image", isSuccess: false);
+        message: "Please capture or upload an image",
+        isSuccess: false,
+      );
       return;
     }
 
@@ -148,7 +152,10 @@ class AddMeetingController extends GetxController {
         Get.offAllNamed(AppRoutes.dashBoard);
       });
     } catch (e) {
-      CustomNotifier.showPopup(message: e.toString(), isSuccess: false);
+      CustomNotifier.showPopup(
+        message: e.toString(),
+        isSuccess: false,
+      );
     } finally {
       isLoading.value = false;
     }

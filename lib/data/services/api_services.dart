@@ -16,7 +16,7 @@ class ApiServices {
       final response = await apiCall();
       return fromJson(response.data);
     } catch (e) {
-      rethrow;
+      rethrow; // error controller में handle करना होगा
     }
   }
 
@@ -33,6 +33,7 @@ class ApiServices {
         final List<dynamic> jsonList = body['data'];
         return jsonList.map((json) => fromJson(json)).toList();
       } else if (body is List) {
+        // कभी server direct List देता है
         return body.map((json) => fromJson(json)).toList();
       } else {
         return [];

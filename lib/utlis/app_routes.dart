@@ -26,4 +26,6 @@ class AppRoutes {
   static const verificationDocuments = '/verificationDocuments-screen';
   static const relationInfo = '/relationInfo-screen';
   static const bankInfo = '/bankInfo-screen';
+  static const passwordChangeScreen = '/passwordChangeScreen-screen';
+  static const supportDetails = '/supportDetails-screen';
 }

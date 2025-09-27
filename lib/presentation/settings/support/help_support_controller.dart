@@ -1,32 +1,23 @@
 import 'package:get/get.dart';
+import 'package:travell_booking_app/models/setting/support.dart' hide Support;
 
-import '../../core/helpers.dart';
-import '../../models/librery/liberery_list.dart';
-import 'library_repository.dart';
+import '../../../core/helpers.dart';
+import 'help_support_repository.dart';
 
-class LibraryController extends GetxController {
-  final LibraryRepository _libraryRepository = LibraryRepository();
-
+class HelpSupportController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool hasError = false.obs;
   final RxString errorMessage = "".obs;
-  final RxList<LibreryList>livn = <LibreryList>[].obs;
 
-  @override
+  // final RxList<Support> selfListGet = <Support>[].obs;
+
+  // final HelpSupportRepository _helpSupportRepository = HelpSupportRepository();
+
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
   }
-
-  String getFirstAndLastLetter(String? name) {
-    if (name == null || name.isEmpty) return "";
-
-    if (name.length == 1) return name;
-
-    return "${name[0]}${name[name.length - 1]}";
-  }
-
 
   Future<void> fetchUsers() async {
     try {
@@ -34,11 +25,8 @@ class LibraryController extends GetxController {
       hasError.value = false;
       errorMessage.value = "";
 
-      final response = await _libraryRepository.getLibraryList();
-
-      livn.assignAll(response);
-      // filteredSelf.assignAll(response); /
-
+      // final response = await _helpSupportRepository.getSefList();
+      // selfListGet.assignAll(response);
     } catch (e) {
       hasError.value = true;
       errorMessage.value = 'An unexpected error occurred';
@@ -50,5 +38,13 @@ class LibraryController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void retry() {
+    fetchUsers();
+  }
+
+  void cancelRequest() {
+    // _helpSupportRepository.cancelRequest();
   }
 }

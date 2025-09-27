@@ -1,15 +1,22 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/constents/app_sizes.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
+
+import '../profileCenter/profileInfo/profile_info_screen.dart';
+import 'relation_information_controller.dart';
 
 class RelationInformationScreen extends StatelessWidget {
   const RelationInformationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final RelationInformationController controller = Get.put(RelationInformationController());
+
     return GestureDetector(
       onTap: (){
         hideKeyboard();
@@ -97,9 +104,30 @@ class RelationInformationScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 20.h,),
-                    AppTextField(hintText: "Rera Serial", labelText: "Rera Serial"),
+                    CustomDropDownField(
+                      labelText: "",
+                      hintText: "Select Rera Serial",
+                      controller: controller.selectedR,
+                      items: const [
+                        DropDownValueModel(name: 'Option 1', value: "Option 1"),
+                        DropDownValueModel(name: 'Option 2', value: "Option 2"),
+                        DropDownValueModel(name: 'Option 3', value: "Option 3"),
+                      ],
+                      selectedValue: controller.selectedRera,
+                    ),
                     AppTextField(hintText: "Rera Number", labelText: "Rera Number"),
-                    AppTextField(hintText: "Team Name", labelText: "Team Name"),
+                    CustomDropDownField(
+                      labelText: "",
+                      hintText: "Select Team",
+                      controller: controller.selectedTeams,
+                      items: const [
+                        DropDownValueModel(name: 'Option 1', value: "Option 1"),
+                        DropDownValueModel(name: 'Option 2', value: "Option 2"),
+                        DropDownValueModel(name: 'Option 3', value: "Option 3"),
+                      ],
+                      selectedValue: controller.selectedTeam,
+                    ),
+
                     AppTextField(hintText: "Pin Name", labelText: "Pin Name"),
                     AppTextField(
                       hintText: "Location Name",

@@ -92,6 +92,23 @@ class OtpVerificationScreen extends StatelessWidget {
                         child: Image.asset(AppImages.otoBanner),
                       ),
                       SizedBox(height: 20.h,),
+                      Obx(() {
+                        if (controller.otpMessage.value.isEmpty || controller.secondsRemaining.value == 0) {
+                          return SizedBox();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                          child: Text(
+                            controller.otpMessage.value,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        );
+                      }),
                       Align(
                         alignment: Alignment.center,
                         child: Text(

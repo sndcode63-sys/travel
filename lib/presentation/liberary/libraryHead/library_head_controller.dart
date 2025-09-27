@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
 
-import '../../core/helpers.dart';
-import '../../models/librery/liberery_list.dart';
-import 'library_repository.dart';
+import '../../../core/helpers.dart';
+import 'library_head.dart';
+import 'library_head_repository.dart';
 
-class LibraryController extends GetxController {
-  final LibraryRepository _libraryRepository = LibraryRepository();
+class LibraryHeadController extends GetxController {
+  final LibraryHeadRepository _libraryHeadRepository = LibraryHeadRepository();
 
   final RxBool isLoading = false.obs;
   final RxBool hasError = false.obs;
   final RxString errorMessage = "".obs;
-  final RxList<LibreryList>livn = <LibreryList>[].obs;
+  final RxList<LibraryHead>livn = <LibraryHead>[].obs;
 
   @override
   @override
@@ -34,10 +34,14 @@ class LibraryController extends GetxController {
       hasError.value = false;
       errorMessage.value = "";
 
-      final response = await _libraryRepository.getLibraryList();
+      // final response = await _libraryRepository.getLibraryList();
+      //
+      // livn.assignAll(response);
+      // // filteredSelf.assignAll(response); /
+      final response = await _libraryHeadRepository.getLibraryList();
+      print("Fetched users: ${response.length}");
+      // livn.assignAll(response);
 
-      livn.assignAll(response);
-      // filteredSelf.assignAll(response); /
 
     } catch (e) {
       hasError.value = true;

@@ -32,6 +32,8 @@ import 'package:travell_booking_app/presentation/profileCenter/profilgeneral/gen
 import 'package:travell_booking_app/presentation/profileCenter/profilgeneral/general_information_binding.dart';
 import 'package:travell_booking_app/presentation/relationInformation/relation_information_binding.dart';
 import 'package:travell_booking_app/presentation/relationInformation/relation_information_screen.dart';
+import 'package:travell_booking_app/presentation/settings/support/help_support_binding.dart';
+import 'package:travell_booking_app/presentation/settings/support/help_support_screen.dart';
 import 'package:travell_booking_app/presentation/splash/splash_binding.dart';
 import 'package:travell_booking_app/presentation/splash/splash_screen.dart';
 import 'package:travell_booking_app/presentation/teams/allDownline/all_downline_binding.dart';
@@ -213,6 +215,12 @@ class AppPages {
       name: AppRoutes.bankInfo,
       page: () => BankVerification(),
       binding: BankVerificationBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.supportDetails,
+      page: () => HelpSupportScreen(),
+      binding: HelpSupportBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

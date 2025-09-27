@@ -2,154 +2,181 @@ import 'package:flutter/material.dart';
 
 
 
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:travell_booking_app/utlis/constents/colors.dart';
+import 'verification_doc_controller.dart';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'verification_doc_controller.dart';
+
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+
 class VerificationDocScreen extends StatelessWidget {
-  const VerificationDocScreen({super.key});
+  final VerificationDocController controller = Get.put(VerificationDocController());
+
+  VerificationDocScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-          },
-        ),
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Verification Documents",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            Text(
-              "Verification Information",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14.0,
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Container(
-        color: const Color(0xFFF0F0F5),
-        padding: const EdgeInsets.all(24.0),
+      appBar: AppBar(title: const Text("Verification Document")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildVerificationField(
-              labelText: "Aadhar Number",
-              value: "2546525488882451",
-            ),
-            _buildVerificationField(
-              labelText: "PAN Number",
-              value: "NWSS7764D",
-            ),
-            _buildVerificationField(
-              labelText: "Passport Number",
-              value: "256684579485",
-            ),
-            _buildVerificationField(
-              labelText: "Rera Certificate",
-              value: "Rajasthan",
-            ),
-            _buildVerificationField(
-              labelText: "Highest Qualification",
-              value: "12th",
-            ),
-            _buildVerificationField(
-              labelText: "Police Verification",
-              value: "KC22564KK",
-            ),
-            _buildVerificationField(
-              labelText: "Bank Account",
-              value: "22548655587457",
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle save button press
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            Obx(() {
+              return Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: controller.pickFile,
+                    child: const Text("Choose file"),
                   ),
-                ),
-                child: const Text(
-                  'SAVE',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      controller.selectedFile.value != null
+                          ? controller.selectedFile.value!.path.split('/').last
+                          : "No file chosen",
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ),
+                  if (controller.selectedFile.value != null)
+                    IconButton(
+                      icon: const Icon(Icons.remove_red_eye),
+                      onPressed: () {
+                        _showPreviewDialog(context);
+                      },
+                    ),
+                ],
+              );
+            }),
+            const SizedBox(height: 8),
+            const Text(
+              "Support only Image/Pdf Only. Max File Size 1 MB.",
+              style: TextStyle(color: Colors.red),
             ),
-            const SizedBox(height: 16),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildVerificationField({
-    required String labelText,
-    required String value,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            labelText,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
+  void _showPreviewDialog(BuildContext context) {
+    if (controller.selectedFile.value == null) return;
+
+    final file = controller.selectedFile.value!;
+    final ext = controller.fileExtension.value.toLowerCase();
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.all(16),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              color: Colors.white,
+              width: double.infinity,
+              height: ext == "pdf"
+                  ? MediaQuery.of(context).size.height * 0.75
+                  : null,
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.63,
+                maxWidth: MediaQuery.of(context).size.width * 0.95,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Preview",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Content
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: ext == "pdf"
+                          ? PDFView(
+                        filePath: file.path,
+                        enableSwipe: true,
+                        swipeHorizontal: true,
+                        autoSpacing: true,
+                        pageFling: true,
+                      )
+                          : StatefulBuilder(
+                        builder: (context, setState) {
+                          bool isContain = false; // Initially cover
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isContain = !isContain; // toggle
+                              });
+                            },
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return InteractiveViewer(
+                                  panEnabled: true,
+                                  minScale: 0.5,
+                                  maxScale: 4,
+                                  child: Container(
+                                    width: constraints.maxWidth,
+                                    constraints: BoxConstraints(
+                                      maxHeight: MediaQuery.of(context).size.height * 0.6,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.file(
+                                        file,
+                                        fit: isContain ? BoxFit.contain : BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              const Icon(
-                Icons.verified,
-                color: Colors.deepPurple,
-                size: 18,
-              ),
-              const SizedBox(width: 24),
-              const Text(
-                'Upload Image',
-                style: TextStyle(
-                  color: Colors.deepPurple,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const Divider(
-            color: Colors.grey,
-            height: 20,
-            thickness: 1,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
+

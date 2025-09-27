@@ -2,20 +2,13 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:travell_booking_app/utlis/constents/app_sizes.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
-import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
-
 import 'profile_info_controller.dart';
-
-
 
 class ProfileInfoScreen extends StatelessWidget {
   ProfileInfoScreen({super.key});
-
   final ProfileInfoController controller = Get.put(ProfileInfoController());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,7 +127,6 @@ class ProfileInfoScreen extends StatelessWidget {
   }
 }
 
-
 class CustomDropDownField extends StatelessWidget {
   final String labelText;
   final String hintText;
@@ -183,11 +175,11 @@ class CustomDropDownField extends StatelessWidget {
             selectedValue.value = val.value.toString();
           },
         ),
-        const SizedBox(height: 8),
-        Obx(() => Text(
-          'Selected: ${selectedValue.value}',
-          style: const TextStyle(color: Colors.grey),
-        )),
+        // const SizedBox(height: 8),
+        // Obx(() => Text(
+        //   // '${selectedValue.value}',
+        //   style: const TextStyle(color: Colors.grey),
+        // )),
       ],
     );
   }

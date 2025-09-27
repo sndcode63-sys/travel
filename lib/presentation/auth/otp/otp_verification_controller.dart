@@ -14,11 +14,15 @@ class OtpVerificationController extends GetxController {
   var secondsRemaining = 0.obs;
   Timer? _timer;
 
+  RxString otpMessage = "".obs;
+
   @override
   void onInit() {
     super.onInit();
     if (Get.arguments != null) {
-      emailController.text = Get.arguments;
+      final args = Get.arguments as Map<String, dynamic>;
+      emailController.text = args["email"] ?? "";
+      otpMessage.value = args["message"] ?? "";
     }
     _startTimer();
   }
@@ -57,30 +61,21 @@ class OtpVerificationController extends GetxController {
         code: otpController.text.trim(),
       );
 
-      if (result.status == 200) {
-        CustomNotifier.showSnackbar(
-          message: result.message.toString(),
-        );
-        Get.toNamed(
-          AppRoutes.resetPassword,
-          arguments: {
-            "email": emailController.text.trim(),
-            "otp": otpController.text.trim(),
-          },
-        );
-      } else {
-        CustomNotifier.showSnackbar(
-          message: result.message.toString(),
-          isSuccess: false,
-        );
-      }
+      CustomNotifier.showSnackbar(
+        message: result.message ?? "OTP Verified Successfully",
+      );
+
+      Get.toNamed(
+        AppRoutes.resetPassword,
+        arguments: {
+          "email": emailController.text.trim(),
+          "otp": otpController.text.trim(),
+        },
+      );
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+      CustomNotifier.showSnackbar(
+        message: e.toString(),
+        isSuccess: false,
       );
     } finally {
       isLoading.value = false;
@@ -97,30 +92,22 @@ class OtpVerificationController extends GetxController {
         email: emailController.text.trim(),
       );
 
-      if (result.status == 200) {
-        CustomNotifier.showSnackbar(
-          message: result.message.toString(),
-        );
-        _startTimer(); // restart countdown
-      } else {
-        CustomNotifier.showSnackbar(
-          message: result.message.toString(),
-          isSuccess: false,
-        );
-      }
+      otpMessage.value = result.message ?? "OTP sent successfully";
+
+      CustomNotifier.showSnackbar(
+        message: result.message ?? "OTP sent successfully",
+      );
+
+      _startTimer(); // restart countdown
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.red,
+      CustomNotifier.showSnackbar(
+        message: e.toString(),
+        isSuccess: false,
       );
     } finally {
       isLoading.value = false;
     }
   }
-
 
   /// Start countdown timer (default 5 minutes)
   void _startTimer({int durationInSeconds = 300}) {

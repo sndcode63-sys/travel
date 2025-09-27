@@ -10,7 +10,6 @@ class ProfileInfoController extends GetxController {
   final reraSerialController = SingleValueDropDownController();
   final teamController = SingleValueDropDownController();
 
-  // Observables for selected values
   RxString selectedReraSerial = "".obs;
   RxString selectedTeam = "".obs;
   // TextEditingControllers
