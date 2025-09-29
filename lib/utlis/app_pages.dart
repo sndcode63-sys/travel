@@ -17,6 +17,10 @@ import 'package:travell_booking_app/bottom_navigation_bar.dart';
 import 'package:travell_booking_app/presentation/bankVerification/bank_verification_binding.dart';
 import 'package:travell_booking_app/presentation/dashBoard/dash_board_screen.dart';
 import 'package:travell_booking_app/presentation/home/home_binding.dart';
+import 'package:travell_booking_app/presentation/liberary/libraryData/library_data.dart';
+import 'package:travell_booking_app/presentation/liberary/libraryData/library_data_binding.dart';
+import 'package:travell_booking_app/presentation/liberary/libraryHead/library_head.dart';
+import 'package:travell_booking_app/presentation/liberary/libraryHead/library_head_binding.dart';
 import 'package:travell_booking_app/presentation/liberary/library_binding.dart';
 import 'package:travell_booking_app/presentation/liberary/library_screen.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_binding.dart';
@@ -221,6 +225,18 @@ class AppPages {
       name: AppRoutes.supportDetails,
       page: () => HelpSupportScreen(),
       binding: HelpSupportBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.libraryHead,
+      page: () => LibraryHead(),
+      binding: LibraryHeadBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.libraryDataScreen,
+      page: () => LibraryDataScreen(),
+      binding: LibraryDataBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

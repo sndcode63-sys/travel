@@ -76,10 +76,7 @@ class ResetPasswordController extends GetxController {
         confirmPassword: confirmPasswordController.text.trim(),
       );
       if (result.status == 200) {
-
-
         CustomNotifier.showSnackbar(message: result.message.toString());
-
         Get.offAllNamed(AppRoutes.dashBoard);
       } else {
         Get.snackbar(

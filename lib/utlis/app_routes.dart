@@ -28,4 +28,6 @@ class AppRoutes {
   static const bankInfo = '/bankInfo-screen';
   static const passwordChangeScreen = '/passwordChangeScreen-screen';
   static const supportDetails = '/supportDetails-screen';
+  static const libraryHead = '/libraryHead-screen';
+  static const libraryDataScreen = '/libraryDataScreen-screen';
 }

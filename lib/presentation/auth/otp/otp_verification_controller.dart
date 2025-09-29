@@ -61,17 +61,27 @@ class OtpVerificationController extends GetxController {
         code: otpController.text.trim(),
       );
 
-      CustomNotifier.showSnackbar(
-        message: result.message ?? "OTP Verified Successfully",
-      );
+      if(result.status==200){
+        CustomNotifier.showSnackbar(
+          message: result.message ?? "OTP Verified Successfully",
+        );
+        Get.toNamed(
+          AppRoutes.resetPassword,
+          arguments: {
+            "email": emailController.text.trim(),
+            "otp": otpController.text.trim(),
+          },
+        );
 
-      Get.toNamed(
-        AppRoutes.resetPassword,
-        arguments: {
-          "email": emailController.text.trim(),
-          "otp": otpController.text.trim(),
-        },
-      );
+      }else{
+        CustomNotifier.showSnackbar(
+          message: result.message ?? "OTP Verified Successfully",
+          isSuccess: false
+        );
+
+      }
+
+
     } catch (e) {
       CustomNotifier.showSnackbar(
         message: e.toString(),

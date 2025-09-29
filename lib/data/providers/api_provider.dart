@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
@@ -201,18 +203,29 @@ class ApiProvider {
         case DioExceptionType.receiveTimeout:
           return Exception('Receive timeout');
         case DioExceptionType.badResponse:
+        // FIX: Seedhe custom message ko return karein.
           return Exception(_handleStatusCode(error.response?.statusCode));
         case DioExceptionType.cancel:
           return Exception('Request cancelled');
+        case DioExceptionType.connectionError:
+        // FIX: DioExceptionType.connectionError ka naya case add kiya
+          return Exception(error.error?.toString() ?? 'Connection failed');
         case DioExceptionType.unknown:
-          return Exception('Unknown error detected');
+        // FIX: DioExceptionType.unknown ko theek se handle karein
+          if (error.error is SocketException) {
+            return Exception('No Internet connection');
+          }
+          return Exception(error.error?.toString() ?? 'Unknown error detected');
         default:
+        // Yeh line unreachable ho sakti hai, but safety ke liye rakhi hai.
           return Exception('Something went wrong!');
       }
     }
-    return Exception('Unexpected error');
+    // Agar error DioException nahi hai
+    return Exception('Unexpected error: ${error.toString()}');
   }
 
+// _handleStatusCode remains the same as it was correct.
   String _handleStatusCode(int? statusCode) {
     switch (statusCode) {
       case 400:

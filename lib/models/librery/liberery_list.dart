@@ -1,22 +1,16 @@
 
 class LibreryList {
-  int? schemeName;
-  String? name;
-  String? id;
+  final int? schemeNumber; // Ya schemeName
+  final String? name; // Yeh display name hai
+  final String? id;
 
-  LibreryList({this.schemeName, this.name, this.id});
+  LibreryList({this.schemeNumber, this.name, this.id});
 
-  LibreryList.fromJson(Map<String, dynamic> json) {
-    schemeName = json['scheme_name'];
-    name = json['name'];
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['scheme_name'] = schemeName;
-    data['name'] = name;
-    data['id'] = id;
-    return data;
+  factory LibreryList.fromJson(Map<String, dynamic> json) {
+    return LibreryList(
+      schemeNumber: json['scheme_name'] as int?, // JSON key: 'scheme_name'
+      name: json['name'] as String?,             // JSON key: 'name'
+      id: json['id'] as String?,
+    );
   }
 }

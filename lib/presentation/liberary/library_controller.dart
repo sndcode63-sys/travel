@@ -34,21 +34,24 @@ class LibraryController extends GetxController {
       hasError.value = false;
       errorMessage.value = "";
 
+
       final response = await _libraryRepository.getLibraryList();
 
+      print('📥 Response from Repository has ${response.length} items');
+
       livn.assignAll(response);
-      // filteredSelf.assignAll(response); /
+
+      print('✅ List assigned. livn now has ${livn.length} items');
+
+      livn.forEach((scheme) {
+        print('   -> Scheme: ${scheme.name}');
+      });
+
 
     } catch (e) {
-      hasError.value = true;
-      errorMessage.value = 'An unexpected error occurred';
-      AppHelpers.showSnackBar(
-        title: "Error",
-        message: errorMessage.value,
-        isError: true,
-      );
     } finally {
       isLoading.value = false;
     }
   }
+
 }

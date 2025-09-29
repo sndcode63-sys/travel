@@ -70,11 +70,19 @@ class ResetPassowrdController extends GetxController {
         confirmPassword: confirmPasswordController.text.trim(),
       );
 
-      CustomNotifier.showSnackbar(
-        message: result.message ?? "Password reset successful",
-      );
+      if(result.status==200){
+        CustomNotifier.showSnackbar(
+          message: result.message ?? "Password reset successful",
+        );
 
-      Get.offAllNamed(AppRoutes.dashBoard);
+        Get.offAllNamed(AppRoutes.login);
+      }else{
+        CustomNotifier.showSnackbar(
+          message: result.message ?? "Password reset successful",
+          isSuccess: false
+        );
+
+      }
     } catch (e) {
       CustomNotifier.showSnackbar(
         message: e.toString(),

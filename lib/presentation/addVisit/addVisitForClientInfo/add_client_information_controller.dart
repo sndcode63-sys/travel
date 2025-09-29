@@ -86,7 +86,6 @@ class AddClientInformationController extends GetxController {
     try {
       final response = await SaveVisitRepository().saveVisit(request);
 
-      // Response may or may not have success/message keys
       final resJson = response.toJson();
 
       if ((resJson['status'] ?? 200) == 200) {

@@ -123,19 +123,22 @@ class SchemeList extends StatelessWidget {
           return InkWell(
             onTap: () {
 
+              Get.toNamed(
+                AppRoutes.libraryHead,
+                arguments: {
+                  'schemeId': scheme.id,
+                  'schemeName': scheme.name,
+                },
+              );
 
-              // Get.toNamed(
-              //   AppRoutes.addMember,
-              //   arguments: {
-              //     'id': scheme.id,
-              //     'name': scheme.schemeName,
-              //   },
-              // );
-              //
-              // print(
-              //   '➡ Selected Scheme -> ID: ${scheme.id}, '
-              //       'Name: ${scheme.schemeName}, '
-              // );
+
+              print('➡ Selected Scheme -> ID: ${scheme.id}, Name: ${scheme.name}');
+
+
+
+              print(
+                '➡ Selected Scheme -> ID: ${scheme.id}, '
+              );
             },
             child: Container(
               padding: EdgeInsets.all(12),

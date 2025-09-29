@@ -24,6 +24,8 @@ class ApiConstants1{
   static const String supportDetails = "/get-Support-Details";
   static const String libraryList = "/library-scheme-List";
   static const String libraryHeadList = "/library-head-List";
+  static const String libraryData = "/library-data";
+  static const String   generalInfoUpdate = "/updateAssociateProfileData";
 
   // Headers
   static const String contentType = 'application/json';

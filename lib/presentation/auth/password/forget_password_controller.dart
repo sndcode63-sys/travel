@@ -23,19 +23,27 @@ class ForgetPasswordController extends GetxController {
       );
 
       final msg = result.message ?? "OTP sent successfully";
+      if(result.status == 200){
+        CustomNotifier.showSnackbar(
+          message: msg,
+          isSuccess: true,
+        );
 
-      CustomNotifier.showSnackbar(
-        message: msg,
-        isSuccess: true,
-      );
 
-      Get.toNamed(
-        AppRoutes.otpVerification,
-        arguments: {
-          "email": emailController.text.trim(),
-          "message": msg,
-        },
-      );
+        Get.toNamed(
+          AppRoutes.otpVerification,
+          arguments: {
+            "email": emailController.text.trim(),
+            "message": msg,
+          },
+        );
+      }else{
+        CustomNotifier.showSnackbar(
+          message: msg,
+          isSuccess: false,
+        );
+      }
+
     } catch (e) {
       CustomNotifier.showSnackbar(
         message: e.toString(),
