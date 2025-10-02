@@ -3,37 +3,61 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../utlis/app_routes.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'forget_password_repository.dart';
 
 class ForgetPasswordController extends GetxController {
   final formKey = GlobalKey<FormState>();
-
-  // text editor controller
   final emailController = TextEditingController();
-
   RxBool isLoading = false.obs;
 
-
-  // On Verify OTP
-  void verifyOtp() async {
+  Future<void> verifyOtp() async {
     if (!formKey.currentState!.validate()) return;
 
+    isLoading.value = true;
     try {
-      final response = await ForgetPasswordRepository.requestOtp(
+      final result = await ForgetPasswordRepository.requestOtp(
         email: emailController.text.trim(),
+        selectType: '',
+        type: 'Forgot Password',
       );
 
-      if (response.status == 200) {
-        Get.snackbar("Success", response.message ?? "OTP sent successfully!");
+      final msg = result.message ?? "OTP sent successfully";
+      if(result.status == 200){
+        CustomNotifier.showSnackbar(
+          message: msg,
+          isSuccess: true,
+        );
+
+
         Get.toNamed(
           AppRoutes.otpVerification,
-          arguments: emailController.text.trim(),
+          arguments: {
+            "email": emailController.text.trim(),
+            "message": msg,
+          },
         );
-      } else {
-        Get.snackbar("Error", response.message ?? "Something went wrong");
+      }else{
+        CustomNotifier.showSnackbar(
+          message: msg,
+          isSuccess: false,
+        );
       }
+
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      CustomNotifier.showSnackbar(
+        message: e.toString(),
+        isSuccess: false,
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
+
+  @override
+  void onClose() {
+    emailController.dispose();
+    super.onClose();
+  }
 }
+

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utlis/app_routes.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'otp_repository.dart';
 
 class OtpVerificationController extends GetxController {
@@ -13,11 +14,15 @@ class OtpVerificationController extends GetxController {
   var secondsRemaining = 0.obs;
   Timer? _timer;
 
+  RxString otpMessage = "".obs;
+
   @override
   void onInit() {
     super.onInit();
     if (Get.arguments != null) {
-      emailController.text = Get.arguments;
+      final args = Get.arguments as Map<String, dynamic>;
+      emailController.text = args["email"] ?? "";
+      otpMessage.value = args["message"] ?? "";
     }
     _startTimer();
   }
@@ -30,7 +35,7 @@ class OtpVerificationController extends GetxController {
     super.onClose();
   }
 
-  /// OTP Validation
+  // OTP Validation
   String? validateOtp(String? value) {
     if (value == null || value.trim().isEmpty) return "OTP is required";
     if (value.length != 6) return "OTP must be 6 digits";
@@ -38,14 +43,14 @@ class OtpVerificationController extends GetxController {
     return null;
   }
 
-  /// Timer text in MM:SS format
+  // Timer text in MM:SS format
   String get timerText {
-    final minutes = (secondsRemaining.value ~/ 60); // integer division
+    final minutes = (secondsRemaining.value ~/ 60).toString().padLeft(2, '0');
     final seconds = (secondsRemaining.value % 60).toString().padLeft(2, '0');
-    return "$minutes:$seconds"; // e.g., 4:05
+    return "$minutes:$seconds";
   }
 
-  /// Verify OTP
+  // Verify OTP
   Future<void> onVerify() async {
     if (!formKey.currentState!.validate()) return;
 
@@ -56,13 +61,10 @@ class OtpVerificationController extends GetxController {
         code: otpController.text.trim(),
       );
 
-      if (result.status == 200) {
-        Get.snackbar(
-          "Success",
-          result.message ?? "OTP Verified",
-          snackPosition: SnackPosition.BOTTOM,
+      if(result.status==200){
+        CustomNotifier.showSnackbar(
+          message: result.message ?? "OTP Verified Successfully",
         );
-
         Get.toNamed(
           AppRoutes.resetPassword,
           arguments: {
@@ -70,61 +72,50 @@ class OtpVerificationController extends GetxController {
             "otp": otpController.text.trim(),
           },
         );
-      } else {
-        Get.snackbar(
-          "Error",
-          result.message ?? "Invalid OTP",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
+
+      }else{
+        CustomNotifier.showSnackbar(
+          message: result.message ?? "OTP Verified Successfully",
+          isSuccess: false
         );
+
       }
+
+
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+      CustomNotifier.showSnackbar(
+        message: e.toString(),
+        isSuccess: false,
       );
     } finally {
       isLoading.value = false;
     }
   }
 
-  /// Resend OTP
+  // Resend OTP
   Future<void> onResendOtp() async {
-    if (secondsRemaining.value > 0) return; // timer not finished
+    if (secondsRemaining.value > 0) return; // wait until timer ends
 
     try {
+      isLoading.value = true;
       final result = await OtpRepository.resendOtp(
         email: emailController.text.trim(),
       );
 
-      if (result.status == 200) {
-        Get.snackbar(
-          "Info",
-          result.message ?? "OTP Resent Successfully",
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        _startTimer();
-      } else {
-        Get.snackbar(
-          "Error",
-          result.message ?? "Cannot resend OTP",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
-        );
-      }
-    } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+      otpMessage.value = result.message ?? "OTP sent successfully";
+
+      CustomNotifier.showSnackbar(
+        message: result.message ?? "OTP sent successfully",
       );
+
+      _startTimer(); // restart countdown
+    } catch (e) {
+      CustomNotifier.showSnackbar(
+        message: e.toString(),
+        isSuccess: false,
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -142,3 +133,5 @@ class OtpVerificationController extends GetxController {
     });
   }
 }
+
+

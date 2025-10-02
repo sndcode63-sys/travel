@@ -12,30 +12,27 @@ class LoginRepository {
     required String username,
     required String password,
   }) async {
-    final response = await _apiServices.post<Map<String, dynamic>>(
+    final response = await _apiServices.post<LoginModels>(
       ApiConstants1.login,
-          (json) => json as Map<String, dynamic>,
+          (json) => LoginModels.fromJson(json),
       data: {
         "username": username,
         "password": password,
       },
     );
 
-    if (response.success && response.data != null) {
-      final loginData = LoginModels.fromJson(response.data!);
-
-      //  AFTER  LOGIN TOKEN SAVE
-      final storage = StorageServices.to;
-      if ((loginData.data?.authorizationToken ?? "").isNotEmpty) {
-        storage.setAuthorizationToken(loginData.data!.authorizationToken!);
-      }
-      if ((loginData.data?.uniqueKey ?? "").isNotEmpty) {
-        storage.setUniqueKey(loginData.data!.uniqueKey!);
-      }
-
-      return loginData;
-    } else {
-      throw Exception(response.errors ?? "Login failed");
+    //  AFTER  LOGIN TOKEN SAVE
+    final storage = StorageServices.to;
+    if ((response.data?.authorizationToken ?? "").isNotEmpty) {
+      storage.setAuthorizationToken(response.data!.authorizationToken!);
     }
+    if ((response.data?.uniqueKey ?? "").isNotEmpty) {
+      storage.setUniqueKey(response.data!.uniqueKey!);
+    }
+
+    return response;
   }
 }
+
+
+

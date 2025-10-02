@@ -7,7 +7,7 @@ import '../../../models/saveVisit/save_visit_conte.dart';
 class SaveVisitRepository {
   final ApiServices _apiServices = ApiServices();
 
-  Future<ApiResponse<SaveVisitConte>> saveVisit(SaveVisitConte visit) async {
+  Future<SaveVisitConte> saveVisit(SaveVisitConte visit) async {
     return await _apiServices.post<SaveVisitConte>(
       ApiConstants1.saveVisit,
           (json) => SaveVisitConte.fromJson(json),

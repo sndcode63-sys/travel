@@ -1,7 +1,13 @@
 import 'package:get/get.dart';
 
 import '../../data/services/storage_services.dart';
+import '../../models/User/user_models.dart';
 import '../../utlis/app_routes.dart';
+
+import 'package:get/get.dart';
+import '../../data/services/storage_services.dart';
+import '../../utlis/app_routes.dart';
+import 'splash_repository.dart';
 
 class SplashController extends GetxController {
   // Rx variables for animation
@@ -10,6 +16,9 @@ class SplashController extends GetxController {
 
   // Storage instance
   final storage = StorageServices.to;
+  final UserRepository _userRepository = UserRepository();
+
+  Rx<UserModels?> user = Rx<UserModels?>(null);
 
   @override
   void onInit() {
@@ -20,11 +29,9 @@ class SplashController extends GetxController {
 
   /// 🔹 Start animations
   void _startAnimation() async {
-    // Scale-in
     await Future.delayed(const Duration(milliseconds: 300));
     scale.value = 1.0;
 
-    // Fade-in text
     await Future.delayed(const Duration(milliseconds: 500));
     opacity.value = 1.0;
   }
@@ -32,13 +39,22 @@ class SplashController extends GetxController {
   /// 🔹 Navigate after splash
   void _navigateUser() async {
     await Future.delayed(const Duration(seconds: 3));
-    final token = storage.getUniqueKey();
+    final token = storage.getAuthorizationToken();
 
     if (token != null && token.isNotEmpty) {
-      // User login hai → Dashboard
-      Get.offAllNamed(AppRoutes.dashBoard);
+      try {
+        // 🔹 API call → user details fetch karo
+        final userData = await _userRepository.getUserDetails();
+        user.value = userData;
+
+        // User details mil gaya → Dashboard
+        Get.offAllNamed(AppRoutes.dashBoard, arguments: userData);
+      } catch (e) {
+        // Agar API fail ho gayi → Login screen
+        Get.offAllNamed(AppRoutes.login);
+      }
     } else {
-      // User login nahi hai → Login screen
+      // Token hi nahi hai → Login screen
       Get.offAllNamed(AppRoutes.login);
     }
   }

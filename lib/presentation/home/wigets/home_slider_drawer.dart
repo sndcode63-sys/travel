@@ -1,146 +1,177 @@
-import 'package:flutter/material.dart';
-import 'package:travell_booking_app/utlis/constents/str_constants.dart';
+import 'dart:convert';
 
-import 'slider_drawer_helper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:travell_booking_app/utlis/app_routes.dart';
+import 'package:travell_booking_app/utlis/constents/colors.dart';
+import '../home_controller.dart';
+
+class _CustomDrawerItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool isSelected;
+  final bool hasArrow;
+
+  const _CustomDrawerItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.isSelected = false,
+    this.hasArrow = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // A slightly lighter purple/lavender color for the selected item (Home)
+    const Color selectedColor = Color.fromARGB(255, 126, 73, 233);
+    const Color defaultColor = Colors.transparent;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.h),
+      child: Material(
+        // Background color for the item
+        color: isSelected ? selectedColor : defaultColor,
+        borderRadius: BorderRadius.circular(12.r),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12.r),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 24.sp,
+                ),
+                SizedBox(width: 15.w),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18.sp,
+                    ),
+                  ),
+                ),
+                if (hasArrow)
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.white,
+                    size: 24.sp,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class HomeSliderDrawer extends StatelessWidget {
   const HomeSliderDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final HomeController controller = Get.find<HomeController>();
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.65,
       child: Drawer(
-        backgroundColor: Colors.blue,
+        backgroundColor: UColors.primary,
         child: ListView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    AppStrings.demoTesting,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
+              child: Obx(() {
+                final user = controller.userData.value;
+
+                if (controller.isLoading.value) {
+                  return const SizedBox.shrink();
+                }
+
+            if (controller.hasError.value) {
+                  return Text(
+                    controller.errorMessage.value,
+                    style: const TextStyle(color: Colors.red),
+                  );
+                }
+                if (user.profilePic != null &&
+                    user.profilePic!.isNotEmpty &&
+                    !user.profilePic!.startsWith("data:image")) {
+                  precacheImage(
+                    CachedNetworkImageProvider("${user.fullImageUrl}${user.profilePic!}"),
+                    context,
+                  );
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 35,
+                      backgroundColor: Colors.grey.shade200,
+                      backgroundImage: (user.profilePic != null && user.profilePic!.isNotEmpty)
+                          ? (user.profilePic!.startsWith("data:image")
+                          ? MemoryImage(base64Decode(user.profilePic!.split(",").last))
+                      as ImageProvider
+                          : CachedNetworkImageProvider("${user.fullImageUrl}${user.profilePic!}"))
+                          : const AssetImage("assets/images/default_profile.png"),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "test@gmail.com",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
+                    const SizedBox(height: 12),
+
+                    // Name
+                    Text(
+                      user.name ?? "Unknown User",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20.sp,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    SizedBox(height: 5.h),
+
+                    // Email
+                    Text(
+                      user.email ?? "No Email",
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                  ],
+                );
+              }),
+
             ),
 
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.white.withAlpha(30),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.blue.shade700,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                  ),
-                ],
-              ),
+            // Drawer Items
+            _CustomDrawerItem(
+              icon: Icons.home_filled,
+              label: "Home",
+              isSelected: true,
+              hasArrow: true,
+              onTap: () {
+                Get.back();
+              },
             ),
-
-            // 🔹 Menu Items
-            DrawerMenuItem(
-              icon: Icons.person,
+            _CustomDrawerItem(
+              icon: Icons.person_add_alt_1,
               label: "Add Visit",
-              onTap: () {},
+              onTap: () => Get.toNamed(AppRoutes.addVisit),
             ),
-            DrawerMenuItem(
-              icon: Icons.meeting_room,
+            _CustomDrawerItem(
+              icon: Icons.people_alt,
               label: "Add Meeting",
-              onTap: () {},
-            ),
-            DrawerMenuItem(icon: Icons.group, label: "Team", onTap: () {}),
-            DrawerMenuItem(
-              icon: Icons.settings,
-              label: "Setting",
-              onTap: () {},
-            ),
-            DrawerMenuItem(
-              icon: Icons.help,
-              label: "Help & Support",
-              onTap: () {},
-            ),
-            DrawerMenuItem(
-              icon: Icons.campaign,
-              label: "Notice Board",
-              onTap: () {},
-            ),
-            DrawerMenuItem(icon: Icons.book, label: "Report", onTap: () {}),
-            DrawerMenuItem(
-              icon: Icons.phone_android,
-              label: "App Settings",
-              onTap: () {},
-            ),
-            DrawerMenuItem(icon: Icons.logout, label: "Logout", onTap: () {}),
-
-            const Divider(height: 30, thickness: 1, color: Colors.white30),
-
-            // 🔹 Footer Section
-            Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Column(
-                children: const [
-                  Text(
-                    "Designed & Developed by",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "Glitchprobe",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 40),
-                  Text(
-                    "Version: 1.1.1",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
+              onTap: () => Get.toNamed(AppRoutes.addMeeting),
             ),
           ],
         ),
@@ -148,4 +179,3 @@ class HomeSliderDrawer extends StatelessWidget {
     );
   }
 }
-

@@ -6,27 +6,21 @@ import '../../../data/services/api_services.dart';
 class OtpRepository {
   static final _apiServices = ApiServices();
 
-  // Submit OTP
+  /// Submit OTP
   static Future<OtpModles> submitOtp({
     required String email,
     required String code,
     String type = "Forgot Password",
   }) async {
-    final response = await _apiServices.post<Map<String, dynamic>>(
+    return await _apiServices.post<OtpModles>(
       ApiConstants1.checkAuth,
-          (json) => json as Map<String, dynamic>,
+          (json) => OtpModles.fromJson(json),
       data: {
         "username": email,
         "type": type,
         "code": code,
       },
     );
-
-    if (response.success && response.data != null) {
-      return OtpModles.fromJson(response.data!);
-    } else {
-      throw Exception(response.errors ?? "Submit OTP failed");
-    }
   }
 
   /// Resend OTP
@@ -34,19 +28,14 @@ class OtpRepository {
     required String email,
     String type = "Forgot Password",
   }) async {
-    final response = await _apiServices.post<Map<String, dynamic>>(
-      ApiConstants1.auth,                      // endpoint
-          (json) => json as Map<String, dynamic>,  // response parse
+    return await _apiServices.post<OtpModles>(
+      ApiConstants1.auth,
+          (json) => OtpModles.fromJson(json),
       data: {
-        "username": email,
+        "email": email,
         "type": type,
       },
     );
-
-    if (response.success && response.data != null) {
-      return OtpModles.fromJson(response.data!);
-    } else {
-      throw Exception(response.errors ?? "Resend OTP failed");
-    }
   }
 }
+

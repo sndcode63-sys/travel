@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/addVisit/repo.dart';
-import '../../core/helpers.dart';
 import '../../models/scheme/scheme_list_data.dart';
+import '../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
+import 'package:geolocator/geolocator.dart';
+import 'addmemberInfo/widgets/location_detection.dart';
 
 class AddVisitController extends GetxController {
   final SchemeRepository _schemeRepository = SchemeRepository();
@@ -9,49 +11,68 @@ class AddVisitController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool hasError = false.obs;
   final RxString errorMessage = "".obs;
-  final RxList<SchemeListData>scheme = <SchemeListData>[].obs;
+
+  final RxList<SchemeListData> scheme = <SchemeListData>[].obs;
+  final RxList<SchemeListData> filteredScheme = <SchemeListData>[].obs;
+  final RxString searchQuery = "".obs;
+
+  final RxString currentAddress = "".obs;
+  final Rxn<Position> currentPosition = Rxn<Position>();
 
   @override
-  @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
+    detectLocation();
     fetchUsers();
+  }
+
+  Future<void> fetchUsers() async {
+    isLoading.value = true;
+    hasError.value = false;
+    errorMessage.value = "";
+
+    final response = await _schemeRepository.getSch();
+
+    if (response.isNotEmpty) {
+      scheme.assignAll(response);
+      filteredScheme.assignAll(response);
+    } else {
+      hasError.value = true;
+      errorMessage.value = "No schemes found";
+      CustomNotifier.showPopup(
+        message: errorMessage.value,
+        isSuccess: false,
+      );
+    }
+
+    isLoading.value = false;
+  }
+
+  void retry() {
+    fetchUsers();
+  }
+  void applySearch() {
+    if (searchQuery.value.isEmpty) {
+      filteredScheme.assignAll(scheme);
+    } else {
+      final query = searchQuery.value.toLowerCase();
+      filteredScheme.assignAll(
+        scheme.where((s) => s.schemeName?.toLowerCase().contains(query) ?? false),
+      );
+    }
   }
 
   String getFirstAndLastLetter(String? name) {
     if (name == null || name.isEmpty) return '';
     if (name.length == 1) return name;
-    return '${name[0]}${name[name.length - 9]}';
+    return '${name[0]}${name[name.length - 1]}';
   }
 
-
-  Future<void> fetchUsers() async {
-    try {
-      isLoading.value = true;
-      hasError.value = false;
-      errorMessage.value = "";
-
-      final responce = await _schemeRepository.getSch();
-
-      if (responce.success && responce.data != null) {
-        scheme.assignAll(responce.data!);
-      } else {
-        hasError.value = true;
-        errorMessage.value = responce.message;
-        AppHelpers.showSnackBar(
-            title: "Error", message: responce.message, isError: true);
-      }
-    } catch (e) {
-      hasError.value = true;
-      errorMessage.value = 'An unexpected error occurred';
-      AppHelpers.showSnackBar(
-          title: "Error", message: errorMessage.value, isError: true);
-    } finally {
-      isLoading.value = false;
-    }
-
-    void retry() {
-      fetchUsers();
+  Future<void> detectLocation() async {
+    final locationData = await LocationService.getCurrentLocationWithAddress();
+    if (locationData != null) {
+      currentPosition.value = locationData['position'] as Position;
+      currentAddress.value = locationData['address'] as String;
     }
   }
 }

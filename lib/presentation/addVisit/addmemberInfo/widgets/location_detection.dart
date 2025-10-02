@@ -1,16 +1,19 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
+
 class LocationService {
   LocationService._();
 
-  static Future<Position?> getCurrentLocation() async {
+  static Future<Map<String, dynamic>?> getCurrentLocationWithAddress() async {
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Open location settings forcibly
       await Geolocator.openLocationSettings();
       Get.snackbar("Location Disabled", "Please enable location service.");
       return null;
@@ -20,7 +23,6 @@ class LocationService {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Open app settings forcibly
         await Geolocator.openAppSettings();
         Get.snackbar("Permission Denied",
             "Location permission is required to continue.");
@@ -29,15 +31,25 @@ class LocationService {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Open app settings forcibly
       await Geolocator.openAppSettings();
       Get.snackbar("Permission Denied",
           "Location permission is permanently denied. Please enable from settings.");
       return null;
     }
 
-    return await Geolocator.getCurrentPosition(
+    Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+
+    List<Placemark> placemarks =
+    await placemarkFromCoordinates(position.latitude, position.longitude);
+
+    String address = "${placemarks.first.street}, ${placemarks.first.locality}, "
+        "${placemarks.first.administrativeArea}, ${placemarks.first.country}";
+
+    return {
+      "position": position,
+      "address": address,
+    };
   }
 }

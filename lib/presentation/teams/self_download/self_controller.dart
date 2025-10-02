@@ -4,27 +4,44 @@ import 'package:travell_booking_app/presentation/teams/self_download/self_reposi
 import '../../../core/helpers.dart';
 import '../../../models/team/team_self_model.dart';
 
+
+
 class SelfController extends GetxController {
   final SelfRepository _selfRepository = SelfRepository();
 
   final RxBool isLoading = false.obs;
   final RxBool hasError = false.obs;
   final RxString errorMessage = "".obs;
-  final RxList<TeamSelfModel>selfListGEt = <TeamSelfModel>[].obs;
+  final RxList<TeamSelfModel> selfListGet = <TeamSelfModel>[].obs;
+  final RxList<TeamSelfModel> filteredSelf = <TeamSelfModel>[].obs;
+  final RxString searchQuery = "".obs;
 
-  @override
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
+    ever(searchQuery, (_) => applySearch());
+  }
+
+  /// 🔍 Search
+  void applySearch() {
+    if (searchQuery.value.isEmpty) {
+      filteredSelf.assignAll(selfListGet);
+    } else {
+      final query = searchQuery.value.toLowerCase();
+      filteredSelf.assignAll(
+        selfListGet.where(
+              (s) => (s.name.toLowerCase().contains(query)),
+        ),
+      );
+    }
   }
 
   String getFirstAndLastLetter(String? name) {
     if (name == null || name.isEmpty) return '';
     if (name.length == 1) return name;
-    return '${name[0]}${name[name.length - 9]}';
+    return '${name[0]}${name[name.length - 1]}'; // ✅ fixed (पहले -9 था)
   }
-
 
   Future<void> fetchUsers() async {
     try {
@@ -32,27 +49,25 @@ class SelfController extends GetxController {
       hasError.value = false;
       errorMessage.value = "";
 
-      final responce = await _selfRepository.getSefList();
+      final response = await _selfRepository.getSefList();
 
-      if (responce.success && responce.data != null) {
-        selfListGEt.assignAll(responce.data!);
-      } else {
-        hasError.value = true;
-        errorMessage.value = responce.message;
-        AppHelpers.showSnackBar(
-            title: "Error", message: responce.message, isError: true);
-      }
+      selfListGet.assignAll(response);
+      filteredSelf.assignAll(response); // ✅ copy for search
+
     } catch (e) {
       hasError.value = true;
       errorMessage.value = 'An unexpected error occurred';
       AppHelpers.showSnackBar(
-          title: "Error", message: errorMessage.value, isError: true);
+        title: "Error",
+        message: errorMessage.value,
+        isError: true,
+      );
     } finally {
       isLoading.value = false;
     }
+  }
 
-    void retry() {
-      fetchUsers();
-    }
+  void retry() {
+    fetchUsers();
   }
 }

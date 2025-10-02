@@ -20,9 +20,11 @@ class AllDownlineController extends GetxController {
   }
 
   String getFirstAndLastLetter(String? name) {
-    if (name == null || name.isEmpty) return '';
+    if (name == null || name.isEmpty) return "";
+
     if (name.length == 1) return name;
-    return '${name[0]}${name[name.length - 9]}';
+
+    return "${name[0]}${name[name.length - 1]}";
   }
 
 
@@ -32,27 +34,21 @@ class AllDownlineController extends GetxController {
       hasError.value = false;
       errorMessage.value = "";
 
-      final responce = await _allDownlineRepository.getSefList();
+      final response = await _allDownlineRepository.getSefList();
 
-      if (responce.success && responce.data != null) {
-        allDownline.assignAll(responce.data!);
-      } else {
-        hasError.value = true;
-        errorMessage.value = responce.message;
-        AppHelpers.showSnackBar(
-            title: "Error", message: responce.message, isError: true);
-      }
+      allDownline.assignAll(response);
+      // filteredSelf.assignAll(response); /
+
     } catch (e) {
       hasError.value = true;
       errorMessage.value = 'An unexpected error occurred';
       AppHelpers.showSnackBar(
-          title: "Error", message: errorMessage.value, isError: true);
+        title: "Error",
+        message: errorMessage.value,
+        isError: true,
+      );
     } finally {
       isLoading.value = false;
-    }
-
-    void retry() {
-      fetchUsers();
     }
   }
 }

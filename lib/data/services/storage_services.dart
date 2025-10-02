@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../utlis/app_routes.dart';
+
 class StorageServices extends GetxService {
   static StorageServices get to => Get.find();
   late GetStorage _box;
@@ -45,6 +47,21 @@ class StorageServices extends GetxService {
   void write<T>(String key, T value) => _box.write(key, value);
   void remove(String key) => _box.remove(key);
   void clear() => _box.erase();
+
+  // -------------------------
+  // Logout Method
+  // -------------------------
+  void logout() {
+    // Remove tokens
+    removeUniqueKey();
+    removeAuthorizationToken();
+
+    // Optionally clear everything
+    // clear();
+
+    // Navigate to login screen
+    Get.offAllNamed(AppRoutes.login);
+  }
 }
 
 

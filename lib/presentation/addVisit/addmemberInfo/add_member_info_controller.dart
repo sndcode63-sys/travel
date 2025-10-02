@@ -12,6 +12,7 @@ class AddMemberInfoController extends GetxController {
   final contactNo = TextEditingController();
   final remark = TextEditingController();
 
+  RxString currentAddress = "".obs;
   RxBool isFormValid = false.obs;
   Rx<Position?> currentPosition = Rx<Position?>(null);
 
@@ -28,12 +29,12 @@ class AddMemberInfoController extends GetxController {
 
   void validateForm() {
     final nameRegex = RegExp(r"^[a-zA-Z ]{3,}$");
-    final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+    // final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
     final phoneRegex = RegExp(r"^[0-9]{10}$");
 
     if (!nameRegex.hasMatch(clientName.text.trim()) ||
         !nameRegex.hasMatch(fatherName.text.trim()) ||
-        !emailRegex.hasMatch(email.text.trim()) ||
+        // !emailRegex.hasMatch(email.text.trim()) ||
         !phoneRegex.hasMatch(contactNo.text.trim()) ||
         (remark.text.isNotEmpty && remark.text.length > 200)) {
       isFormValid.value = false;
@@ -44,7 +45,20 @@ class AddMemberInfoController extends GetxController {
   }
 
   Future<void> getLocationOnStart() async {
-    currentPosition.value = await LocationService.getCurrentLocation();
+    var result = await LocationService.getCurrentLocationWithAddress();
+
+    if (result != null) {
+      currentPosition.value = result['position'];
+      currentAddress.value = result['address'];
+    } else {
+      Future.delayed(Duration(milliseconds: 500), () async {
+        result = await LocationService.getCurrentLocationWithAddress();
+        if (result != null) {
+          currentPosition.value = result?['position'];
+          currentAddress.value = result?['address'];
+        }
+      });
+    }
   }
 
   @override

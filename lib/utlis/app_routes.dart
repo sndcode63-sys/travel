@@ -14,4 +14,21 @@ class AppRoutes {
   static const addClientInformation = '/addClientInformation-screen';
   static const meetingList = '/meetingList-screen';
   static const teamScreen = '/teamScreen-screen';
+  static const selfDownline = '/selfDownline-screen';
+  static const meeting = '/meeting-screen';
+  static const visitList = '/visitList-screen';
+  static const allDowline = '/allDowline-screen';
+  static const addMeeting = '/addMeeting-screen';
+  static const profileCenter = '/profileCenter-screen';
+  static const generalInformation = '/generalInformation-screen';
+  static const profilePic = '/profilePic-screen';
+  static const profileInfo = '/profileInfo-screen';
+  static const verificationDocuments = '/verificationDocuments-screen';
+  static const relationInfo = '/relationInfo-screen';
+  static const bankInfo = '/bankInfo-screen';
+  static const passwordChangeScreen = '/passwordChangeScreen-screen';
+  static const supportDetails = '/supportDetails-screen';
+  static const libraryHead = '/libraryHead-screen';
+  static const libraryDataScreen = '/libraryDataScreen-screen';
+  static const privacyPolicy = '/privacyPolicy-screen';
 }

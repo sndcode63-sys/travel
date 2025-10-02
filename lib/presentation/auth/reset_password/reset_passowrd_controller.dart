@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_pass_repo.dart';
 import '../../../utlis/app_routes.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 
 class ResetPassowrdController extends GetxController {
   RxBool obscureNew = true.obs;
@@ -22,7 +23,6 @@ class ResetPassowrdController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // 👇 arguments me email + otp expect karenge
     if (Get.arguments != null) {
       emailController.text = Get.arguments['email'] ?? "";
       otpController.text = Get.arguments['otp'] ?? "";
@@ -42,31 +42,12 @@ class ResetPassowrdController extends GetxController {
       return;
     }
 
-    if (newPass.length < 8) {
-      errorMessage.value = "Password must be at least 8 characters long";
+    if (newPass.length < 6) {
+      errorMessage.value = "Password must be at least 6 characters long";
       isButtonEnabled.value = false;
       return;
     }
-    if (!RegExp(r'[A-Z]').hasMatch(newPass)) {
-      errorMessage.value = "Password must contain at least 1 uppercase letter";
-      isButtonEnabled.value = false;
-      return;
-    }
-    if (!RegExp(r'[a-z]').hasMatch(newPass)) {
-      errorMessage.value = "Password must contain at least 1 lowercase letter";
-      isButtonEnabled.value = false;
-      return;
-    }
-    if (!RegExp(r'[0-9]').hasMatch(newPass)) {
-      errorMessage.value = "Password must contain at least 1 number";
-      isButtonEnabled.value = false;
-      return;
-    }
-    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(newPass)) {
-      errorMessage.value = "Password must contain at least 1 special character";
-      isButtonEnabled.value = false;
-      return;
-    }
+
     if (newPass != confirmPass) {
       errorMessage.value = "Passwords do not match";
       isButtonEnabled.value = false;
@@ -89,29 +70,23 @@ class ResetPassowrdController extends GetxController {
         confirmPassword: confirmPasswordController.text.trim(),
       );
 
-      if (result.status == 200) {
-        Get.snackbar(
-          "Success",
-          result.message ?? "Password changed",
-          snackPosition: SnackPosition.BOTTOM,
+      if(result.status==200){
+        CustomNotifier.showSnackbar(
+          message: result.message ?? "Password reset successful",
         );
+
         Get.offAllNamed(AppRoutes.login);
-      } else {
-        Get.snackbar(
-          "Error",
-          result.message ?? "Failed to reset password",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
+      }else{
+        CustomNotifier.showSnackbar(
+          message: result.message ?? "Password reset successful",
+          isSuccess: false
         );
+
       }
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+      CustomNotifier.showSnackbar(
+        message: e.toString(),
+        isSuccess: false,
       );
     } finally {
       isLoading.value = false;
