@@ -93,6 +93,7 @@ body: Column(
               svgPath:AppImages.privacy ,
               text: 'Privacy Policy',
               onTap: () {
+                Get.toNamed(AppRoutes.privacyPolicy);
 
               },
             ),

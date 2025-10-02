@@ -7,7 +7,7 @@ class LibraryDataModel {
   int? id;
   int? userId;
   String? content;
-  String? urlLink; // isme PDF / link aayega
+  String? urlLink;
   int? schemeId;
   int? libraryHeadNameId;
   int? librarydataId;
@@ -61,12 +61,25 @@ class LibraryDataModel {
     data['created_at'] = createdAt;
     return data;
   }
-
-  //Agar PDF link hai to use karega
+  /// Full URL for PDF
   String? get fullPdfUrl {
     if (urlLink != null && urlLink!.toLowerCase().endsWith(".pdf")) {
       return "${ApiConstants1.imagePath}$urlLink";
     }
+    if (images != null && images!.toLowerCase().endsWith(".pdf")) {
+      return "${ApiConstants1.imagePath}$images";
+    }
     return null;
   }
+
+  /// Full URL for video
+  String? get fullVideoUrl {
+    if (images != null && images!.toLowerCase().endsWith(".mp4")) {
+      return "${ApiConstants1.imagePath}$images";
+    }
+    return null;
+  }
+
+  String get fullImageUrl => ApiConstants1.imagePath;
+
 }

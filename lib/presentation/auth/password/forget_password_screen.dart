@@ -9,7 +9,6 @@ import '../../../utlis/constents/colors.dart';
 import '../../../utlis/custom_widgets/custom_button.dart';
 import '../../../utlis/custom_widgets/custom_text_field.dart';
 import '../../../utlis/formatters/validato.dart';
-import '../../../utlis/theme/widgets_theme/text_theme.dart';
 
 class ForgetPasswordScreen extends GetView<ForgetPasswordController> {
   const ForgetPasswordScreen({super.key});

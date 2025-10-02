@@ -27,24 +27,41 @@
 //   };
 // }
 //
-// // ==================== Repository ====================
-// class HelpSupportRepository {
-//   final ApiServices _apiServices = ApiServices();
-//   CancelToken? _cancelToken;
-//
-//   Future<List<Support>> getSefList() async {
-//     _cancelToken = CancelToken();
-//     return await _apiServices.getList<Support>(
-//       ApiConstants1.supportDetails,
-//           (data) => Support.fromJson(data as Map<String, dynamic>),
-//       cancelToken: _cancelToken,
-//     );
-//   }
-//
-//   void cancelRequest() {
-//     _cancelToken?.cancel("Request cancelled by the user");
-//   }
-// }
+// ==================== Repository ====================
+import 'package:dio/dio.dart';
+
+import '../../../core/constants/api_constants.dart';
+import '../../../data/services/api_services.dart';
+import '../../../models/setting/support.dart';
+
+
+
+
+
+
+class HelpSupportRepository {
+  final ApiServices _apiServices = ApiServices();
+  CancelToken? _cancelToken;
+
+  Future<Support> getSupportDetails() async {
+    _cancelToken = CancelToken();
+
+    final response = await _apiServices.get<Support>(
+      ApiConstants1.supportDetails,
+          (data) => Support.fromJson(Map<String, dynamic>.from(data['data'])),
+      cancelToken: _cancelToken,
+    );
+
+    return response;
+  }
+
+  void cancelRequest() {
+    _cancelToken?.cancel("Request cancelled by the user");
+  }
+}
+
+
+
 //
 //
 //

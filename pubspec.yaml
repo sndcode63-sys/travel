@@ -41,6 +41,10 @@ dependencies:
   flutter_pdfview: ^1.4.3
   syncfusion_flutter_pdf: ^31.1.19
   video_player: ^2.10.0
+  pdfx: ^2.9.2
+  chewie: ^1.13.0
+  open_file: ^3.5.10
+
 
 
 

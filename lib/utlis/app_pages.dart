@@ -36,6 +36,8 @@ import 'package:travell_booking_app/presentation/profileCenter/profilgeneral/gen
 import 'package:travell_booking_app/presentation/profileCenter/profilgeneral/general_information_binding.dart';
 import 'package:travell_booking_app/presentation/relationInformation/relation_information_binding.dart';
 import 'package:travell_booking_app/presentation/relationInformation/relation_information_screen.dart';
+import 'package:travell_booking_app/presentation/settings/privacyPolicy/privacy_policy_binding.dart';
+import 'package:travell_booking_app/presentation/settings/privacyPolicy/privacy_policy_screen.dart';
 import 'package:travell_booking_app/presentation/settings/support/help_support_binding.dart';
 import 'package:travell_booking_app/presentation/settings/support/help_support_screen.dart';
 import 'package:travell_booking_app/presentation/splash/splash_binding.dart';
@@ -54,6 +56,8 @@ import '../presentation/auth/reset_password/reset_password_screen.dart';
 import '../presentation/bankVerification/bank_verification.dart';
 import '../presentation/dashBoard/dash_board_binding.dart';
 import '../presentation/meeting/meeting_binding.dart';
+import '../presentation/settings/resetPassword/reset_password.dart';
+import '../presentation/settings/resetPassword/reset_password_binding.dart';
 import '../presentation/vefificationDucuments/verification_doc_screen.dart';
 import 'app_routes.dart';
 
@@ -237,6 +241,18 @@ class AppPages {
       name: AppRoutes.libraryDataScreen,
       page: () => LibraryDataScreen(),
       binding: LibraryDataBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.passwordChangeScreen,
+      page: () => ResetPassword(),
+      binding: ResetPasswordBinding1(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.privacyPolicy,
+      page: () => PrivacyPolicyScreen(),
+      binding: PrivacyPolicyBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

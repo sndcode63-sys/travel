@@ -116,18 +116,7 @@ class RelationInformationScreen extends StatelessWidget {
                       selectedValue: controller.selectedRera,
                     ),
                     AppTextField(hintText: "Rera Number", labelText: "Rera Number"),
-                    CustomDropDownField(
-                      labelText: "",
-                      hintText: "Select Team",
-                      controller: controller.selectedTeams,
-                      items: const [
-                        DropDownValueModel(name: 'Option 1', value: "Option 1"),
-                        DropDownValueModel(name: 'Option 2', value: "Option 2"),
-                        DropDownValueModel(name: 'Option 3', value: "Option 3"),
-                      ],
-                      selectedValue: controller.selectedTeam,
-                    ),
-
+                    AppTextField(hintText: "Team Name", labelText: "Team Name"),
                     AppTextField(hintText: "Pin Name", labelText: "Pin Name"),
                     AppTextField(
                       hintText: "Location Name",

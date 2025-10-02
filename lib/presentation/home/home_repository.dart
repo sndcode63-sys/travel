@@ -1,10 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:travell_booking_app/models/home/home_page_view_builder_loader.dart';
-
-import '../../core/constants/api_constants.dart';
-import '../../core/response_model.dart';
 import '../../data/services/api_services.dart';
-import '../../models/scheme/scheme_list_data.dart';
+import '../../core/constants/api_constants.dart';
+import '../../models/User/user_models.dart';
+import '../../models/home/home_page_view_builder_loader.dart';
 
 class HomeRepository {
   final ApiServices _apiServices = ApiServices();
@@ -12,12 +10,21 @@ class HomeRepository {
 
   Future<List<HomePageViewBuilderLoader>> getSch() async {
     _cancelToken = CancelToken();
-
     return await _apiServices.getList<HomePageViewBuilderLoader>(
       ApiConstants1.homeSlider,
           (data) => HomePageViewBuilderLoader.fromJson(data),
       cancelToken: _cancelToken,
     );
+  }
+
+  Future<UserModels> getDataUser() async {
+    _cancelToken = CancelToken();
+    final response = await _apiServices.get(
+      ApiConstants1.getUserDetails,
+          (json) => UserModels.fromJson(json['data']),
+      cancelToken: _cancelToken,
+    );
+    return response;
   }
 
   void cancelRequest() {

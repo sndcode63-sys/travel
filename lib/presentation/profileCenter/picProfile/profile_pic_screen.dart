@@ -1,14 +1,19 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
+import '../../home/home_controller.dart';
 import 'profile_pic_controller.dart';
 
 class ProfilePicScreen extends StatelessWidget {
   const ProfilePicScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    final HomeController controller = Get.find<HomeController>();
     final ProfilePicController profileController = Get.put(ProfilePicController());
     return Scaffold(
       appBar: PreferredSize(
@@ -110,19 +115,44 @@ class ProfilePicScreen extends StatelessWidget {
               ),
             ),
              SizedBox(height: 50.h),
-            Obx(
-                  () => Stack(
-                children: [
-                  CircleAvatar(
+            Obx(() {
+              final user = controller.userData.value;
+
+              Widget avatar;
+
+              if (profileController.profileImage.value != null) {
+                avatar = CircleAvatar(
+                  radius: 80,
+                  backgroundImage: FileImage(profileController.profileImage.value!),
+                );
+              } else if (user.profilePic != null && user.profilePic!.isNotEmpty) {
+                if (user.profilePic!.startsWith("data:image")) {
+                  avatar = CircleAvatar(
                     radius: 80,
+                    backgroundImage: MemoryImage(
+                      base64Decode(user.profilePic!.split(",").last),
+                    ),
+                  );
+                } else {
+                  avatar = CircleAvatar(
+                    radius: 80,
+                    backgroundImage: CachedNetworkImageProvider(
+                      "${user.fullImageUrl}${user.profilePic!}",
+                    ),
                     backgroundColor: Colors.grey[200],
-                    backgroundImage: profileController.profileImage.value != null
-                        ? FileImage(profileController.profileImage.value!)
-                        : null,
-                    child: profileController.profileImage.value == null
-                        ? const Icon(Icons.person, size: 80, color: Colors.grey)
-                        : null,
-                  ),
+                  );
+                }
+              } else {
+                avatar = const CircleAvatar(
+                  radius: 80,
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person, size: 80, color: Colors.white),
+                );
+              }
+
+              return Stack(
+                children: [
+                  avatar,
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -130,9 +160,7 @@ class ProfilePicScreen extends StatelessWidget {
                       backgroundColor: UColors.primary,
                       child: IconButton(
                         icon: const Icon(Icons.edit, color: Colors.white),
-                        onPressed: () {
-                          profileController.pickImage();
-                        },
+                        onPressed: () => profileController.pickImage(),
                       ),
                     ),
                   ),
@@ -142,16 +170,20 @@ class ProfilePicScreen extends StatelessWidget {
                       right: 0,
                       child: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          profileController.removeImage();
-                        },
+                        onPressed: () => profileController.removeImage(),
                       ),
                     ),
                 ],
-              ),
-            ),
+              );
+            }),
             Spacer(),
-            CustomButton(text: "UPDATE",backgroundColor: UColors.primary,),
+            Obx(() => CustomButton(
+              text: controller.isLoading.value ? "UPDATING..." : "UPDATE",
+              backgroundColor: UColors.primary,
+              onPressed: controller.isLoading.value ? null : () {
+                profileController.updateProfile();
+              },
+            )),
             SizedBox(height: 40.h),
 
           ],

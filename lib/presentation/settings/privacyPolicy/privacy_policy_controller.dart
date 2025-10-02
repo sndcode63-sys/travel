@@ -1,37 +1,34 @@
 import 'package:get/get.dart';
-import 'package:travell_booking_app/models/setting/support.dart';
-
 import '../../../core/helpers.dart';
-import 'help_support_repository.dart';
+import '../../../models/setting/privacy_model.dart';
+import 'privacy_policy_repository.dart';
 
-
-
-class HelpSupportController extends GetxController {
+class PrivacyPolicyController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool hasError = false.obs;
   final RxString errorMessage = "".obs;
 
-  final Rx<Support> support = Support().obs;
+  final Rx<PrivacyModel> privacyData = PrivacyModel().obs;
 
-  final HelpSupportRepository _helpSupportRepository = HelpSupportRepository();
+  final PrivacyPolicyRepository _repository = PrivacyPolicyRepository();
 
   @override
   void onInit() {
     super.onInit();
-    fetchSupport();
+    fetchPrivacyPolicy();
   }
 
-  Future<void> fetchSupport() async {
+  Future<void> fetchPrivacyPolicy() async {
     try {
       isLoading.value = true;
       hasError.value = false;
       errorMessage.value = "";
 
-      final response = await _helpSupportRepository.getSupportDetails();
-      support.value = response;
+      final response = await _repository.getPrivacyPolicy();
+      privacyData.value = response;
     } catch (e) {
       hasError.value = true;
-      errorMessage.value = 'An unexpected error occurred';
+      errorMessage.value = 'Failed to fetch privacy policy';
       AppHelpers.showSnackBar(
         title: "Error",
         message: errorMessage.value,
@@ -43,10 +40,10 @@ class HelpSupportController extends GetxController {
   }
 
   void retry() {
-    fetchSupport();
+    fetchPrivacyPolicy();
   }
 
   void cancelRequest() {
-    _helpSupportRepository.cancelRequest();
+    _repository.cancelRequest();
   }
 }

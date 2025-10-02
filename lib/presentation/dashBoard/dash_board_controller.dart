@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import '../../models/User/user_models.dart';
 import '../addVisit/add_visit_controller.dart';
 import '../addVisit/add_visit_screen.dart';
 import '../addmetting/add_meeting_screen.dart';
@@ -13,6 +14,18 @@ import 'package:get/get.dart';
 class DashboardController extends GetxController {
   final PageController pageController = PageController();
   final RxInt selectedIndex = 0.obs;
+
+
+  late UserModels user;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (Get.arguments != null) {
+      user = Get.arguments as UserModels;
+    }
+  }
+
 
   final RxList<Widget?> views = <Widget?>[
     HomScreen(),

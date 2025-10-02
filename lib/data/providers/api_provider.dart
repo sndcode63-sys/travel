@@ -10,7 +10,17 @@ import 'package:travell_booking_app/utlis/app_routes.dart';
 import '../../core/constants/api_constants.dart';
 import '../services/storage_services.dart';
 
-// --------------------- ApiProvider.dart ---------------------
+/// Custom Exception class
+class AppException implements Exception {
+  final String message;
+  final int? code;
+
+  AppException(this.message, {this.code});
+
+  @override
+  String toString() => message;
+}
+
 class ApiProvider {
   static ApiProvider? _instance;
   late Dio _dio;
@@ -58,7 +68,7 @@ class ApiProvider {
           if (connectivity == ConnectivityResult.none) {
             throw DioException(
               requestOptions: options,
-              error: "No Internet connection",
+              error: SocketException("No Internet connection"),
               type: DioExceptionType.connectionError,
             );
           }
@@ -71,15 +81,13 @@ class ApiProvider {
             final body = response.data as Map<String, dynamic>;
             if ((body['status'] == 401 || body['status'] == 404) &&
                 body['message']?.toString().toLowerCase().contains("unauthorized") == true) {
-              // Use StorageServices logout method
               StorageServices.to.logout();
-              return; // stop further response processing
+              return;
             }
           }
           handler.next(response);
         },
         onError: (error, handler) async {
-          // --- Handle HTTP 401 ---
           if (error.response?.statusCode == 401) {
             StorageServices.to.logout();
             return;
@@ -193,39 +201,44 @@ class ApiProvider {
   }
 
   // ----------------------------- Error Handling -----------------------------
-  Exception _handleError(dynamic error) {
+  AppException _handleError(dynamic error) {
     if (error is DioException) {
       switch (error.type) {
         case DioExceptionType.connectionTimeout:
-          return Exception('Connection timeout');
+          return AppException("Connection timeout. Please try again.");
         case DioExceptionType.sendTimeout:
-          return Exception('Send timeout');
+          return AppException("Send timeout. Please try again.");
         case DioExceptionType.receiveTimeout:
-          return Exception('Receive timeout');
+          return AppException("Receive timeout. Please try again.");
         case DioExceptionType.badResponse:
-        // FIX: Seedhe custom message ko return karein.
-          return Exception(_handleStatusCode(error.response?.statusCode));
+          return AppException(
+            _handleStatusCode(error.response?.statusCode),
+            code: error.response?.statusCode,
+          );
         case DioExceptionType.cancel:
-          return Exception('Request cancelled');
+          return AppException("Request cancelled");
         case DioExceptionType.connectionError:
-        // FIX: DioExceptionType.connectionError ka naya case add kiya
-          return Exception(error.error?.toString() ?? 'Connection failed');
-        case DioExceptionType.unknown:
-        // FIX: DioExceptionType.unknown ko theek se handle karein
           if (error.error is SocketException) {
-            return Exception('No Internet connection');
+            return AppException("No Internet connection");
           }
-          return Exception(error.error?.toString() ?? 'Unknown error detected');
-        default:
-        // Yeh line unreachable ho sakti hai, but safety ke liye rakhi hai.
-          return Exception('Something went wrong!');
+          return AppException("Connection failed. Please check your network.");
+        case DioExceptionType.unknown:
+          if (error.error is SocketException) {
+            return AppException("No Internet connection");
+          }
+          return AppException("Something went wrong. Please try again.");
+        case DioExceptionType.badCertificate:
+          return AppException("Invalid SSL certificate. Please try again later.");
       }
     }
-    // Agar error DioException nahi hai
-    return Exception('Unexpected error: ${error.toString()}');
+
+    if (error is SocketException) {
+      return AppException("No Internet connection");
+    }
+
+    return AppException("Unexpected error: ${error.toString()}");
   }
 
-// _handleStatusCode remains the same as it was correct.
   String _handleStatusCode(int? statusCode) {
     switch (statusCode) {
       case 400:

@@ -30,4 +30,5 @@ class AppRoutes {
   static const supportDetails = '/supportDetails-screen';
   static const libraryHead = '/libraryHead-screen';
   static const libraryDataScreen = '/libraryDataScreen-screen';
+  static const privacyPolicy = '/privacyPolicy-screen';
 }

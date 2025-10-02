@@ -20,75 +20,7 @@ class HomScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.blue.withOpacity(0.08),
       drawer: const HomeSliderDrawer(),
-      extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.h),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-            color: UColors.primary,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4.r,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: Builder(
-              builder:
-                  (context) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.menu, color: UColors.primary, size: 20),
-                      onPressed: () => Scaffold.of(context).openDrawer(),
-                    ),
-                  ),
-            ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppStrings.demoTesting,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20.sp,
-                  ),
-                ),
-                Text(
-                  "test@gmail.com",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.sp,
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  Icons.notifications_rounded,
-                  color: Colors.white,
-                  size: 26.sp,
-                ),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.settings, color: Colors.white, size: 26.sp),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: const CustomAppBarExample(),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
@@ -96,23 +28,24 @@ class HomScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Obx(() {
+
                 final sliderImages =
                     controller.slider
                         .map((e) => e.fullImageUrl)
                         .where((url) => url.isNotEmpty)
                         .toList();
-
+        
                 if (sliderImages.isEmpty) {
                   return SizedBox(
                     height: 220.sp,
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }
-
+        
                 final PageController pageController = PageController();
                 final ValueNotifier<int> currentIndex = ValueNotifier(0);
                 int currentPage = 0;
-
+        
                 Timer.periodic(const Duration(seconds: 3), (timer) {
                   if (pageController.hasClients && sliderImages.isNotEmpty) {
                     currentPage++;
@@ -124,7 +57,7 @@ class HomScreen extends StatelessWidget {
                     );
                   }
                 });
-
+        
                 return SizedBox(
                   height: 220.sp,
                   child: Stack(
@@ -269,7 +202,7 @@ class HomScreen extends StatelessWidget {
                     label: "Complaint With Me",
                     assetPath: AppImages.addVehicle,
                   ),
-
+        
                 ],
               ),
               SizedBox(height: 20.h),
@@ -288,7 +221,7 @@ class HomScreen extends StatelessWidget {
                     label: "Downline",
                     assetPath: AppImages.addVehicle,
                   ),
-
+        
                 ],
               ),
               SizedBox(height: 20.h),
@@ -307,7 +240,7 @@ class HomScreen extends StatelessWidget {
                     label: "Search Vehicle",
                     assetPath: AppImages.addVehicle,
                   ),
-
+        
                 ],
               ),
               SizedBox(height: 20.h),
@@ -326,12 +259,76 @@ class HomScreen extends StatelessWidget {
                     label: "Library",
                     assetPath: AppImages.addVehicle,
                   ),
-
+        
                 ],
               ),
               SizedBox(height: 20.h),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class CustomAppBarExample extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBarExample({super.key});
+
+  @override
+  Size get preferredSize => Size.fromHeight(70.h);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      color: UColors.primary,
+      child: Center(
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () => Scaffold.of(context).openDrawer(),
+              child: Container(
+                width: 48.w,
+                height: 48.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.r),
+                ),
+                child: Icon(Icons.menu, color: UColors.primary, size: 20.sp),
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  AppStrings.demoTesting,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20.sp),
+                ),
+                Text(
+                  "test@gmail.com",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.sp),
+                ),
+              ],
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.notifications_rounded, color: Colors.white, size: 26.sp),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.settings, color: Colors.white, size: 26.sp),
+              onPressed: () {},
+            ),
+          ],
         ),
       ),
     );

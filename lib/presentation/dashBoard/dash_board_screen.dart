@@ -22,7 +22,7 @@ class DashBoardScreen extends StatelessWidget {
         return PageView(
           controller: controller.pageController,
           onPageChanged: controller.onPageChanged,
-          physics: const NeverScrollableScrollPhysics(), // 👈 disable swipe
+          physics: const NeverScrollableScrollPhysics(),
           children: controller.views.map((screen) {
             return screen ?? const SizedBox.shrink();
           }).toList(),
@@ -32,7 +32,7 @@ class DashBoardScreen extends StatelessWidget {
             () => CustomBottomNavBar(
           selectedIndex: controller.selectedIndex.value,
           onItemTapped: (index) =>
-              controller.onItemTapped(index, context), // 👈 pass context
+              controller.onItemTapped(index, context),
         ),
       ),
     );

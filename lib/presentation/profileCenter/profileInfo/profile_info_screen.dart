@@ -1,14 +1,14 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
-import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'profile_info_controller.dart';
+
 
 class ProfileInfoScreen extends StatelessWidget {
   ProfileInfoScreen({super.key});
   final ProfileInfoController controller = Get.put(ProfileInfoController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,105 +23,127 @@ class ProfileInfoScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Relation Information",
+              "Profile Information",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
             ),
             Text(
-              "Relation Information",
+              "Address Info",
               style: TextStyle(color: Colors.grey, fontSize: 14.0),
             ),
           ],
         ),
       ),
-      body: SizedBox.expand(
-        child: Container(
-          color: Colors.blue.withOpacity(0.08),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  SizedBox(height: 20.h,),
-                  CustomDropDownField(
-                    labelText: "Rera Serial",
-                    hintText: "Select Rera Serial",
-                    controller: controller.reraSerialController,
-                    items: const [
-                      DropDownValueModel(name: 'Option 1', value: "Option 1"),
-                      DropDownValueModel(name: 'Option 2', value: "Option 2"),
-                      DropDownValueModel(name: 'Option 3', value: "Option 3"),
-                    ],
-                    selectedValue: controller.selectedReraSerial,
+      body: Form(
+        key: controller.formKey,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              children: [
+                // PIN Code
+                TextFormField(
+                  controller: controller.pincodeController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: "Pin Code",
+                    hintText: "Enter PIN",
+                    border: UnderlineInputBorder(),
                   ),
-                  const SizedBox(height: 16),
-                  _buildTextField(
-                    labelText: "Rera Number",
-                    hintText: "Enter Rera Number*",
-                    showStar: true,
+                  maxLength: 6,
+                  onChanged: (value) {
+                    if (value.length == 6) {
+                      controller.fetchAddressFromPin(value);
+                    }
+                  },
+                  validator: (value) =>
+                  value == null || value.isEmpty ? "Enter PIN" : null,
+                ),
+                const SizedBox(height: 16),
+
+                // Address
+                TextFormField(
+                  controller: controller.addressController,
+                  decoration: const InputDecoration(
+                    labelText: "Address",
+                    hintText: "Enter Address",
+                    border: UnderlineInputBorder(),
                   ),
-                  const SizedBox(height: 16),
-                  CustomDropDownField(
-                    labelText: "Team Name",
-                    hintText: "Select Team",
-                    controller: controller.teamController,
-                    items: const [
-                      DropDownValueModel(name: 'Team A', value: "Team A"),
-                      DropDownValueModel(name: 'Team B', value: "Team B"),
-                      DropDownValueModel(name: 'Team C', value: "Team C"),
-                    ],
-                    selectedValue: controller.selectedTeam,
+                  validator: (value) =>
+                  value == null || value.isEmpty ? "Enter Address" : null,
+                ),
+                const SizedBox(height: 16),
+
+                // City Dropdown
+                Obx(() => DropDownTextField(
+                  controller: controller.cityController,
+                  dropDownList: controller.cityOptions.value,
+                  textFieldDecoration: const InputDecoration(
+                    labelText: "City",
+                    border: UnderlineInputBorder(),
                   ),
-                  const SizedBox(height: 16),
-                  _buildTextField(
-                    labelText: "Pin Name",
-                    hintText: "Trainee",
+                  validator: (val) => controller.validateDropdown(
+                      controller.selectedCity.value, "City"),
+                  onChanged: (val) {
+                    controller.selectedCity.value = val.value;
+                  },
+                )),
+                const SizedBox(height: 16),
+
+                // State Dropdown
+                Obx(() => DropDownTextField(
+                  controller: controller.stateController,
+                  dropDownList: controller.stateOptions.value,
+                  textFieldDecoration: const InputDecoration(
+                    labelText: "State",
+                    border: UnderlineInputBorder(),
                   ),
-                  const SizedBox(height: 16),
-                  _buildTextField(
-                    labelText: "Location",
-                    hintText: "Mansarover",
+                  validator: (val) => controller.validateDropdown(
+                      controller.selectedState.value, "State"),
+                  onChanged: (val) {
+                    controller.selectedState.value = val.value;
+                  },
+                )),
+                const SizedBox(height: 16),
+
+                // Country Dropdown
+                Obx(() => DropDownTextField(
+                  controller: controller.countryController,
+                  dropDownList: controller.countryOptions.value,
+                  textFieldDecoration: const InputDecoration(
+                    labelText: "Country",
+                    border: UnderlineInputBorder(),
                   ),
-                  const SizedBox(height: 30),
-                ],
-              ),
+                  validator: (val) => controller.validateDropdown(
+                      controller.selectedCountry.value, "Country"),
+                  onChanged: (val) {
+                    controller.selectedCountry.value = val.value;
+                  },
+                )),
+                const SizedBox(height: 30),
+              ],
             ),
           ),
         ),
       ),
-      bottomSheet: BottomAppBar(child: CustomButton(text: "UPDATE",backgroundColor: UColors.primary,),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String labelText,
-    required String hintText,
-    bool showStar = false,
-  }) {
-    return TextField(
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        border: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.deepPurple),
-        ),
-        suffixIcon: showStar
-            ? const Padding(
-          padding: EdgeInsets.only(top: 18.0),
-          child: Text(
-            '*',
-            style: TextStyle(color: Colors.red, fontSize: 18),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Obx(() => ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              minimumSize: const Size.fromHeight(50),
+              backgroundColor: UColors.primary),
+          onPressed: controller.isLoading.value ? null : () {
+            if (controller.formKey.currentState!.validate()) {
+              controller.updateProfile();
+            }
+          },
+          child: controller.isLoading.value
+              ? const CircularProgressIndicator(color: Colors.white)
+              : const Text(
+            "UPDATE",
+            style: TextStyle(fontSize: 18, color: Colors.white),
           ),
-        )
-            : null,
+        )),
       ),
     );
   }
@@ -175,11 +197,7 @@ class CustomDropDownField extends StatelessWidget {
             selectedValue.value = val.value.toString();
           },
         ),
-        // const SizedBox(height: 8),
-        // Obx(() => Text(
-        //   // '${selectedValue.value}',
-        //   style: const TextStyle(color: Colors.grey),
-        // )),
+
       ],
     );
   }

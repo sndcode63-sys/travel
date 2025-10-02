@@ -10,6 +10,7 @@ class ApiConstants1{
   //Authentication endpoints
   static const String auth = "/authenticateUser";
   static const String login = "/login-authenticate";
+  static const String getUserDetails = "/get-user-details";
   static const String checkAuth = "/check-authentication-code";
   static const String setPass = "/setPassword";
   static const String changePassword = "/changePassword";
@@ -25,7 +26,10 @@ class ApiConstants1{
   static const String libraryList = "/library-scheme-List";
   static const String libraryHeadList = "/library-head-List";
   static const String libraryData = "/library-data";
-  static const String   generalInfoUpdate = "/updateAssociateProfileData";
+  static const String updateAssociateProfile = "/updateAssociateProfileData";
+  static const String getDetailsFromPinCode = "/getDetailsFromPinCode";
+  static const String getBankDetailsFromIfscCode = "/getBankDetailsFromIfscCode";
+  static const String getPrivacyPolicy = "/get-privacy-policy";
 
   // Headers
   static const String contentType = 'application/json';

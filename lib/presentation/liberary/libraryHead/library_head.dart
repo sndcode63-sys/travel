@@ -4,29 +4,24 @@ import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_listview_builder.dart';
 import '../../../utlis/app_routes.dart';
 import 'library_head_controller.dart';
-
-
-
-
 class LibraryHead extends StatelessWidget {
   const LibraryHead({super.key});
 
   Widget getIconForType(String? type) {
     switch (type?.toLowerCase()) {
       case 'pdf':
-        return Icon(Icons.picture_as_pdf, color: Colors.red, size: 30);
+        return const Icon(Icons.picture_as_pdf, color: Colors.red, size: 30);
       case 'image':
-        return Icon(Icons.image, color: Colors.blue, size: 30);
+        return const Icon(Icons.image, color: Colors.blue, size: 30);
       case 'video':
-        return Icon(Icons.videocam, color: Colors.orange, size: 30);
+        return const Icon(Icons.videocam, color: Colors.orange, size: 30);
       case 'ppt':
-        return Icon(Icons.slideshow, color: Colors.deepOrange, size: 30);
+        return const Icon(Icons.slideshow, color: Colors.deepOrange, size: 30);
       case 'location':
       case 'map':
-        return Icon(Icons.location_on, color: Colors.green, size: 30);
+        return const Icon(Icons.location_on, color: Colors.green, size: 30);
       default:
-        return Icon(Icons.sentiment_satisfied_alt,
-            color: Colors.purple, size: 30); // funny/default icon
+        return const Icon(Icons.sentiment_satisfied_alt, color: Colors.purple, size: 30);
     }
   }
 
@@ -41,13 +36,7 @@ class LibraryHead extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
             color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4,
-                offset: Offset(0, 2),
-              ),
-            ],
+            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
           ),
           child: SafeArea(
             child: Row(
@@ -55,22 +44,13 @@ class LibraryHead extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Get.back(),
-                    ),
+                    IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Get.back()),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Library",
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text("Scheme List", style: TextStyle(fontSize: 14.sp)),
+                        Text("Library", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+                        Text("Library Type", style: TextStyle(fontSize: 14.sp)),
                       ],
                     ),
                   ],
@@ -84,27 +64,18 @@ class LibraryHead extends StatelessWidget {
       body: Container(
         color: Colors.blue.withOpacity(0.08),
         child: Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          if (controller.isLoading.value) return const Center(child: CircularProgressIndicator());
+          if (controller.errorMessage.isNotEmpty) return Center(child: Text('Error: ${controller.errorMessage.value}'));
+          if (controller.livn.isEmpty) return const Center(child: Text('No Data Found'));
 
-          if (controller.errorMessage.isNotEmpty) {
-            return Center(
-                child: Text('Error: ${controller.errorMessage.value}'));
-          }
-
-          if (controller.livn.isEmpty) {
-            return const Center(child: Text('No Data Found'));
-          }
-
-          return CustomListView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             itemCount: controller.livn.length,
-            itemBuilder: (context, index, item) {
+            itemBuilder: (context, index) {
               final headL = controller.livn[index];
 
               return Padding(
-                padding: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(bottom: 16),
                 child: GestureDetector(
                   onTap: () {
                     Get.toNamed(
@@ -115,20 +86,13 @@ class LibraryHead extends StatelessWidget {
                         'library_head_name': headL.id,
                       },
                     );
-                    print(
-                        '➡ Selected schemeName: ${headL.schemeName}, libraryHeadName: ${headL.id}');
+                    print('➡ Selected schemeName: ${headL.schemeName}, libraryHeadName: ${headL.id}');
                   },
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
@@ -139,9 +103,7 @@ class LibraryHead extends StatelessWidget {
                           Expanded(
                             child: Text(
                               headL.name ?? "",
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
                             ),
                           ),
                         ],

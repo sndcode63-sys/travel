@@ -1,16 +1,85 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
-import 'package:travell_booking_app/utlis/constents/str_constants.dart';
-import '../../../data/services/storage_services.dart';
-import 'slider_drawer_helper.dart';
+import '../home_controller.dart';
+
+class _CustomDrawerItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool isSelected;
+  final bool hasArrow;
+
+  const _CustomDrawerItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.isSelected = false,
+    this.hasArrow = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // A slightly lighter purple/lavender color for the selected item (Home)
+    const Color selectedColor = Color.fromARGB(255, 126, 73, 233);
+    const Color defaultColor = Colors.transparent;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.h),
+      child: Material(
+        // Background color for the item
+        color: isSelected ? selectedColor : defaultColor,
+        borderRadius: BorderRadius.circular(12.r),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12.r),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 24.sp,
+                ),
+                SizedBox(width: 15.w),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18.sp,
+                    ),
+                  ),
+                ),
+                if (hasArrow)
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.white,
+                    size: 24.sp,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class HomeSliderDrawer extends StatelessWidget {
   const HomeSliderDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final HomeController controller = Get.find<HomeController>();
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.65,
       child: Drawer(
@@ -21,270 +90,88 @@ class HomeSliderDrawer extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:  [
-                  Text(
-                    AppStrings.demoTesting,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20.sp,
+              child: Obx(() {
+                final user = controller.userData.value;
+
+                if (controller.isLoading.value) {
+                  return const SizedBox.shrink();
+                }
+
+            if (controller.hasError.value) {
+                  return Text(
+                    controller.errorMessage.value,
+                    style: const TextStyle(color: Colors.red),
+                  );
+                }
+                if (user.profilePic != null &&
+                    user.profilePic!.isNotEmpty &&
+                    !user.profilePic!.startsWith("data:image")) {
+                  precacheImage(
+                    CachedNetworkImageProvider("${user.fullImageUrl}${user.profilePic!}"),
+                    context,
+                  );
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 35,
+                      backgroundColor: Colors.grey.shade200,
+                      backgroundImage: (user.profilePic != null && user.profilePic!.isNotEmpty)
+                          ? (user.profilePic!.startsWith("data:image")
+                          ? MemoryImage(base64Decode(user.profilePic!.split(",").last))
+                      as ImageProvider
+                          : CachedNetworkImageProvider("${user.fullImageUrl}${user.profilePic!}"))
+                          : const AssetImage("assets/images/default_profile.png"),
                     ),
-                  ),
-                  SizedBox(height: 5.h),
-                  Text(
-                    "test@gmail.com",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                    const SizedBox(height: 12),
 
-            // Container(
-            //   margin: const EdgeInsets.only(bottom: 20),
-            //   padding: const EdgeInsets.all(5),
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(15.r),
-            //     color: Colors.white.withAlpha(30),
-            //   ),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Container(
-            //         height: 40.h,
-            //         width: 40.w,
-            //         decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.circular(15.r),
-            //           color: Colors.blue.shade700,
-            //         ),
-            //         child: Icon(Icons.home_filled,size: 20.sp,color: UColors.white,),
-            //       ),
-            //       Text("Home",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 20.sp),),
-            //       IconButton(
-            //         onPressed: () {},
-            //         icon:  Icon(
-            //           Icons.arrow_back_ios_rounded,
-            //           color: Colors.white,
-            //           size: 16.sp,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-
-            DrawerMenuItem(
-              icon: Icons.person,
-              label: "Home",
-              onTap: () {
-                Get.toNamed(AppRoutes.addVisit);
-              },
-            ),
-            DrawerMenuItem(
-              icon: Icons.person,
-              label: "Add Visit",
-              onTap: () {
-                Get.toNamed(AppRoutes.addVisit);
-              },
-            ),
-            DrawerMenuItem(
-              icon: Icons.meeting_room,
-              label: "Add Meeting",
-              onTap: () {
-                Get.toNamed(AppRoutes.addMeeting);
-
-              },
-            ),
-            DrawerMenuItem(icon: Icons.group, label: "Team", onTap: () {
-              Get.toNamed(AppRoutes.teamScreen);
-
-            }),
-            DrawerMenuItem(
-              icon: Icons.settings,
-              label: "Setting",
-              onTap: () {},
-            ),
-            DrawerMenuItem(
-              icon: Icons.help,
-              label: "Help & Support",
-              onTap: () {},
-            ),
-            DrawerMenuItem(
-              icon: Icons.campaign,
-              label: "Notice Board",
-              onTap: () {},
-            ),
-            DrawerMenuItem(icon: Icons.book, label: "Report", onTap: () {}),
-            DrawerMenuItem(
-              icon: Icons.phone_android,
-              label: "App Settings",
-              onTap: () {},
-            ),
-            DrawerMenuItem(
-              icon: Icons.logout,
-              label: "Logout",
-              onTap: () {
-                Get.dialog(
-                  Center(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: ScaleTransition(
-                        scale: CurvedAnimation(
-                          parent: AnimationController(
-                            vsync: Navigator.of(Get.context!),
-                            duration: const Duration(milliseconds: 300),
-                          )..forward(),
-                          curve: Curves.easeOutBack,
-                        ),
-                        child: Container(
-                          width: Get.width * 0.8,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white.withOpacity(0.95),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(18),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient:  LinearGradient(
-                                    colors: [Colors.blue, UColors.primary],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:UColors.primary.withOpacity(0.4),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 6),
-                                    ),
-                                  ],
-                                ),
-                                child: const Icon(Icons.logout, color: Colors.white, size: 36),
-                              ),
-                              const SizedBox(height: 18),
-
-                              // Title
-                              const Text(
-                                "Logout",
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-
-                              // Subtitle
-                              const Text(
-                                "Are you sure you want to logout?",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-
-                              // Buttons
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.grey.shade200,
-                                        foregroundColor: Colors.black87,
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(14),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(vertical: 14),
-                                      ),
-                                      onPressed: () => Get.back(),
-                                      child: const Text("Cancel"),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: UColors.primary,
-                                        foregroundColor: Colors.white,
-                                        elevation: 2,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(14),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(vertical: 14),
-                                      ),
-                                      onPressed: () {
-                                        Get.back();
-                                        StorageServices.to.logout();
-                                      },
-                                      child: const Text("Yes, Logout"),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
+                    // Name
+                    Text(
+                      user.name ?? "Unknown User",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20.sp,
                       ),
                     ),
-                  ),
-                  barrierDismissible: true,
+                    SizedBox(height: 5.h),
+
+                    // Email
+                    Text(
+                      user.email ?? "No Email",
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                  ],
                 );
-              },
+              }),
+
             ),
 
-             Divider(height: 30.h, thickness: 1, color: Colors.white30),
-
-            // 🔹 Footer Section
-            Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Column(
-                children: [
-                  Text(
-                    "Designed & Developed by",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 5.h),
-                  Text(
-                    "Glitchprobe",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 40.h),
-                  Text(
-                    "Version: 1.1.1",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ],
-              ),
+            // Drawer Items
+            _CustomDrawerItem(
+              icon: Icons.home_filled,
+              label: "Home",
+              isSelected: true,
+              hasArrow: true,
+              onTap: () {
+                Get.back();
+              },
+            ),
+            _CustomDrawerItem(
+              icon: Icons.person_add_alt_1,
+              label: "Add Visit",
+              onTap: () => Get.toNamed(AppRoutes.addVisit),
+            ),
+            _CustomDrawerItem(
+              icon: Icons.people_alt,
+              label: "Add Meeting",
+              onTap: () => Get.toNamed(AppRoutes.addMeeting),
             ),
           ],
         ),
@@ -292,4 +179,3 @@ class HomeSliderDrawer extends StatelessWidget {
     );
   }
 }
-
