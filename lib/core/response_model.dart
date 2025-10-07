@@ -1,19 +1,19 @@
-class ApiResponse<T> {
+class CommonResponseModel<T> {
   final int status;
   final String message;
   final T? data;
 
-  ApiResponse({
+  CommonResponseModel({
     required this.status,
     required this.message,
     this.data,
   });
 
-  factory ApiResponse.fromJson(
+  factory CommonResponseModel.fromJson(
       Map<String, dynamic> json,
       T Function(dynamic) fromJson,
       ) {
-    return ApiResponse<T>(
+    return CommonResponseModel<T>(
       status: json['status'] ?? 0,
       message: json['message'] ?? "",
       data: json['data'] != null ? fromJson(json['data']) : null,

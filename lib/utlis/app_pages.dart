@@ -15,6 +15,15 @@ import 'package:travell_booking_app/presentation/auth/password/forget_password_b
 import 'package:travell_booking_app/presentation/auth/reset_password/reset_password_binding.dart';
 import 'package:travell_booking_app/bottom_navigation_bar.dart';
 import 'package:travell_booking_app/presentation/bankVerification/bank_verification_binding.dart';
+import 'package:travell_booking_app/presentation/complaine/AssociateComplain/associate_complain_binding.dart';
+import 'package:travell_booking_app/presentation/complaine/AssociateComplain/associate_complain_screen.dart';
+import 'package:travell_booking_app/presentation/complaine/complainDispute/complain_dispute_binding.dart';
+import 'package:travell_booking_app/presentation/complaine/complainDispute/complaine_dispute_screen.dart';
+import 'package:travell_booking_app/presentation/complaine/coplainDisputeSummary/enter_summary_binding.dart';
+import 'package:travell_booking_app/presentation/complaine/coplainDisputeSummary/enter_summary_screen.dart';
+import 'package:travell_booking_app/presentation/complaine/disputSummary/dispute_enter_binding.dart';
+import 'package:travell_booking_app/presentation/complaine/myComplain/my_complain_binding.dart';
+import 'package:travell_booking_app/presentation/complaine/myComplain/my_complain_screen.dart';
 import 'package:travell_booking_app/presentation/dashBoard/dash_board_screen.dart';
 import 'package:travell_booking_app/presentation/home/home_binding.dart';
 import 'package:travell_booking_app/presentation/liberary/libraryData/library_data.dart';
@@ -26,6 +35,8 @@ import 'package:travell_booking_app/presentation/liberary/library_screen.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_binding.dart';
 import 'package:travell_booking_app/presentation/libraryImageCollection/library_image_collection_screen.dart';
 import 'package:travell_booking_app/presentation/meeting/meeting.dart';
+import 'package:travell_booking_app/presentation/myComplaintData/my_complaint_data_binding.dart';
+import 'package:travell_booking_app/presentation/myComplaintData/my_complaint_data_screen.dart';
 import 'package:travell_booking_app/presentation/profileCenter/picProfile/profile_pic_binding.dart';
 import 'package:travell_booking_app/presentation/profileCenter/picProfile/profile_pic_screen.dart';
 import 'package:travell_booking_app/presentation/profileCenter/profileInfo/profile_info_binding.dart';
@@ -49,16 +60,25 @@ import 'package:travell_booking_app/presentation/teams/self_download/self_downlo
 import 'package:travell_booking_app/presentation/teams/team_binding.dart';
 import 'package:travell_booking_app/presentation/teams/team_screen.dart';
 import 'package:travell_booking_app/presentation/vefificationDucuments/verification_doc_binding.dart';
+import 'package:travell_booking_app/presentation/vehicle/addVehicle/add_vehicle_binding.dart';
+import 'package:travell_booking_app/presentation/vehicle/addVehicle/add_vehicle_screen.dart';
+import 'package:travell_booking_app/presentation/vehicle/vehicleList/vehicle_list_screen.dart';
 import '../presentation/addmetting/visitList/visit_list_binding.dart';
 import '../presentation/addmetting/visitList/visit_screen.dart';
 import '../presentation/auth/password/forget_password_screen.dart';
 import '../presentation/auth/reset_password/reset_password_screen.dart';
 import '../presentation/bankVerification/bank_verification.dart';
+import '../presentation/complaine/disputSummary/dispute_enter_summary.dart';
 import '../presentation/dashBoard/dash_board_binding.dart';
 import '../presentation/meeting/meeting_binding.dart';
 import '../presentation/settings/resetPassword/reset_password.dart';
 import '../presentation/settings/resetPassword/reset_password_binding.dart';
+import '../presentation/theme/theme_binding.dart';
+import '../presentation/theme/theme_screen.dart';
 import '../presentation/vefificationDucuments/verification_doc_screen.dart';
+import '../presentation/vehicle/vehicleList/vehicle_list_binding.dart';
+import '../presentation/vehicle/vehicleR.dart';
+import '../presentation/vehicle/vehicleR_binding.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -253,6 +273,69 @@ class AppPages {
       name: AppRoutes.privacyPolicy,
       page: () => PrivacyPolicyScreen(),
       binding: PrivacyPolicyBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.complainDispute,
+      page: () => ComplaineDisputeScreen(),
+      binding: ComplainDisputeBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.myComplaint,
+      page: () => MyComplainScreen(),
+      binding: MyComplainBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.enterSummary,
+      page: () => EnterSummaryScreen(),
+      binding: EnterSummaryBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.vehicleAdd,
+      page: () => AddVehicleScreen(),
+      binding: AddVehicleBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.vehicleList,
+      page: () => VehicleListScreen(),
+      binding: VehicleListBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.vehicleR,
+      page: () => Vehicler(),
+      binding: VehiclerBinding(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: AppRoutes.associateSearch,
+      page: () => AssociateComplainScreen(),
+      binding: AssociateComplainBinding(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: AppRoutes.staffSummary,
+      page: () => DisputeEnterSummary(),
+      binding: DisputeEnterBinding(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: AppRoutes.myData,
+      page: () => MyComplaintDataScreen(),
+      binding: MyComplaintDataBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.theme,
+      page: () => ThemeScreen(),
+      binding: ThemeBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

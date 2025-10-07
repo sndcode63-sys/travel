@@ -1,3 +1,4 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,12 +6,14 @@ import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
+import '../profileInfo/profile_info_screen.dart';
 import 'general_information_controller.dart';
 
 class GeneralInformation extends StatelessWidget {
   GeneralInformation({super.key});
-  final GeneralInformationController controller =
-  Get.put(GeneralInformationController());
+  final GeneralInformationController controller = Get.put(
+    GeneralInformationController(),
+  );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -59,8 +62,10 @@ class GeneralInformation extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                  icon: const Icon(Icons.account_circle_rounded,
-                      color: Colors.black54),
+                  icon: const Icon(
+                    Icons.account_circle_rounded,
+                    color: Colors.black54,
+                  ),
                   onPressed: () {},
                 ),
               ],
@@ -84,43 +89,64 @@ class GeneralInformation extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Full Name
-                    // Full Name
                     AppTextField(
                       controller: controller.fullNameController,
                       hintText: "Full Name",
                       labelText: "Full Name",
                       showStar: true,
-                      validator: (val) => val == null || val.isEmpty ? "Full Name is required" : null,
+                      validator:
+                          (val) =>
+                              val == null || val.isEmpty
+                                  ? "Full Name is required"
+                                  : null,
                     ),
-
-// Father Name
                     AppTextField(
                       controller: controller.fatherNameController,
                       hintText: "Father Name",
                       labelText: "Father Name",
                       showStar: true,
-                      validator: (val) => val == null || val.isEmpty ? "Father Name is required" : null,
+                      validator:
+                          (val) =>
+                              val == null || val.isEmpty
+                                  ? "Father Name is required"
+                                  : null,
                     ),
-
-// Email
+                    AppTextField(
+                      controller: controller.motherNameController,
+                      hintText: "Mother Name",
+                      labelText: "Mother Name",
+                      showStar: true,
+                      validator:
+                          (val) =>
+                              val == null || val.isEmpty
+                                  ? "Mother Name is required"
+                                  : null,
+                    ),
+                    AppTextField(
+                      controller: controller.spouseNameController,
+                      hintText: "Spouse Name",
+                      labelText: "Spouse Name",
+                    ),
                     AppTextField(
                       controller: controller.emailController,
                       hintText: "Email Address",
                       labelText: "Email Address",
                       showStar: true,
                       validator: (val) {
-                        if (val == null || val.isEmpty) return "Email is required";
-                        final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
-                        if (!emailRegex.hasMatch(val)) return "Enter a valid email";
+                        if (val == null || val.isEmpty)
+                          return "Email is required";
+                        final emailRegex = RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$',
+                        );
+                        if (!emailRegex.hasMatch(val))
+                          return "Enter a valid email";
                         return null;
                       },
                     ),
-
-// Contact Number
                     AppTextField(
                       controller: controller.contactNumberController,
                       maxLength: 10,
+                      keyboardType: TextInputType.number,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         LengthLimitingTextInputFormatter(10),
@@ -128,107 +154,113 @@ class GeneralInformation extends StatelessWidget {
                       hintText: "Contact Number",
                       labelText: "Contact Number",
                       showStar: true,
-                      keyboardType: TextInputType.number,
                       validator: (val) {
-                        if (val == null || val.isEmpty) return "Contact number is required";
-                        if (val.length != 10) return "Contact number must be 10 digits";
+                        if (val == null || val.isEmpty)
+                          return "Contact number is required";
+                        if (val.length != 10)
+                          return "Contact number must be 10 digits";
                         return null;
                       },
                     ),
 
-// Gender
-                    AppTextField(
-                      controller: controller.genderController,
-                      hintText: "Gender",
+                    const SizedBox(height: 16),
+                    const SizedBox(height: 16),
+                    CustomDropDownField(
                       labelText: "Gender",
-                      showStar: true,
-                      validator: (val) => val == null || val.isEmpty ? "Gender is required" : null,
+                      hintText: "Select Gender",
+                      controller: controller.genderDropDownController,
+                      items: const [
+                        DropDownValueModel(name: 'Male', value: "Male"),
+                        DropDownValueModel(name: 'Female', value: "Female"),
+                      ],
+                      selectedValue: controller.selectedGender,
                     ),
-
 
                     const SizedBox(height: 16),
 
-                    // DOB Label
-                    Row(
-                      children: const [
-                        Text(
-                          "Date of Birth",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Text("*", style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-
-                    // DOB Dropdowns
-                    Obx(
-                          () => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DropdownButton<int>(
-                            value: controller.selectedDay.value,
-                            items: controller.days
-                                .map((d) => DropdownMenuItem(
-                              value: d,
-                              child: Text(d.toString()),
-                            ))
-                                .toList(),
-                            onChanged: (val) {
-                              if (val != null) controller.selectedDay.value = val;
-                            },
-                          ),
-                          DropdownButton<int>(
-                            value: controller.selectedMonth.value,
-                            items: controller.months
-                                .map((m) => DropdownMenuItem(
-                              value: m,
-                              child: Text(m.toString()),
-                            ))
-                                .toList(),
-                            onChanged: (val) {
-                              if (val != null) controller.selectedMonth.value = val;
-                            },
-                          ),
-                          DropdownButton<int>(
-                            value: controller.selectedYear.value,
-                            items: controller.years
-                                .map((y) => DropdownMenuItem(
-                              value: y,
-                              child: Text(y.toString()),
-                            ))
-                                .toList(),
-                            onChanged: (val) {
-                              if (val != null) controller.selectedYear.value = val;
-                            },
-                          ),
-                        ],
+                    const Text(
+                      "Date of Birth *",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    Obx(
+                          () {
+                        // Ensure selected values exist in lists
+                        if (!controller.days.contains(controller.selectedDay.value)) {
+                          controller.selectedDay.value = controller.days.first;
+                        }
+                        if (!controller.months.contains(controller.selectedMonth.value)) {
+                          controller.selectedMonth.value = controller.months.first;
+                        }
+                        if (!controller.years.contains(controller.selectedYear.value)) {
+                          controller.years.add(controller.selectedYear.value); // add if missing
+                          controller.years.sort();
+                        }
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Day Dropdown
+                            DropdownButton<int>(
+                              value: controller.selectedDay.value,
+                              items: controller.days
+                                  .map(
+                                    (d) => DropdownMenuItem(
+                                  value: d,
+                                  child: Text(d.toString()),
+                                ),
+                              )
+                                  .toList(),
+                              onChanged: (val) {
+                                if (val != null) controller.selectedDay.value = val;
+                              },
+                            ),
+                            // Month Dropdown
+                            DropdownButton<int>(
+                              value: controller.selectedMonth.value,
+                              items: controller.months
+                                  .map(
+                                    (m) => DropdownMenuItem(
+                                  value: m,
+                                  child: Text(m.toString()),
+                                ),
+                              )
+                                  .toList(),
+                              onChanged: (val) {
+                                if (val != null) controller.selectedMonth.value = val;
+                              },
+                            ),
+                            // Year Dropdown
+                            DropdownButton<int>(
+                              value: controller.selectedYear.value,
+                              items: controller.years
+                                  .map(
+                                    (y) => DropdownMenuItem(
+                                  value: y,
+                                  child: Text(y.toString()),
+                                ),
+                              )
+                                  .toList(),
+                              onChanged: (val) {
+                                if (val != null) controller.selectedYear.value = val;
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+
 
                     const SizedBox(height: 16),
 
-                    // Gender
-                    AppTextField(
-                      controller: controller.genderController,
-                      hintText: "Gender",
-                      labelText: "Gender",
-                      showStar: true,
-                      validator: (val) =>
-                      val == null || val.isEmpty ? "Gender is required" : null,
-                    ),
-
-                    // Nominee Name
                     AppTextField(
                       controller: controller.nomineeNameController,
                       hintText: "Nominee Name",
                       labelText: "Nominee Name",
                     ),
-
-                    // Nominee Relation
                     AppTextField(
                       controller: controller.nomineeRelationController,
                       hintText: "Nominee Relation",
@@ -237,21 +269,26 @@ class GeneralInformation extends StatelessWidget {
 
                     const SizedBox(height: 24),
 
-
                     Obx(
-                          () => CustomButton(
-                        text: controller.isLoading.value ? "UPDATING..." : "UPDATE GENERAL INFORMATION",
-                        backgroundColor: controller.isFormValid.value ? UColors.primary : Colors.grey,
+                      () => CustomButton(
+                        text:
+                            controller.isLoading.value
+                                ? "UPDATING..."
+                                : "UPDATE GENERAL INFORMATION",
+                        backgroundColor:
+                            controller.isFormValid.value
+                                ? UColors.primary
+                                : Colors.grey,
                         textColor: Colors.white,
-                        onPressed: controller.isFormValid.value && !controller.isLoading.value
-                            ? () => controller.saveGeneralInfo(_formKey)
-                            : null,
+                        onPressed:
+                            controller.isFormValid.value &&
+                                    !controller.isLoading.value
+                                ? () => controller.saveGeneralInfo(_formKey)
+                                : null,
                       ),
                     ),
 
-                    SizedBox(
-                      height: 30.h,
-                    ),
+                    SizedBox(height: 30.h),
                   ],
                 ),
               ),

@@ -17,7 +17,9 @@ class ProfileInfoScreen extends StatelessWidget {
         elevation: 1,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
+          onPressed: () {Get.back();
+
+          },
         ),
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,8 +84,7 @@ class ProfileInfoScreen extends StatelessWidget {
                     labelText: "City",
                     border: UnderlineInputBorder(),
                   ),
-                  validator: (val) => controller.validateDropdown(
-                      controller.selectedCity.value, "City"),
+                  validator: (val) => controller.validateDropdown(controller.selectedCity.value, "City"),
                   onChanged: (val) {
                     controller.selectedCity.value = val.value;
                   },

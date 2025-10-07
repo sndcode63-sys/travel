@@ -1,11 +1,10 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:get/get.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-
+import '../../models/associate/associate_details_get.dart';
 import '../../models/profiles/bank_info_model.dart';
-import '../../models/profiles/getBankModel.dart';
+import '../profileCenter/profile_center_controller.dart';
 import 'bank_verification_repo.dart';
 
 
@@ -21,85 +20,89 @@ class BankVerificationController extends GetxController {
   final stateController = TextEditingController();
   final districtController = TextEditingController();
 
-  // For CustomDropDownField
   RxString accountType = 'Saving'.obs;
   final accountTypeController = SingleValueDropDownController();
 
   final storage = GetStorage();
+  final profileController = Get.find<ProfileCenterController>();
 
   @override
   void onInit() {
     super.onInit();
-    print("BankVerificationController initialized");
 
-    _loadBankInfo();
-
-    // IFSC listener
+    if (profileController.userData.value.id != null) {
+      prefillBankData();
+    } else {
+      ever(profileController.userData, (_) => prefillBankData());
+    }
     ifscController.addListener(() {
       final value = ifscController.text.trim();
-      print("IFSC changed: $value"); // Debug
       if (value.length == 11) {
         fetchBankInfoByIfsc(value);
       }
     });
   }
 
+  void prefillBankData() {
+    final user = profileController.userData.value;
+
+    if (user.bankInfo != null && user.bankInfo!.isNotEmpty) {
+      final bank = user.bankInfo!.first;
+      ifscController.text = bank.ifscCode ?? '';
+      bankNameController.text = bank.bankName ?? '';
+      accountNumberController.text = bank.accountNumber ?? '';
+      accountType.value = bank.accountType ?? 'Saving';
+
+      accountTypeController.dropDownValue = DropDownValueModel(
+        name: accountType.value,
+        value: accountType.value,
+      );
+    } else {
+      _loadBankInfo();
+    }
+  }
+
   void _loadBankInfo() {
-    print("Loading bank info from storage");
     ifscController.text = storage.read('ifscCode') ?? '';
     bankNameController.text = storage.read('bankName') ?? '';
     accountNumberController.text = storage.read('accountNumber') ?? '';
-    addressController.text = storage.read('address') ?? '';
-    branchController.text = storage.read('branch') ?? '';
-    stateController.text = storage.read('state') ?? '';
-    districtController.text = storage.read('district') ?? '';
     accountType.value = storage.read('accountType') ?? 'Saving';
     accountTypeController.dropDownValue = DropDownValueModel(
         name: accountType.value, value: accountType.value);
   }
 
-  // Fetch bank info by IFSC
   Future<void> fetchBankInfoByIfsc(String ifscCode) async {
     if (ifscCode.isEmpty || ifscCode.length != 11) return;
-
     try {
       isLoading.value = true;
-      print("Fetching bank info for IFSC: $ifscCode");
-
-      final Getbankmodel bankData = await BankInfoRepository.getBankByIfsc(ifscCode);
-      print("BANK DATA RECEIVED: ${bankData.toJson()}");
+      final bankData = await BankInfoRepository.getBankByIfsc(ifscCode);
 
       if (bankData.status == 200) {
         bankNameController.text = bankData.bank ?? '';
         accountNumberController.text = bankData.accountNumber ?? '';
         accountType.value = bankData.accountType ?? 'Saving';
+
         accountTypeController.dropDownValue = DropDownValueModel(
             name: accountType.value, value: accountType.value);
 
-        // Save locally
         storage.write('ifscCode', ifscCode);
         storage.write('bankName', bankData.bank ?? '');
         storage.write('accountNumber', bankData.accountNumber ?? '');
-        storage.write('accountType', bankData.accountType ?? 'Saving');
-
-        print("Bank info auto-filled successfully");
+        storage.write('accountType', accountType.value);
       } else {
         Get.snackbar("Error", "Invalid IFSC code");
-        print("Invalid IFSC code");
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to fetch bank details");
-      print("Error fetching bank info: $e");
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Update bank info
   Future<void> updateBankInfo() async {
     if (!formKey.currentState!.validate()) return;
-
     isLoading.value = true;
+
     try {
       final model = BankInfoModel(
         actiontype: "bank-information",
@@ -110,10 +113,33 @@ class BankVerificationController extends GetxController {
       );
 
       await BankInfoRepository.updateBankInfo(model);
+
+      // Save locally
+      storage.write('ifscCode', ifscController.text);
+      storage.write('bankName', bankNameController.text);
+      storage.write('accountNumber', accountNumberController.text);
       storage.write('accountType', accountType.value);
 
-      Get.snackbar("Success", "Bank Info Updated Successfully");
-      print("Bank info updated: ${model.toJson()}");
+      // Update profileController.userData instantly
+      final user = profileController.userData.value;
+
+      final bankInfo = BankInfo(
+        ifscCode: model.ifscCode,
+        bankName: model.bankName,
+        accountNumber: model.accountNumber,
+        accountType: model.accountType,
+      );
+
+      if (user.bankInfo == null || user.bankInfo!.isEmpty) {
+        user.bankInfo = [bankInfo];
+      } else {
+        user.bankInfo![0] = bankInfo;
+      }
+
+      // Trigger reactive update
+      profileController.userData.value = user;
+
+      Get.snackbar("Success", "Bank Info Updated Successfully",backgroundColor: Colors.green,colorText: Colors.white);
     } finally {
       isLoading.value = false;
     }

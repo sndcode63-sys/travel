@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
+import '../../../data/services/api_manager.dart';
 import '../home_controller.dart';
 
 class _CustomDrawerItem extends StatelessWidget {
@@ -78,8 +79,8 @@ class HomeSliderDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeController controller = Get.find<HomeController>();
-
+    // HomeController ab sirf drawer item ke liye use hoga
+    // User data ke liye AuthService use karenge
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.65,
       child: Drawer(
@@ -91,18 +92,17 @@ class HomeSliderDrawer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
               child: Obx(() {
-                final user = controller.userData.value;
+                final user = AuthService.to.userData.value;
 
-                if (controller.isLoading.value) {
-                  return const SizedBox.shrink();
-                }
-
-            if (controller.hasError.value) {
-                  return Text(
-                    controller.errorMessage.value,
-                    style: const TextStyle(color: Colors.red),
+                if (user == null) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
                   );
                 }
+
+                // Precache network image
                 if (user.profilePic != null &&
                     user.profilePic!.isNotEmpty &&
                     !user.profilePic!.startsWith("data:image")) {
@@ -150,7 +150,6 @@ class HomeSliderDrawer extends StatelessWidget {
                   ],
                 );
               }),
-
             ),
 
             // Drawer Items

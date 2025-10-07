@@ -1,47 +1,60 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-
 import '../../utlis/app_routes.dart';
+import '../../models/User/user_models.dart';
 
 class StorageServices extends GetxService {
   static StorageServices get to => Get.find();
   late GetStorage _box;
 
   @override
-  void onInit() async {
-    super.onInit();
+  Future<void> onInit() async {
     await GetStorage.init();
     _box = GetStorage();
+    super.onInit();
   }
 
   // -------------------------
-  // UniqueKey Management
-  // -------------------------
-  String? getUniqueKey() => _box.read('uniqueKey');
-  void setUniqueKey(String key) => _box.write('uniqueKey', key);
-  void removeUniqueKey() => _box.remove('uniqueKey');
-
-  // -------------------------
-  // Authorization Token Management
+  // Token Management
   // -------------------------
   String? getAuthorizationToken() => _box.read('authorization_token');
   void setAuthorizationToken(String token) => _box.write('authorization_token', token);
   void removeAuthorizationToken() => _box.remove('authorization_token');
 
   // -------------------------
-  // Language Management
+  // Unique Key
+  // -------------------------
+  String? getUniqueKey() => _box.read('uniqueKey');
+  void setUniqueKey(String key) => _box.write('uniqueKey', key);
+  void removeUniqueKey() => _box.remove('uniqueKey');
+
+  // -------------------------
+  // Language
   // -------------------------
   String? getLanguage() => _box.read('language');
   void setLanguage(String language) => _box.write('language', language);
 
   // -------------------------
-  // Theme Management
+  // Theme
   // -------------------------
   bool isDarkMode() => _box.read('darkMode') ?? false;
   void setDarkMode(bool value) => _box.write('darkMode', value);
 
   // -------------------------
-  // Generic Storage methods
+  // User Management
+  // -------------------------
+  void setUser(UserModels user) => write('user_data', user.toJson());
+
+  UserModels? getUser() {
+    final json = read('user_data');
+    if (json != null && json is Map<String, dynamic>) {
+      return UserModels.fromJson(json);
+    }
+    return null;
+  }
+
+  // -------------------------
+  // Generic Methods
   // -------------------------
   T? read<T>(String key) => _box.read(key);
   void write<T>(String key, T value) => _box.write(key, value);
@@ -49,20 +62,12 @@ class StorageServices extends GetxService {
   void clear() => _box.erase();
 
   // -------------------------
-  // Logout Method
+  // Logout
   // -------------------------
   void logout() {
-    // Remove tokens
-    removeUniqueKey();
     removeAuthorizationToken();
-
-    // Optionally clear everything
-    // clear();
-
-    // Navigate to login screen
+    removeUniqueKey();
+    clear();
     Get.offAllNamed(AppRoutes.login);
   }
 }
-
-
-

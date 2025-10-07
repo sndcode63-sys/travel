@@ -1,23 +1,48 @@
-import '../../core/constants/api_constants.dart';
-import '../../data/services/api_services.dart';
-import '../../models/profiles/address_profile_model.dart';
+import 'package:dio/dio.dart';
+import 'package:travell_booking_app/models/profiles/relation_get.dart';
+
+import '../../../core/constants/api_constants.dart';
+import '../../../data/services/api_services.dart';
+import '../../models/profiles/post_relation_model.dart';
+
+
 
 class RelationRepository {
-  static final _apiServices = ApiServices();
+  final _apiServices = ApiServices();
+  CancelToken? _cancelToken;
 
-  static Future<AddressProfileModel> changePass({
-    required String oldPassword,
-    required String password,
-    required String confirmPassword,
+  // GET API
+  Future<RelationGet> getSefList() async {
+    _cancelToken = CancelToken();
+    return await _apiServices.get<RelationGet>(
+      ApiConstants1.relationGetMasterAll,
+          (json) => RelationGet.fromJson(json as Map<String, dynamic>),
+      cancelToken: _cancelToken,
+    );
+  }
+  void cancelRequest() => _cancelToken?.cancel("Request cancelled");
+
+
+  // POST API
+  static Future<PostRelationModel> updateRelationInfo({
+    required int reraSerialId,
+    required String reraNumber,
+    required int teamId,
+    required int pinId,
+    required int locationId,
   }) async {
-    return await _apiServices.post<AddressProfileModel>(
+    return await ApiServices().post<PostRelationModel>(
       ApiConstants1.updateAssociateProfile,
-          (json) => AddressProfileModel.fromJson(json),
+          (json) => PostRelationModel.fromJson(json),
       data: {
-        "oldpassword": oldPassword,
-        "password": password,
-        "confirmPassword": confirmPassword,
+        "actiontype": "relation-information",
+        "rera_serial": reraSerialId, // send ID
+        "rera_number": reraNumber,
+        "team_name": teamId,
+        "pin_name": pinId,
+        "location_name": locationId,
       },
     );
   }
+
 }

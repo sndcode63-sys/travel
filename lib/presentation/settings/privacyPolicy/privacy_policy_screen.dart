@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'privacy_policy_controller.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -37,9 +38,17 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: Text(
-            controller.privacyData.value.data ?? "No privacy policy available.",
-            style: const TextStyle(fontSize: 16),
+          child: Html(
+            data:
+                controller.privacyData.value.data ??
+                "<p>No privacy policy available.</p>",
+            style: {
+              "h1": Style(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+              "h2": Style(color: Colors.black,),
+            },
           ),
         );
       }),

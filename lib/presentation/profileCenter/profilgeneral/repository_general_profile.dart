@@ -41,10 +41,5 @@ class GeneralProfileRepository {
     );
   }
 
-  static Future<GeneralInfoModel> getProfile() async {
-    return await _apiServices.get<GeneralInfoModel>(
-      ApiConstants1.updateAssociateProfile, // replace with GET profile endpoint
-          (json) => GeneralInfoModel.fromJson(json),
-    );
-  }
+
 }

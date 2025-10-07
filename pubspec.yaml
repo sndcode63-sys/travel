@@ -44,6 +44,9 @@ dependencies:
   pdfx: ^2.9.2
   chewie: ^1.13.0
   open_file: ^3.5.10
+  flutter_html: ^3.0.0
+  flex_color_scheme: ^8.2.0
+
 
 
 

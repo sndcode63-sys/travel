@@ -31,4 +31,14 @@ class AppRoutes {
   static const libraryHead = '/libraryHead-screen';
   static const libraryDataScreen = '/libraryDataScreen-screen';
   static const privacyPolicy = '/privacyPolicy-screen';
+  static const complainDispute = '/complainDispute-screen';
+  static const myComplaint = '/myComplaint-screen';
+  static const enterSummary = '/enterSummary-screen';
+  static const vehicleAdd = '/vehicleAdd-screen';
+  static const vehicleList = '/vehicleList-screen';
+  static const vehicleR = '/vehicleR-screen';
+  static const associateSearch = '/associateSearch-screen';
+  static const staffSummary = '/staffSummary-screen';
+  static const myData = '/myData-screen';
+  static const theme = '/theme-screen';
 }

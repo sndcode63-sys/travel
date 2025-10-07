@@ -1,11 +1,14 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../profile_center_controller.dart';
 import 'repository_general_profile.dart';
 
 
-
 class GeneralInformationController extends GetxController {
+  final ProfileCenterController profileController = Get.find<ProfileCenterController>();
+
   // TextEditingControllers
   final fullNameController = TextEditingController();
   final fatherNameController = TextEditingController();
@@ -13,9 +16,12 @@ class GeneralInformationController extends GetxController {
   final spouseNameController = TextEditingController();
   final emailController = TextEditingController();
   final contactNumberController = TextEditingController();
-  final genderController = TextEditingController();
   final nomineeNameController = TextEditingController();
   final nomineeRelationController = TextEditingController();
+
+  // Dropdown controller for Gender
+  final SingleValueDropDownController genderDropDownController = SingleValueDropDownController();
+  RxString selectedGender = ''.obs;
 
   // DOB
   RxInt selectedDay = 1.obs;
@@ -27,11 +33,54 @@ class GeneralInformationController extends GetxController {
   // Dropdown lists
   final List<int> days = List.generate(31, (index) => index + 1);
   final List<int> months = List.generate(12, (index) => index + 1);
-  final List<int> years =
-  List.generate(DateTime.now().year - 1900 + 1, (index) => 1900 + index);
+  final List<int> years = List.generate(DateTime.now().year - 1900 + 1, (index) => 1900 + index);
 
-  DateTime get selectedDate =>
-      DateTime(selectedYear.value, selectedMonth.value, selectedDay.value);
+  // Form validation
+  RxBool isFormValid = false.obs;
+
+  void validateFormFields() {
+    isFormValid.value =
+        fullNameController.text.trim().isNotEmpty &&
+            fatherNameController.text.trim().isNotEmpty &&
+            emailController.text.trim().isNotEmpty &&
+            contactNumberController.text.trim().length == 10 &&
+            selectedGender.value.isNotEmpty;
+  }
+
+  void prefillData() {
+    final user = profileController.userData.value;
+
+    // TextFields
+    fullNameController.text = user.fullName ?? '';
+    fatherNameController.text = user.fatherName ?? '';
+    motherNameController.text = user.motherName ?? '';
+    spouseNameController.text = user.spouseName ?? '';
+    emailController.text = user.email ?? '';
+    contactNumberController.text = user.mobileNumber ?? '';
+    nomineeNameController.text = user.nomineeName ?? '';
+    nomineeRelationController.text = user.nomineeRelation ?? '';
+
+    // Gender
+    if (user.gender != null && user.gender!.isNotEmpty) {
+      selectedGender.value = user.gender!;
+      genderDropDownController.dropDownValue = DropDownValueModel(
+        name: user.gender!,
+        value: user.gender!,
+      );
+    }
+
+    // DOB
+    if (user.dob != null && user.dob!.isNotEmpty) {
+      final dobParts = user.dob!.split('-');
+      if (dobParts.length == 3) {
+        selectedYear.value = int.tryParse(dobParts[0]) ?? 2000;
+        selectedMonth.value = int.tryParse(dobParts[1]) ?? 1;
+        selectedDay.value = int.tryParse(dobParts[2]) ?? 1;
+      }
+    }
+
+    validateFormFields();
+  }
 
   Future<void> saveGeneralInfo(GlobalKey<FormState> formKey) async {
     if (!formKey.currentState!.validate()) return;
@@ -49,19 +98,35 @@ class GeneralInformationController extends GetxController {
         date: selectedDay.value.toString().padLeft(2, '0'),
         month: selectedMonth.value.toString().padLeft(2, '0'),
         year: selectedYear.value.toString(),
-        gender: genderController.text.trim(),
+        gender: selectedGender.value.trim(),
         nomineeRelation: nomineeRelationController.text.trim(),
         nomineeName: nomineeNameController.text.trim(),
       );
+
+      // Update local userData for immediate UI reflect
+      profileController.userData.update((user) {
+        user?.fullName = fullNameController.text.trim();
+        user?.fatherName = fatherNameController.text.trim();
+        user?.motherName = motherNameController.text.trim();
+        user?.spouseName = spouseNameController.text.trim();
+        user?.email = emailController.text.trim();
+        user?.mobileNumber = contactNumberController.text.trim();
+        user?.gender = selectedGender.value.trim();
+        user?.dob =
+        '${selectedYear.value.toString().padLeft(4, '0')}-${selectedMonth.value.toString().padLeft(2, '0')}-${selectedDay.value.toString().padLeft(2, '0')}';
+        user?.nomineeName = nomineeNameController.text.trim();
+        user?.nomineeRelation = nomineeRelationController.text.trim();
+      });
 
       isLoading.value = false;
 
       Get.snackbar(
         "Success",
-        "Profile updated successfully",
+        "Profile General Information Update Successfully",
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
+
       print("API Response: ${response.toJson()}");
     } catch (e) {
       isLoading.value = false;
@@ -73,27 +138,24 @@ class GeneralInformationController extends GetxController {
       );
     }
   }
-  RxBool isFormValid = false.obs;
-
-  void validateFormFields() {
-    isFormValid.value =
-        fullNameController.text.trim().isNotEmpty &&
-            fatherNameController.text.trim().isNotEmpty &&
-            emailController.text.trim().isNotEmpty &&
-            contactNumberController.text.trim().length == 10 &&
-            genderController.text.trim().isNotEmpty;
-  }
 
   @override
   void onInit() {
     super.onInit();
+
+    // Add listeners for validation
     fullNameController.addListener(validateFormFields);
     fatherNameController.addListener(validateFormFields);
     emailController.addListener(validateFormFields);
     contactNumberController.addListener(validateFormFields);
-    genderController.addListener(validateFormFields);
-  }
 
+    // Prefill data on first load
+    if (profileController.userData.value.id != null) {
+      prefillData();
+    } else {
+      ever(profileController.userData, (_) => prefillData());
+    }
+  }
 
   @override
   void onClose() {
@@ -103,7 +165,6 @@ class GeneralInformationController extends GetxController {
     spouseNameController.dispose();
     emailController.dispose();
     contactNumberController.dispose();
-    genderController.dispose();
     nomineeNameController.dispose();
     nomineeRelationController.dispose();
     super.onClose();

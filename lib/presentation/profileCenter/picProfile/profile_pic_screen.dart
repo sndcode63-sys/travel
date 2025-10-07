@@ -1,112 +1,46 @@
 import 'dart:convert';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
-import '../../home/home_controller.dart';
+import '../../../data/services/api_manager.dart';
 import 'profile_pic_controller.dart';
+
+
 
 class ProfilePicScreen extends StatelessWidget {
   const ProfilePicScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final HomeController controller = Get.find<HomeController>();
     final ProfilePicController profileController = Get.put(ProfilePicController());
+
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.h),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: SafeArea(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.grey),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Profile",
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Upload Profile Pic',
-                          style: TextStyle(fontSize: 14.sp),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.account_circle_rounded,
-                        color: Colors.black54,
-                        size: 30,
-                      ),
-                      onPressed: () {},
-                    ),
-                    Positioned(
-                      right: 10,
-                      top: 10,
-                      child: Container(
-                        height: 10,
-                        width: 10,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        title: const Text("Upload Profile Pic"),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 2,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             RichText(
-              text:  TextSpan(
+              text: const TextSpan(
                 children: [
                   TextSpan(
                     text: 'Profile Pic ',
                     style: TextStyle(
-                      fontSize: 20.h,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
                   TextSpan(
-                    text: 'Support Only Image. Max Max Image Size 2 MB.',
+                    text: 'Support Only Image. Max Image Size 1 MB.',
                     style: TextStyle(
-                      fontSize: 16.h,
+                      fontSize: 16,
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
                     ),
@@ -114,35 +48,27 @@ class ProfilePicScreen extends StatelessWidget {
                 ],
               ),
             ),
-             SizedBox(height: 50.h),
+            const SizedBox(height: 50),
             Obx(() {
-              final user = controller.userData.value;
+              final localImage = profileController.profileImage.value;
+              final savedProfile = AuthService.to.profileImageBase64.value;
 
               Widget avatar;
 
-              if (profileController.profileImage.value != null) {
+              if (localImage != null) {
+                // Local selected image
                 avatar = CircleAvatar(
                   radius: 80,
-                  backgroundImage: FileImage(profileController.profileImage.value!),
+                  backgroundImage: FileImage(localImage),
                 );
-              } else if (user.profilePic != null && user.profilePic!.isNotEmpty) {
-                if (user.profilePic!.startsWith("data:image")) {
-                  avatar = CircleAvatar(
-                    radius: 80,
-                    backgroundImage: MemoryImage(
-                      base64Decode(user.profilePic!.split(",").last),
-                    ),
-                  );
-                } else {
-                  avatar = CircleAvatar(
-                    radius: 80,
-                    backgroundImage: CachedNetworkImageProvider(
-                      "${user.fullImageUrl}${user.profilePic!}",
-                    ),
-                    backgroundColor: Colors.grey[200],
-                  );
-                }
+              } else if (savedProfile.isNotEmpty) {
+                // Base64 image (instant)
+                avatar = CircleAvatar(
+                  radius: 80,
+                  backgroundImage: MemoryImage(base64Decode(savedProfile.split(",").last)),
+                );
               } else {
+                // Default placeholder
                 avatar = const CircleAvatar(
                   radius: 80,
                   backgroundColor: Colors.grey,
@@ -164,7 +90,7 @@ class ProfilePicScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (profileController.profileImage.value != null)
+                  if (localImage != null)
                     Positioned(
                       top: 0,
                       right: 0,
@@ -176,16 +102,15 @@ class ProfilePicScreen extends StatelessWidget {
                 ],
               );
             }),
-            Spacer(),
+            const Spacer(),
             Obx(() => CustomButton(
-              text: controller.isLoading.value ? "UPDATING..." : "UPDATE",
+              text: profileController.isLoading.value ? "UPDATING..." : "UPDATE",
               backgroundColor: UColors.primary,
-              onPressed: controller.isLoading.value ? null : () {
-                profileController.updateProfile();
-              },
+              onPressed: profileController.isLoading.value
+                  ? null
+                  : () => profileController.updateProfile(),
             )),
-            SizedBox(height: 40.h),
-
+            const SizedBox(height: 40),
           ],
         ),
       ),

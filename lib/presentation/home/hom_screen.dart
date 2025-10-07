@@ -177,7 +177,7 @@ class HomScreen extends StatelessWidget {
                   DashboardItem(
                     label: "Self Downline",
                     assetPath: AppImages.selfDownline,
-                    onTap: () => Get.toNamed(AppRoutes.selfDownline),
+                    onTap: () => Get.toNamed(AppRoutes.complainDispute),
                   ),
                   DashboardItem(
                     label: "All Downline",
@@ -193,10 +193,13 @@ class HomScreen extends StatelessWidget {
                   DashboardItem(
                     label: "Raise Complaint",
                     assetPath: AppImages.addVisit,
+                      onTap: () => Get.toNamed(AppRoutes.complainDispute),
                   ),
                   DashboardItem(
                     label: "My Complaint",
                     assetPath: AppImages.addVisit,
+                    onTap: () => Get.toNamed(AppRoutes.myComplaint),
+
                   ),
                   DashboardItem(
                     label: "Complaint With Me",
@@ -231,6 +234,8 @@ class HomScreen extends StatelessWidget {
                   DashboardItem(
                     label: "Add Vehicle",
                     assetPath: AppImages.addVisit,
+                    onTap: () => Get.toNamed(AppRoutes.vehicleAdd),
+
                   ),
                   DashboardItem(
                     label: "My Vehicle",

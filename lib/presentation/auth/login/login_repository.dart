@@ -21,7 +21,6 @@ class LoginRepository {
       },
     );
 
-    //  AFTER  LOGIN TOKEN SAVE
     final storage = StorageServices.to;
     if ((response.data?.authorizationToken ?? "").isNotEmpty) {
       storage.setAuthorizationToken(response.data!.authorizationToken!);

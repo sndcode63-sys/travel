@@ -3,12 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 
+import 'profile_center_controller.dart';
+
 
 class ProfileCenterScreen extends StatelessWidget {
   const ProfileCenterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ProfileCenterController controller = Get.put(ProfileCenterController());
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize:  Size.fromHeight(70.h),
@@ -54,7 +58,7 @@ class ProfileCenterScreen extends StatelessWidget {
             ),
           ),
         ),
-        
+
       ),
       body: Container(
         color: Colors.blue.withOpacity(0.08),

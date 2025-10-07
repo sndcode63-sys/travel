@@ -30,6 +30,11 @@ class ApiConstants1{
   static const String getDetailsFromPinCode = "/getDetailsFromPinCode";
   static const String getBankDetailsFromIfscCode = "/getBankDetailsFromIfscCode";
   static const String getPrivacyPolicy = "/get-privacy-policy";
+  static const String getUserAssociate = "/get-associate-details";
+  static const String relationGetRelationModel = "/GetRelationModel";
+  static const String relationGetMasterAll = "/get-all-master-details";
+  static const String searchUserData = "/searchUserData";
+  static const String saveInternalDispute = "$baseUrl/save-internal-dispute";
 
   // Headers
   static const String contentType = 'application/json';

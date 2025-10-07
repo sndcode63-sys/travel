@@ -14,7 +14,7 @@ class Getbankmodel {
 
   Getbankmodel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    bank = json['bank_name'];
+    bank = json['Bank'];
     ifscCode = json['ifsc_code'];
     accountNumber = json['account_number'];
     accountType = json['account_type'];

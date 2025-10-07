@@ -40,7 +40,7 @@ class SelfController extends GetxController {
   String getFirstAndLastLetter(String? name) {
     if (name == null || name.isEmpty) return '';
     if (name.length == 1) return name;
-    return '${name[0]}${name[name.length - 1]}'; // ✅ fixed (पहले -9 था)
+    return '${name[0]}${name[name.length - 1]}';
   }
 
   Future<void> fetchUsers() async {
@@ -52,7 +52,7 @@ class SelfController extends GetxController {
       final response = await _selfRepository.getSefList();
 
       selfListGet.assignAll(response);
-      filteredSelf.assignAll(response); // ✅ copy for search
+      filteredSelf.assignAll(response);
 
     } catch (e) {
       hasError.value = true;
