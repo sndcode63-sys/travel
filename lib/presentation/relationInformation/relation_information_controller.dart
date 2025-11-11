@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 import '../../models/profiles/relation_get.dart';
+import '../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'relation_repository.dart';
 
 class RelationInformationController extends GetxController {
@@ -58,7 +59,6 @@ class RelationInformationController extends GetxController {
 
       final first = masterData.value;
       if (first != null) {
-        // Prefill Rera Serial
         if (first.reraSerial != null && first.reraSerial!.isNotEmpty) {
           final initialRera = DropDownValueModel(
             name: first.reraSerial!.first.name ?? "",
@@ -176,17 +176,26 @@ class RelationInformationController extends GetxController {
       }
 
 
-      Get.snackbar(
-        "Success",
-        "Relation Information Update Successfully",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      if (response.status == 200) {
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: true,
+        );
 
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Get.isDialogOpen ?? false) Get.back();
+          Get.offAllNamed(AppRoutes.dashBoard);
+        });
+      } else {
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: false,
+        );
+      }
     } catch (e) {
       Get.snackbar(
         "Error",
-        "Failed to update relation info",
+        e.toString(),
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );

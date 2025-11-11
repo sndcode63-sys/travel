@@ -7,6 +7,7 @@ class EnterSummaryController extends GetxController {
   final disputeReasonController = SingleValueDropDownController();
   final projectNameController = SingleValueDropDownController();
   final plotNameController = SingleValueDropDownController();
+  RxBool isLoading = false.obs;
 
   final SchemeRepository schemeRepository = SchemeRepository();
 

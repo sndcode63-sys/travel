@@ -8,6 +8,9 @@ class SaveVisitConte {
   String? remarks;
   String? schemeName;
   String? visitImage;
+  // Use status & message directly from API response
+  int? status;
+  String? message;
 
   SaveVisitConte(
       {this.clientFullName,
@@ -18,7 +21,9 @@ class SaveVisitConte {
         this.mobileNumber,
         this.remarks,
         this.schemeName,
-        this.visitImage});
+        this.visitImage,
+        this.status,
+        this.message,});
 
   SaveVisitConte.fromJson(Map<String, dynamic> json) {
     clientFullName = json['client_full_name'];
@@ -30,6 +35,9 @@ class SaveVisitConte {
     remarks = json['remarks'];
     schemeName = json['scheme_name'];
     visitImage = json['visit_image'];
+    // API response fields
+    status = json['status'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {

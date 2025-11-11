@@ -17,15 +17,6 @@ class HomeRepository {
     );
   }
 
-  Future<UserModels> getDataUser() async {
-    _cancelToken = CancelToken();
-    final response = await _apiServices.get(
-      ApiConstants1.getUserDetails,
-          (json) => UserModels.fromJson(json['data']),
-      cancelToken: _cancelToken,
-    );
-    return response;
-  }
 
   void cancelRequest() {
     _cancelToken?.cancel("Request cancelled by the user");

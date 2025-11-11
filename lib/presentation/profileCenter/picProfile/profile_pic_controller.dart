@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../data/services/api_manager.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import 'profilepic_repository.dart';
 
 class ProfilePicController extends GetxController {
@@ -42,19 +43,23 @@ class ProfilePicController extends GetxController {
       isLoading.value = false;
 
       if (response.status == 200) {
-        //  Local image ko base64 me convert karke update
         final bytes = await file.readAsBytes();
         final base64Image =
             "data:image/${file.path.split('.').last};base64,${base64Encode(bytes)}";
 
-        // Update AuthService instantly (UI turant refresh)
         AuthService.to.updateProfilePic(base64Image);
 
-        profileImage.value = null; // Reset local selection
+        profileImage.value = null;
 
-        Get.snackbar('Success', 'Profile Update Successfully',backgroundColor: Colors.green,colorText: Colors.white);
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: true,
+        );
       } else {
-        Get.snackbar('Error', response.message ?? 'Failed to update profile picture.',backgroundColor: Colors.red);
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: false,
+        );
       }
     } catch (e) {
       isLoading.value = false;

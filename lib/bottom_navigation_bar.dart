@@ -62,7 +62,7 @@ class CustomBottomNavBar extends StatelessWidget {
 
                 const Spacer(flex: 1),
 
-                Expanded(child: _buildNavItem(context, 3, Icons.people_outline, 'Meeting')),
+                Expanded(child: _buildNavItem(context, 3, Icons.people_outline, 'Verification')),
                 Expanded(child: _buildNavItem(context, 4, Icons.settings, 'Setting')),
               ],
             ),

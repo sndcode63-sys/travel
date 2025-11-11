@@ -5,6 +5,8 @@ class AddressProfileModel {
   String? state;
   String? country;
   String? pincode;
+  int? status;
+  String? message;
 
   AddressProfileModel({
     this.actiontype,
@@ -13,6 +15,9 @@ class AddressProfileModel {
     this.state,
     this.country,
     this.pincode,
+    this.status,
+    this.message,
+
   });
 
   AddressProfileModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +27,8 @@ class AddressProfileModel {
     state = json['state'];
     country = json['country'];
     pincode = json['pincode'];
+    status = json['status'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {

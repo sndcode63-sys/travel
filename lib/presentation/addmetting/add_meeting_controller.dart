@@ -142,10 +142,22 @@ class AddMeetingController extends GetxController {
 
       final response = await _repository.saveMeeting(meeting: meeting);
 
-      CustomNotifier.showPopup(
-        message: "Meeting Information Saved",
-        isSuccess: true,
-      );
+      if (response.status == 200) {
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: true,
+        );
+
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Get.isDialogOpen ?? false) Get.back();
+          Get.offAllNamed(AppRoutes.dashBoard);
+        });
+      } else {
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: false,
+        );
+      }
 
       Future.delayed(const Duration(seconds: 2), () {
         if (Get.isDialogOpen ?? false) Get.back();

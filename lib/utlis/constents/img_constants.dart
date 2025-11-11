@@ -37,6 +37,7 @@ class AppImages {
   static const String lock = "assets/images/lock.svg";
   static const String privacy = "assets/images/privacy.svg";
   static const String profile = "assets/images/profile.svg";
+  static const String bacGround = "assets/images/bacGround.svg";
 
   //SVGs
 static const String menuIcon = "assets/images/menuIcon.svg";

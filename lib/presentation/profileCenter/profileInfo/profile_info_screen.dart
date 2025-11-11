@@ -107,7 +107,6 @@ class ProfileInfoScreen extends StatelessWidget {
                 )),
                 const SizedBox(height: 16),
 
-                // Country Dropdown
                 Obx(() => DropDownTextField(
                   controller: controller.countryController,
                   dropDownList: controller.countryOptions.value,

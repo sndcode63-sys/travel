@@ -7,6 +7,7 @@ import '../addmetting/add_meeting_screen.dart';
 import '../home/hom_screen.dart';
 import '../home/wigets/diloag_home.dart';
 import '../settings/setting_screen.dart';
+import '../verification/verificatation_screen.dart';
 
 class DashboardController extends GetxController {
   final PageController pageController = PageController();
@@ -23,7 +24,7 @@ class DashboardController extends GetxController {
     HomScreen(),
     null,
     const SizedBox.shrink(),
-    const AddMeetingScreen(),
+     VerificationScreen(),
     const SettingScreen(),
   ].obs;
 

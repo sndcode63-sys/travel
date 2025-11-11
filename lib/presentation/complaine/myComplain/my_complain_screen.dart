@@ -19,33 +19,63 @@ class MyComplainScreen extends StatelessWidget {
         hideKeyboard();
       },
       child: Scaffold(
-        appBar: AppBar(title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Complaint/Dispute",
-              style: TextStyle(
-                color: UColors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70.h),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => Get.back(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Complaint / Dispute",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Staff List",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
-            Text(
-              "Staff List",
-              style: TextStyle(
-                color: UColors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ],
-        ),),
+          ),
+        ),
         body: GestureDetector(
           onTap: hideKeyboard,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
+                SizedBox(height: 10.h,),
                 Text(
                   'Enter min 3 digits of name / mobile number',
                   style: TextStyle(color: UColors.black),

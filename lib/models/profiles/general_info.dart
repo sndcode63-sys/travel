@@ -12,6 +12,8 @@ class GeneralInfoModel {
   String? gender;
   String? nomineeRelation;
   String? nomineeName;
+  int? status;
+  String? message;
 
   GeneralInfoModel(
       {this.actiontype,
@@ -26,7 +28,9 @@ class GeneralInfoModel {
         this.year,
         this.gender,
         this.nomineeRelation,
-        this.nomineeName});
+        this.nomineeName,
+        this.status,
+        this.message,});
 
   GeneralInfoModel.fromJson(Map<String, dynamic> json) {
     actiontype = json['actiontype'];
@@ -42,6 +46,8 @@ class GeneralInfoModel {
     gender = json['gender'];
     nomineeRelation = json['nominee_relation'];
     nomineeName = json['nominee_name'];
+    status = json['status'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {

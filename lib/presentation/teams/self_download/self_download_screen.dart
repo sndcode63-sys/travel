@@ -34,37 +34,43 @@ class SelfDownloadScreen extends StatelessWidget {
               ],
             ),
             child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () => Get.back(),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:  [
-                          Text(
-                            "My Team",
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => Get.back(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "My Team",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text("Self Downline", style: TextStyle(fontSize: 14)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () {
-                      Get.to(AllDownlineScreen());
-                    },
-                  ),
-                ],
+                            Text(
+                              "Self Downline",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -112,18 +118,18 @@ class SelfDownloadScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 5.h),
 
-                /// 🔄 Loader / Error / List
+                // Loader / Error / List
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      /// Loader
+                      // Loader
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
 
                     if (controller.hasError.value) {
-                      /// Error
+                      // Error
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

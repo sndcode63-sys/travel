@@ -35,6 +35,21 @@ class ApiConstants1{
   static const String relationGetMasterAll = "/get-all-master-details";
   static const String searchUserData = "/searchUserData";
   static const String saveInternalDispute = "$baseUrl/save-internal-dispute";
+  static const String saveVehicleData = "$baseUrl/saveVehicleData";
+  static const String getVehicleData = "$baseUrl/getVehicleData";
+  static const String searchVehicleData = "$baseUrl/searchVehicleData";
+  static const String brandNameVehicle = "$baseUrl/get-vehicle-brand";
+  static const String deleteVehicle = "$baseUrl/deleteVehicleInformation";
+  static const String changeVehicleInformation = "$baseUrl/changeVehicleInformation";
+  static const String notifyVehicle = "$baseUrl/notify";
+  static const String updateVehicleData = "$baseUrl/updateVehicleData";
+  static const String saveSuggestion = "$baseUrl/save-suggestion";
+  static const String getSuggestionList = "$baseUrl/get-suggestion-list";
+  static const String sendVerificationCode = "$baseUrl/send-verification-code";
+  static const String validateOtpCode = "$baseUrl/validate-otp-code";
+  static const String saveVerificationData = "$baseUrl/save-verification-data";
+  static const String saveAssociateData = "$baseUrl/save-associate-data";
+  static const String associateList = "$baseUrl/get-associate-list";
 
   // Headers
   static const String contentType = 'application/json';

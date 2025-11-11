@@ -63,7 +63,6 @@ class ForgetPasswordScreen extends GetView<ForgetPasswordController> {
                       ),
                     ),
                     SizedBox(height: 30.h,),
-                    /// Form
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Form(

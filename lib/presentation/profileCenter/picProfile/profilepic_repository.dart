@@ -17,7 +17,7 @@ class ProfileRepository {
     final image = img.decodeImage(bytes);
     if (image == null) return file;
 
-    final compressedBytes = img.encodeJpg(image, quality: 70); // 70% quality
+    final compressedBytes = img.encodeJpg(image, quality: 70);
     final tempFile = File(file.path)..writeAsBytesSync(compressedBytes);
     return tempFile;
   }

@@ -26,23 +26,43 @@ class AddVisitScreen extends StatelessWidget {
               boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
             ),
             child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Get.back()),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Add Visit", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                          Text("Scheme List", style: TextStyle(fontSize: 14)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  IconButton(icon: const Icon(Icons.settings), onPressed: () => Get.toNamed(AppRoutes.meetingList)),
-                ],
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => Get.back(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Add Visit",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Scheme List",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

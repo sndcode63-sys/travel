@@ -86,22 +86,23 @@ class AddClientInformationController extends GetxController {
     try {
       final response = await SaveVisitRepository().saveVisit(request);
 
-      final resJson = response.toJson();
-
-      if ((resJson['status'] ?? 200) == 200) {
+      if (response.status == 200) {
         CustomNotifier.showPopup(
-          message: resJson['message'] ?? "Visit saved successfully",
+          message: response.message ?? "",
           isSuccess: true,
         );
-        await Future.delayed(const Duration(seconds: 1));
-        if (Get.isDialogOpen ?? false) Get.back();
-        Get.offAllNamed(AppRoutes.dashBoard);
+
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Get.isDialogOpen ?? false) Get.back();
+          Get.offAllNamed(AppRoutes.dashBoard);
+        });
       } else {
         CustomNotifier.showPopup(
-          message: resJson['message'] ?? "Failed to save visit",
+          message: response.message ?? "",
           isSuccess: false,
         );
       }
+
     } finally {
       isLoading.value = false;
     }

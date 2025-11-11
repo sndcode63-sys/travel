@@ -5,13 +5,18 @@ class AddMeetingModel {
   String? latitute;
   String? longitude;
   String? meetingImage;
+  // Use status & message directly from API response
+  int? status;
+  String? message;
 
   AddMeetingModel(
       {this.noOfUsers,
         this.reference,
         this.latitute,
         this.longitude,
-        this.meetingImage,});
+        this.meetingImage,
+        this.status,
+        this.message,});
 
   AddMeetingModel.fromJson(Map<String, dynamic> json) {
     noOfUsers = json['no_of_users'];
@@ -19,6 +24,9 @@ class AddMeetingModel {
     latitute = json['latitute'];
     longitude = json['longitude'];
     meetingImage = json['meeting_image'];
+    // API response fields
+    status = json['status'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {

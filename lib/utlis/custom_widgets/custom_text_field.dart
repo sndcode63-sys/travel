@@ -12,12 +12,13 @@ class AppTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
-
   final int? maxLength;
   final int maxLines;
   final List<TextInputFormatter>? inputFormatters;
-
   final bool showStar;
+
+  /// 🔹 Add this
+  final String? errorText;
 
   const AppTextField({
     super.key,
@@ -35,6 +36,7 @@ class AppTextField extends StatelessWidget {
     this.maxLines = 1,
     this.inputFormatters,
     this.showStar = false,
+    this.errorText, // <-- Add here too
   });
 
   @override
@@ -91,6 +93,8 @@ class AppTextField extends StatelessWidget {
         focusedErrorBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.red, width: 1.2),
         ),
+
+        errorText: errorText,
       ),
     );
   }

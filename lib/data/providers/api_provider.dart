@@ -53,10 +53,10 @@ class ApiProvider {
           final authToken = _storageService.getAuthorizationToken();
 
           if (uniqueKey != null) {
-            options.headers["authorization"] = "Bearer $uniqueKey";
+            options.headers["Authorization"] = "Bearer $uniqueKey";
           }
           if (authToken != null) {
-            options.headers["basicauthorizationkey"] = authToken;
+            options.headers["BasicAuthorizationkey"] = authToken;
           }
 
           // --- Language headers ---

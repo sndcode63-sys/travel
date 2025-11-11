@@ -5,6 +5,8 @@ class PostRelationModel {
   String? teamName;
   String? pinName;
   String? locationName;
+  int? status;
+  String? message;
 
   PostRelationModel({
     this.actiontype,
@@ -13,6 +15,9 @@ class PostRelationModel {
     this.teamName,
     this.pinName,
     this.locationName,
+    this.status,
+    this.message,
+
   });
 
   PostRelationModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +27,8 @@ class PostRelationModel {
     teamName = json['team_name'];
     pinName = json['pin_name'];
     locationName = json['location_name'];
+    status = json['status'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {

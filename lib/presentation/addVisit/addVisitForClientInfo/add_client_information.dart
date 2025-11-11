@@ -34,47 +34,43 @@ class AddClientInformation extends GetView<AddClientInformationController> {
             ],
           ),
           child: SafeArea(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /// Back Button + Title
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.grey),
-                      onPressed: () => Get.back(),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:  [
-                        Text(
-                          "Add Visit",
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+            child: Padding(
+              padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () => Get.back(),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "My Visit",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Add Client Information",
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.black,
+                          Text(
+                            "Add Client Information",
+                            style: TextStyle(fontSize: 14.sp),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                /// Settings Icon
-                IconButton(
-                  icon: const Icon(Icons.settings, color: Colors.black54),
-                  onPressed: () {
-                    // Action here
-                  },
-                ),
-              ],
+                        ],
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ),
           ),
         ),

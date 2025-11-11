@@ -56,6 +56,13 @@ class AssociateDetailsGet {
   String? policeVerificationImageSource;
   String? bankCopyImageSource;
   String? profilePicSource;
+
+  // ✅ ADD THESE VERIFICATION STATUS FIELDS
+  int? emailVerifyStatus;
+  int? phoneVerifyStatus;
+  int? aadharVerifyStatus;
+  int? panVerifyStatus;
+
   List<BankInfo>? bankInfo;
 
   AssociateDetailsGet({
@@ -116,6 +123,10 @@ class AssociateDetailsGet {
     this.policeVerificationImageSource,
     this.bankCopyImageSource,
     this.profilePicSource,
+    this.emailVerifyStatus,
+    this.phoneVerifyStatus,
+    this.aadharVerifyStatus,
+    this.panVerifyStatus,
     this.bankInfo,
   });
 
@@ -177,6 +188,20 @@ class AssociateDetailsGet {
     policeVerificationImageSource = json['police_verification_image_source']?.toString();
     bankCopyImageSource = json['bank_copy_image_source']?.toString();
     profilePicSource = json['profile_pic_source']?.toString();
+
+    //  PARSE VERIFICATION STATUS FIELDS
+    emailVerifyStatus = json['email_verify_status'] is int
+        ? json['email_verify_status']
+        : int.tryParse(json['email_verify_status']?.toString() ?? '0');
+    phoneVerifyStatus = json['phone_verify_status'] is int
+        ? json['phone_verify_status']
+        : int.tryParse(json['phone_verify_status']?.toString() ?? '0');
+    aadharVerifyStatus = json['aadhar_verify_status'] is int
+        ? json['aadhar_verify_status']
+        : int.tryParse(json['aadhar_verify_status']?.toString() ?? '0');
+    panVerifyStatus = json['pan_verify_status'] is int
+        ? json['pan_verify_status']
+        : int.tryParse(json['pan_verify_status']?.toString() ?? '0');
 
     if (json['bank_info'] != null) {
       bankInfo = <BankInfo>[];
@@ -245,6 +270,13 @@ class AssociateDetailsGet {
     data['police_verification_image_source'] = policeVerificationImageSource;
     data['bank_copy_image_source'] = bankCopyImageSource;
     data['profile_pic_source'] = profilePicSource;
+
+    //  ADD VERIFICATION STATUS TO JSON
+    data['email_verify_status'] = emailVerifyStatus;
+    data['phone_verify_status'] = phoneVerifyStatus;
+    data['aadhar_verify_status'] = aadharVerifyStatus;
+    data['pan_verify_status'] = panVerifyStatus;
+
     if (bankInfo != null) {
       data['bank_info'] = bankInfo!.map((v) => v.toJson()).toList();
     }
@@ -266,7 +298,7 @@ class BankInfo {
     ifscCode = json['ifsc_code']?.toString();
     bankName = json['bank_name']?.toString();
     accountNumber = json['account_number']?.toString();
-    accountType = json['account_type']?.toString(); // Add this
+    accountType = json['account_type']?.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -275,7 +307,7 @@ class BankInfo {
       'ifsc_code': ifscCode,
       'bank_name': bankName,
       'account_number': accountNumber,
-      'account_type': accountType, // Add this
+      'account_type': accountType,
     };
   }
 }

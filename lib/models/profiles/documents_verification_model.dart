@@ -11,6 +11,9 @@ class DocumentsVerificationModel {
   String? reraImage;
   String? policeVerificationImage;
   String? bankCopyImage;
+  int? status;
+  String? message;
+
 
   DocumentsVerificationModel(
       {this.actiontype,
@@ -24,7 +27,9 @@ class DocumentsVerificationModel {
         this.qualificationRemarksImage,
         this.reraImage,
         this.policeVerificationImage,
-        this.bankCopyImage});
+        this.bankCopyImage,
+        this.status,
+        this.message,});
 
   DocumentsVerificationModel.fromJson(Map<String, dynamic> json) {
     actiontype = json['actiontype'];
@@ -39,6 +44,8 @@ class DocumentsVerificationModel {
     reraImage = json['rera_image'];
     policeVerificationImage = json['police_verification_image'];
     bankCopyImage = json['bank_copy_image'];
+    status = json['status'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {

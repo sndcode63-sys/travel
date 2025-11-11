@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:travell_booking_app/presentation/addVisit/addmemberInfo/add_member_info_controller.dart';
+import 'package:travell_booking_app/presentation/auth/otp/otp_verification_screen.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import '../../../utlis/constents/color_constants.dart';
@@ -17,7 +18,6 @@ class AddMemberInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AddMemberInfoController());
-    // Receive scheme arguments
     final args = Get.arguments as Map<String, dynamic>?;
     // final schemeId = args?['id'] ?? '';
     final schemeName = args?['name'] ?? '';
@@ -27,7 +27,9 @@ class AddMemberInfoScreen extends StatelessWidget {
 
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: (){
+        hideKeyboard();
+      },
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize:  Size.fromHeight(70.h),
@@ -35,48 +37,52 @@ class AddMemberInfoScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back,),
-                        onPressed: () => Get.back(),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:  [
-                          Text(
-                            "Add Visit",
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Add Client Information",
-                            style: TextStyle(fontSize: 14.sp),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.settings,),
-                    onPressed: () {
-                    },
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
                   ),
                 ],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => Get.back(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Add Visit",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Add Member Infirmation",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -200,7 +206,6 @@ class AddMemberInfoScreen extends StatelessWidget {
                               backgroundColor: UColors.primary,
                               text: "CONTINUE",
                               onPressed: () {
-
                                 if (controller.formKey.currentState!.validate()) {
                                   final schemeArgs = Get.arguments as Map<String, dynamic>?;
 

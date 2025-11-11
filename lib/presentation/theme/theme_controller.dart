@@ -8,10 +8,8 @@ class ThemeController extends GetxController {
   Rx<Color> primaryColor = Colors.blue.obs;
   Rx<Color> secondaryColor = Colors.white.obs;
 
-  // ✅ Theme index store karne ke liye
   RxInt selectedThemeIndex = (-1).obs;
 
-// ✅ Available gradient color themes
   final List<Map<String, List<Color>>> colorThemes = [
     {
       "colors": [Colors.blue, Colors.lightBlueAccent],
@@ -31,7 +29,6 @@ class ThemeController extends GetxController {
   ];
 
 
-  // Theme change karne ke liye
   void changeTheme(int index) {
     final colors = colorThemes[index]["colors"]!;
     primaryColor.value = colors.first;
@@ -47,7 +44,7 @@ class ThemeController extends GetxController {
     Get.changeThemeMode(ThemeMode.light);
   }
 
-  // ✅ Dark Mode
+  //  Dark Mode
   void setDarkMode() {
     isDark.value = true;
     themeMode.value = ThemeMode.dark;
@@ -62,4 +59,5 @@ class ThemeController extends GetxController {
   //   themeMode.value = ThemeMode.system;
   //   Get.changeThemeMode(ThemeMode.system);
   // }
+
 }

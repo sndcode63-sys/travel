@@ -63,34 +63,48 @@ class UserModels {
   });
 
   factory UserModels.fromJson(Map<String, dynamic> json) => UserModels(
-    identifier: json['identifier'],
-    name: json['name'],
-    email: json['email'],
-    associateCode: json['associate_code'],
-    mobileNumber: json['mobile_number'],
-    status: json['status'],
-    uuid: json['uuid'],
-    teamName: json['team_name'],
-    pinName: json['pin_name'],
-    locationName: json['location_name'],
-    uplinerName: json['upliner_name'],
-    firebaseToken: json['firebase_token'],
-    aadharNumber: json['aadhar_number'],
-    panNumber: json['pan_number'],
-    emailVerifyStatus: json['email_verify_status'],
-    phoneVerifyStatus: json['phone_verify_status'],
-    aadharVerifyStatus: json['aadhar_verify_status'],
-    panVerifyStatus: json['pan_verify_status'],
-    profilePic: json['profile_pic'],
-    fatherName: json['father_name'],
-    motherName: json['mother_name'],
-    spouseName: json['spouse_name'],
-    gender: json['gender'],
-    nomineeName: json['nominee_name'],
-    nomineeRelation: json['nominee_relation'],
-    dobDay: json['dob_day'],
-    dobMonth: json['dob_month'],
-    dobYear: json['dob_year'],
+    identifier: json['identifier']?.toString(),
+    name: json['name']?.toString(),
+    email: json['email']?.toString(),
+    associateCode: json['associate_code']?.toString(),
+    mobileNumber: json['mobile_number']?.toString(),
+    status: json['status']?.toString(),
+    uuid: json['uuid']?.toString(),
+    teamName: json['team_name']?.toString(),
+    pinName: json['pin_name']?.toString(),
+    locationName: json['location_name']?.toString(),
+    uplinerName: json['upliner_name']?.toString(),
+    firebaseToken: json['firebase_token']?.toString(),
+    aadharNumber: json['aadhar_number']?.toString(),
+    panNumber: json['pan_number']?.toString(),
+    emailVerifyStatus: json['email_verify_status'] is String
+        ? int.tryParse(json['email_verify_status'])
+        : json['email_verify_status'],
+    phoneVerifyStatus: json['phone_verify_status'] is String
+        ? int.tryParse(json['phone_verify_status'])
+        : json['phone_verify_status'],
+    aadharVerifyStatus: json['aadhar_verify_status'] is String
+        ? int.tryParse(json['aadhar_verify_status'])
+        : json['aadhar_verify_status'],
+    panVerifyStatus: json['pan_verify_status'] is String
+        ? int.tryParse(json['pan_verify_status'])
+        : json['pan_verify_status'],
+    profilePic: json['profile_pic']?.toString(),
+    fatherName: json['father_name']?.toString(),
+    motherName: json['mother_name']?.toString(),
+    spouseName: json['spouse_name']?.toString(),
+    gender: json['gender']?.toString(),
+    nomineeName: json['nominee_name']?.toString(),
+    nomineeRelation: json['nominee_relation']?.toString(),
+    dobDay: json['dob_day'] is String
+        ? int.tryParse(json['dob_day'])
+        : json['dob_day'],
+    dobMonth: json['dob_month'] is String
+        ? int.tryParse(json['dob_month'])
+        : json['dob_month'],
+    dobYear: json['dob_year'] is String
+        ? int.tryParse(json['dob_year'])
+        : json['dob_year'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -123,6 +137,7 @@ class UserModels {
     'dob_month': dobMonth,
     'dob_year': dobYear,
   };
-  String get fullImageUrl => ApiConstants1.imagePath;
 
+  //  Helper: Full image path if profilePic exists
+  String get fullImageUrl => "${ApiConstants1.imagePath}${profilePic ?? ''}";
 }

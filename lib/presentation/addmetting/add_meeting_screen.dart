@@ -35,26 +35,43 @@ class AddMeetingScreen extends StatelessWidget {
               boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
             ),
             child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.grey),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Meeting", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                          Text("Add Meeting", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: UColors.greyDark)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  IconButton(icon: const Icon(Icons.settings, color: Colors.black54), onPressed: () {}),
-                ],
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => Get.back(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Meeting",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Add Meeting",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -179,7 +196,12 @@ class AddMeetingScreen extends StatelessWidget {
 }
 
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({super.key});
+  final CameraLensDirection lensDirection;
+
+  const CameraScreen({
+    super.key,
+    this.lensDirection = CameraLensDirection.front,
+  });
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -199,13 +221,14 @@ class _CameraScreenState extends State<CameraScreen> {
   Future<void> _initCamera() async {
     try {
       cameras = await availableCameras();
-      // Front camera select
-      final frontCamera = cameras!.firstWhere(
-              (camera) => camera.lensDirection == CameraLensDirection.front,
-          orElse: () => cameras!.first);
+
+      final selectedCamera = cameras!.firstWhere(
+            (camera) => camera.lensDirection == widget.lensDirection,
+        orElse: () => cameras!.first,
+      );
 
       _controller = CameraController(
-        frontCamera,
+        selectedCamera,
         ResolutionPreset.high,
         enableAudio: false,
       );
@@ -231,7 +254,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
     try {
       final XFile file = await _controller!.takePicture();
-      Get.back(result: File(file.path)); // Return the captured file
+      Get.back(result: File(file.path)); // Return captured file
     } catch (e) {
       debugPrint("Capture error: $e");
     }
@@ -278,4 +301,5 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 }
+
 

@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../models/associate/associate_details_get.dart';
 import '../../models/profiles/bank_info_model.dart';
+import '../../utlis/app_routes.dart';
+import '../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import '../profileCenter/profile_center_controller.dart';
 import 'bank_verification_repo.dart';
-
 
 class BankVerificationController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -30,11 +31,18 @@ class BankVerificationController extends GetxController {
   void onInit() {
     super.onInit();
 
+    // Load saved data (if user revisits screen)
+    _loadBankInfo();
+
+    // If profile data already loaded
     if (profileController.userData.value.id != null) {
       prefillBankData();
     } else {
+      // Wait for user data to load, then prefill
       ever(profileController.userData, (_) => prefillBankData());
     }
+
+    // IFSC listener
     ifscController.addListener(() {
       final value = ifscController.text.trim();
       if (value.length == 11) {
@@ -45,9 +53,9 @@ class BankVerificationController extends GetxController {
 
   void prefillBankData() {
     final user = profileController.userData.value;
-
     if (user.bankInfo != null && user.bankInfo!.isNotEmpty) {
       final bank = user.bankInfo!.first;
+
       ifscController.text = bank.ifscCode ?? '';
       bankNameController.text = bank.bankName ?? '';
       accountNumberController.text = bank.accountNumber ?? '';
@@ -57,18 +65,35 @@ class BankVerificationController extends GetxController {
         name: accountType.value,
         value: accountType.value,
       );
-    } else {
-      _loadBankInfo();
+
+      /// ✅ Save in storage for persistence
+      storage.write('ifscCode', ifscController.text);
+      storage.write('bankName', bankNameController.text);
+      storage.write('accountNumber', accountNumberController.text);
+      storage.write('accountType', accountType.value);
     }
   }
 
   void _loadBankInfo() {
-    ifscController.text = storage.read('ifscCode') ?? '';
-    bankNameController.text = storage.read('bankName') ?? '';
-    accountNumberController.text = storage.read('accountNumber') ?? '';
-    accountType.value = storage.read('accountType') ?? 'Saving';
-    accountTypeController.dropDownValue = DropDownValueModel(
-        name: accountType.value, value: accountType.value);
+    final savedIfsc = storage.read('ifscCode');
+    final savedBankName = storage.read('bankName');
+    final savedAccountNumber = storage.read('accountNumber');
+    final savedAccountType = storage.read('accountType');
+
+    if (savedIfsc != null ||
+        savedBankName != null ||
+        savedAccountNumber != null ||
+        savedAccountType != null) {
+      ifscController.text = savedIfsc ?? '';
+      bankNameController.text = savedBankName ?? '';
+      accountNumberController.text = savedAccountNumber ?? '';
+      accountType.value = savedAccountType ?? 'Saving';
+
+      accountTypeController.dropDownValue = DropDownValueModel(
+        name: accountType.value,
+        value: accountType.value,
+      );
+    }
   }
 
   Future<void> fetchBankInfoByIfsc(String ifscCode) async {
@@ -83,7 +108,9 @@ class BankVerificationController extends GetxController {
         accountType.value = bankData.accountType ?? 'Saving';
 
         accountTypeController.dropDownValue = DropDownValueModel(
-            name: accountType.value, value: accountType.value);
+          name: accountType.value,
+          value: accountType.value,
+        );
 
         storage.write('ifscCode', ifscCode);
         storage.write('bankName', bankData.bank ?? '');
@@ -112,34 +139,52 @@ class BankVerificationController extends GetxController {
         accountType: accountType.value,
       );
 
-      await BankInfoRepository.updateBankInfo(model);
+      final response = await BankInfoRepository.updateBankInfo(model);
 
-      // Save locally
-      storage.write('ifscCode', ifscController.text);
-      storage.write('bankName', bankNameController.text);
-      storage.write('accountNumber', accountNumberController.text);
-      storage.write('accountType', accountType.value);
+      if (response.status == 200 || response.status == 1) {
+        storage.write('ifscCode', ifscController.text);
+        storage.write('bankName', bankNameController.text);
+        storage.write('accountNumber', accountNumberController.text);
+        storage.write('accountType', accountType.value);
 
-      // Update profileController.userData instantly
-      final user = profileController.userData.value;
+        final user = profileController.userData.value;
+        final bankInfo = BankInfo(
+          ifscCode: model.ifscCode,
+          bankName: model.bankName,
+          accountNumber: model.accountNumber,
+          accountType: model.accountType,
+        );
 
-      final bankInfo = BankInfo(
-        ifscCode: model.ifscCode,
-        bankName: model.bankName,
-        accountNumber: model.accountNumber,
-        accountType: model.accountType,
-      );
+        if (user.bankInfo == null || user.bankInfo!.isEmpty) {
+          user.bankInfo = [bankInfo];
+        } else {
+          user.bankInfo![0] = bankInfo;
+        }
 
-      if (user.bankInfo == null || user.bankInfo!.isEmpty) {
-        user.bankInfo = [bankInfo];
+        profileController.userData.value = user;
+
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: true,
+        );
+
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Get.isDialogOpen ?? false) Get.back();
+          Get.offAllNamed(AppRoutes.dashBoard);
+        });
       } else {
-        user.bankInfo![0] = bankInfo;
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: false,
+        );
       }
-
-      // Trigger reactive update
-      profileController.userData.value = user;
-
-      Get.snackbar("Success", "Bank Info Updated Successfully",backgroundColor: Colors.green,colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Something went wrong: $e",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }

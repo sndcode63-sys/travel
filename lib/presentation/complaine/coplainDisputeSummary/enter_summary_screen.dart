@@ -21,8 +21,55 @@ class EnterSummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Enter Dispute Summary"),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.h),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () => Get.back(),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Complaint / Dispute",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "Entre Dispute Summary",
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -42,7 +89,6 @@ class EnterSummaryScreen extends StatelessWidget {
               onChanged: controller.onDisputeReasonSelected,
             ),
 
-            // If "Plot" selected → show API-based dropdowns
             Obx(() {
               if (controller.disputeReason.value?.value != 'Plot') {
                 return const SizedBox.shrink();
@@ -93,10 +139,11 @@ class EnterSummaryScreen extends StatelessWidget {
               labelText: "Description",
               showStar: true,
             ),
+            SizedBox(height: 100.h,),
+            CustomButton(text: "Update",backgroundColor: UColors.primary,)
           ],
         ),
       ),
-
     );
   }
 }

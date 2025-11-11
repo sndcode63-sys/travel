@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../utlis/app_routes.dart';
+import '../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import '../profileCenter/profile_center_controller.dart';
 import 'repository_documents_verfication.dart';
 import 'package:image/image.dart' as img;
@@ -222,13 +224,23 @@ class VerificationDocController extends GetxController {
         }
       });
 
-      Get.snackbar(
-        "Success",
-        "ocument Update Successfully",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      if (result.status == 200) {
+        CustomNotifier.showPopup(
+          message: result.message ?? "",
+          isSuccess: true,
+        );
+
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Get.isDialogOpen ?? false) Get.back();
+          Get.offAllNamed(AppRoutes.dashBoard);
+        });
+      } else {
+        CustomNotifier.showPopup(
+          message: result.message ?? "",
+          isSuccess: false,
+        );
+      }
+
     } catch (e) {
       Get.snackbar(
         "Error",

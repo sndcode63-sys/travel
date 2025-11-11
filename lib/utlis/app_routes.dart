@@ -41,4 +41,21 @@ class AppRoutes {
   static const staffSummary = '/staffSummary-screen';
   static const myData = '/myData-screen';
   static const theme = '/theme-screen';
+  static const searchVehicle = '/searchVehicle-screen';
+  static const updateVehicle = '/updateVehicle-screen';
+  static const saveSuggestion = '/saveSuggestion-screen';
+  static const suggestionListScreen = '/suggestionListScreen-screen';
+  static const panVerification = '/panVerification-screen';
+  static const aadharVerification = '/aadharVerification-screen';
+  static const phoneVerification = '/phoneVerification-screen';
+  static const emailVerification = '/emailVerification-screen';
+  static const addAssociate = '/addAssociate-screen';
+  static const associateProfile = '/associateProfile-screen';
+  static const associateRelationInfo = '/associateRelationInfo-screen';
+  static const associateVerification = '/associateVerification-screen';
+  static const associateBank = '/associateBank-screen';
+  static const associateList = '/associateList-screen';
+  static const associateTab = '/associateTab-screen';
+  static const  unifiedVerification = '/unified-verification';
+
 }

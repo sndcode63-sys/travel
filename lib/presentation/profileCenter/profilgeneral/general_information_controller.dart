@@ -2,6 +2,8 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../utlis/app_routes.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import '../profile_center_controller.dart';
 import 'repository_general_profile.dart';
 
@@ -103,7 +105,6 @@ class GeneralInformationController extends GetxController {
         nomineeName: nomineeNameController.text.trim(),
       );
 
-      // Update local userData for immediate UI reflect
       profileController.userData.update((user) {
         user?.fullName = fullNameController.text.trim();
         user?.fatherName = fatherNameController.text.trim();
@@ -120,14 +121,22 @@ class GeneralInformationController extends GetxController {
 
       isLoading.value = false;
 
-      Get.snackbar(
-        "Success",
-        "Profile General Information Update Successfully",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      if (response.status == 200) {
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: true,
+        );
 
-      print("API Response: ${response.toJson()}");
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Get.isDialogOpen ?? false) Get.back();
+          Get.offAllNamed(AppRoutes.dashBoard);
+        });
+      } else {
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: false,
+        );
+      }
     } catch (e) {
       isLoading.value = false;
       Get.snackbar(

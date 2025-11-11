@@ -2,12 +2,15 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../models/profiles/address_profile_model.dart';
+import '../../../utlis/app_routes.dart';
+import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
 import '../profile_center_controller.dart';
 import 'profile_info_repository.dart';
 import 'package:get_storage/get_storage.dart';
 
 class ProfileInfoController extends GetxController {
-  final ProfileCenterController profileCenterController = Get.find<ProfileCenterController>();
+  final ProfileCenterController profileCenterController =
+      Get.find<ProfileCenterController>();
 
   final formKey = GlobalKey<FormState>();
 
@@ -52,15 +55,27 @@ class ProfileInfoController extends GetxController {
     selectedCountry.value = user.country ?? '';
 
     if (selectedCity.value.isNotEmpty) {
-      cityOptions.value = [DropDownValueModel(name: selectedCity.value, value: selectedCity.value)];
+      cityOptions.value = [
+        DropDownValueModel(name: selectedCity.value, value: selectedCity.value),
+      ];
       cityController.dropDownValue = cityOptions.value.first;
     }
     if (selectedState.value.isNotEmpty) {
-      stateOptions.value = [DropDownValueModel(name: selectedState.value, value: selectedState.value)];
+      stateOptions.value = [
+        DropDownValueModel(
+          name: selectedState.value,
+          value: selectedState.value,
+        ),
+      ];
       stateController.dropDownValue = stateOptions.value.first;
     }
     if (selectedCountry.value.isNotEmpty) {
-      countryOptions.value = [DropDownValueModel(name: selectedCountry.value, value: selectedCountry.value)];
+      countryOptions.value = [
+        DropDownValueModel(
+          name: selectedCountry.value,
+          value: selectedCountry.value,
+        ),
+      ];
       countryController.dropDownValue = countryOptions.value.first;
     }
   }
@@ -84,18 +99,37 @@ class ProfileInfoController extends GetxController {
         selectedState.value = model.state!.first;
         selectedCountry.value = model.country!.first;
 
-        cityOptions.value = model.city!.map((c) => DropDownValueModel(name: c, value: c)).toList();
-        stateOptions.value = model.state!.map((s) => DropDownValueModel(name: s, value: s)).toList();
-        countryOptions.value = model.country!.map((c) => DropDownValueModel(name: c, value: c)).toList();
+        cityOptions.value =
+            model.city!
+                .map((c) => DropDownValueModel(name: c, value: c))
+                .toList();
+        stateOptions.value =
+            model.state!
+                .map((s) => DropDownValueModel(name: s, value: s))
+                .toList();
+        countryOptions.value =
+            model.country!
+                .map((c) => DropDownValueModel(name: c, value: c))
+                .toList();
 
         cityController.dropDownValue = cityOptions.value[0];
         stateController.dropDownValue = stateOptions.value[0];
         countryController.dropDownValue = countryOptions.value[0];
       } else {
-        Get.snackbar("Error", "Invalid PIN code", backgroundColor: Colors.red, colorText: Colors.white);
+        Get.snackbar(
+          "Error",
+          "Invalid PIN code",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to fetch address", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Failed to fetch address",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -113,29 +147,48 @@ class ProfileInfoController extends GetxController {
         pincode: pincodeController.text,
       );
 
-      await ProfileInfoRepository.updateProfile(model);
+      final response = await ProfileInfoRepository.updateProfile(model);
 
-      // ✅ Save locally
-      storage.write('pincode', pincodeController.text);
-      storage.write('address', addressController.text);
-      storage.write('city', selectedCity.value);
-      storage.write('state', selectedState.value);
-      storage.write('country', selectedCountry.value);
+      //  Save locally
+      storage.write('pincode', response.pincode ?? pincodeController.text);
+      storage.write('address', response.address ?? addressController.text);
+      storage.write('city', response.city ?? selectedCity.value);
+      storage.write('state', response.state ?? selectedState.value);
+      storage.write('country', response.country ?? selectedCountry.value);
 
-      // ✅ Update userData instantly for reactive UI
+      //  Update userData instantly for reactive UI
       final user = profileCenterController.userData.value;
-      user.address = addressController.text;
-      user.city = selectedCity.value;
-      user.state = selectedState.value;
-      user.country = selectedCountry.value;
-      user.pincode = pincodeController.text;
+      user.address = response.address ?? addressController.text;
+      user.city = response.city ?? selectedCity.value;
+      user.state = response.state ?? selectedState.value;
+      user.country = response.country ?? selectedCountry.value;
+      user.pincode = response.pincode ?? pincodeController.text;
 
-      // Trigger reactive update
       profileCenterController.userData.value = user;
 
-      Get.snackbar("Success", "Address Information Update Successfully",backgroundColor: Colors.green,colorText: Colors.white);
+      if (response.status == 200) {
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: true,
+        );
+
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Get.isDialogOpen ?? false) Get.back();
+          Get.offAllNamed(AppRoutes.dashBoard);
+        });
+      } else {
+        CustomNotifier.showPopup(
+          message: response.message ?? "",
+          isSuccess: false,
+        );
+      }
     } catch (e) {
-      Get.snackbar("Error", "Failed to update profile", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Failed to update profile: $e",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }

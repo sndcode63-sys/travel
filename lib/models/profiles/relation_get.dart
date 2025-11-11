@@ -1,11 +1,12 @@
 
-class RelationGet {
+class   RelationGet {
   int? status;
   List<Teams>? teams;
   List<Pin>? pin;
   List<CustomLocation>? location;
   List<ReraSerial>? reraSerial;
   String? currentReraNumber;
+  String? message;
 
   RelationGet({
     this.status,
@@ -14,6 +15,7 @@ class RelationGet {
     this.location,
     this.reraSerial,
     this.currentReraNumber,
+    this.message,
   });
 
   factory RelationGet.fromJson(Map<String, dynamic> json) {
@@ -26,16 +28,18 @@ class RelationGet {
           ? List<Pin>.from(json['pin'].map((x) => Pin.fromJson(x)))
           : null,
       location: json['location'] != null
-          ? List<CustomLocation>.from(json['location'].map((x) => CustomLocation.fromJson(x)))
+          ? List<CustomLocation>.from(
+          json['location'].map((x) => CustomLocation.fromJson(x)))
           : null,
       reraSerial: json['rera_serial'] != null
-          ? List<ReraSerial>.from(json['rera_serial'].map((x) => ReraSerial.fromJson(x)))
+          ? List<ReraSerial>.from(
+          json['rera_serial'].map((x) => ReraSerial.fromJson(x)))
           : null,
       currentReraNumber: json['current_rera_number'],
+      message: json['message'],
     );
   }
 }
-
   class Teams {
     int? id;
     String? name;

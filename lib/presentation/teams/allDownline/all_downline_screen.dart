@@ -15,7 +15,7 @@ class AllDownlineScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize:  Size.fromHeight(70.h),
+        preferredSize: Size.fromHeight(70.h),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: const BoxDecoration(
@@ -29,37 +29,43 @@ class AllDownlineScreen extends StatelessWidget {
             ],
           ),
           child: SafeArea(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Get.back(),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:  [
-                        Text(
-                          "My Team",
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: EdgeInsets.only(top: 8.h, bottom: 12.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () => Get.back(),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "My Team",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text("All Downline", style: TextStyle(fontSize: 14)),
-                      ],
-                    ),
-                  ],
-                ),
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    Get.to(SelfDownloadScreen());
-                  },
-                ),
-              ],
+                          Text(
+                            "All Downline",
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -69,39 +75,49 @@ class AllDownlineScreen extends StatelessWidget {
           color: Colors.blue.withOpacity(0.08),
           child: Column(
             children: [
-              SizedBox(height: 10.h,),
+              SizedBox(height: 10.h),
+
+              // 🔍 Search Box
               Container(
-                  margin: EdgeInsets.symmetric(horizontal: 15),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.r),
-                      color: UColors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                      border: Border.all(color: UColors.grey)
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.r),
+                  color: UColors.white,
+                  border: Border.all(color: UColors.grey),
+                  boxShadow: [
+                    const BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: "Search...",
+                    hintStyle: TextStyle(
+                      color: Colors.black.withAlpha(75),
+                      fontSize: 14.sp,
+                    ),
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    prefixIcon: Icon(Icons.search, color: UColors.primary),
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 12),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.search, color: UColors.grey,),
-                      SizedBox(width: 20.w,),
-                      Text('Search Associate Name',
-                          style: TextStyle(color: UColors.grey)),
-                    ],
-                  )
+                  style: TextStyle(fontSize: 14.sp, color: UColors.primary),
+                  onChanged: (value) => controller.searchQuery.value = value,
+                ),
               ),
-              SizedBox(height: 5.h,),
+
+              SizedBox(height: 5.h),
+
+              // 🧾 List Section
               Expanded(
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-
-                    );
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (controller.hasError.value) {
@@ -113,7 +129,7 @@ class AllDownlineScreen extends StatelessWidget {
                             controller.errorMessage.value,
                             style: TextStyle(color: Colors.red, fontSize: 14.sp),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () => controller.fetchUsers(),
                             child: const Text("Retry"),
@@ -123,7 +139,8 @@ class AllDownlineScreen extends StatelessWidget {
                     );
                   }
 
-                  if (controller.allDownline.isEmpty) {
+                  // ✅ Use filteredSelf instead of allDownline
+                  if (controller.filteredSelf.isEmpty) {
                     return const Center(
                       child: Text("No associates found"),
                     );
@@ -132,9 +149,9 @@ class AllDownlineScreen extends StatelessWidget {
                   return CustomListView(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     scrollDirection: Axis.vertical,
-                    itemCount: controller.allDownline.length,
+                    itemCount: controller.filteredSelf.length,
                     itemBuilder: (context, index, item) {
-                      final allListD = controller.allDownline[index];
+                      final allListD = controller.filteredSelf[index];
                       return Container(
                         padding: EdgeInsets.all(10),
                         margin: EdgeInsets.symmetric(vertical: 5),
@@ -167,7 +184,6 @@ class AllDownlineScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 10.w),
-
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +200,7 @@ class AllDownlineScreen extends StatelessWidget {
                     },
                   );
                 }),
-              )
+              ),
             ],
           ),
         ),
@@ -196,7 +212,7 @@ class AllDownlineScreen extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 80, // label ka fixed width
+          width: 80,
           child: Text(
             title,
             style: TextStyle(
@@ -221,5 +237,4 @@ class AllDownlineScreen extends StatelessWidget {
       ],
     );
   }
-
 }

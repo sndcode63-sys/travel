@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,8 +8,6 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 
 import 'verification_doc_controller.dart';
-
-
 
 class VerificationDocScreen extends StatelessWidget {
   final VerificationDocController controller = Get.put(VerificationDocController());
@@ -22,76 +19,138 @@ class VerificationDocScreen extends StatelessWidget {
     controller.initDataFromUser();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Verification Document")),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            FilePickerWidget(
-              label: "Upload Adhar",
-              file: controller.adharFile,
-              prefilledFile: controller.adharPrefilled,
-              fileExt: controller.adharExt,
-              error: controller.adharError,
-              fileName: controller.adharFileName,
-              controller: controller,
+      backgroundColor: const Color(0xFFF9FAFB),
+      appBar: AppBar(
+        title: const Text("Verification Documents"),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        foregroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          // Info Banner
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.shade200),
             ),
-            FilePickerWidget(
-              label: "Upload PAN",
-              file: controller.panFile,
-              prefilledFile: controller.panPrefilled,
-              fileExt: controller.panExt,
-              error: controller.panError,
-              fileName: controller.panFileName,
-              controller: controller,
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, color: Colors.orange.shade700, size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Upload clear images/PDFs. Max size: 5MB per file',
+                    style: TextStyle(
+                      color: Colors.orange.shade700,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            FilePickerWidget(
-              label: "Upload Passport",
-              file: controller.passportFile,
-              prefilledFile: controller.passportPrefilled,
-              fileExt: controller.passportExt,
-              error: controller.passportError,
-              fileName: controller.passportFileName,
-              controller: controller,
+          ),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  FilePickerWidget(
+                    label: "Aadhar Card",
+                    file: controller.adharFile,
+                    prefilledFile: controller.adharPrefilled,
+                    fileExt: controller.adharExt,
+                    error: controller.adharError,
+                    fileName: controller.adharFileName,
+                    controller: controller,
+                    icon: Icons.credit_card,
+                  ),
+                  FilePickerWidget(
+                    label: "PAN Card",
+                    file: controller.panFile,
+                    prefilledFile: controller.panPrefilled,
+                    fileExt: controller.panExt,
+                    error: controller.panError,
+                    fileName: controller.panFileName,
+                    controller: controller,
+                    icon: Icons.badge,
+                  ),
+                  FilePickerWidget(
+                    label: "Passport",
+                    file: controller.passportFile,
+                    prefilledFile: controller.passportPrefilled,
+                    fileExt: controller.passportExt,
+                    error: controller.passportError,
+                    fileName: controller.passportFileName,
+                    controller: controller,
+                    icon: Icons.flight_takeoff,
+                  ),
+                  FilePickerWidget(
+                    label: "Higher Qualification",
+                    file: controller.higherQualificationFile,
+                    prefilledFile: controller.higherQualificationPrefilled,
+                    fileExt: controller.higherQualificationExt,
+                    error: controller.higherQualificationError,
+                    fileName: controller.higherQualificationFileName,
+                    controller: controller,
+                    icon: Icons.school,
+                  ),
+                  FilePickerWidget(
+                    label: "RERA Certificate",
+                    file: controller.reraFile,
+                    prefilledFile: controller.reraPrefilled,
+                    fileExt: controller.reraExt,
+                    error: controller.reraError,
+                    fileName: controller.reraFileName,
+                    controller: controller,
+                    icon: Icons.verified,
+                  ),
+                  FilePickerWidget(
+                    label: "Police Verification",
+                    file: controller.policeFile,
+                    prefilledFile: controller.policePrefilled,
+                    fileExt: controller.policeExt,
+                    error: controller.policeError,
+                    fileName: controller.policeFileName,
+                    controller: controller,
+                    icon: Icons.local_police,
+                  ),
+                  FilePickerWidget(
+                    label: "Bank Document",
+                    file: controller.bankFile,
+                    prefilledFile: controller.bankPrefilled,
+                    fileExt: controller.bankExt,
+                    error: controller.bankError,
+                    fileName: controller.bankFileName,
+                    controller: controller,
+                    icon: Icons.account_balance,
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              ),
             ),
-            FilePickerWidget(
-              label: "Upload Higher Qualification",
-              file: controller.higherQualificationFile,
-              prefilledFile: controller.higherQualificationPrefilled,
-              fileExt: controller.higherQualificationExt,
-              error: controller.higherQualificationError,
-              fileName: controller.higherQualificationFileName,
-              controller: controller,
+          ),
+
+          // Submit Button (Fixed at bottom)
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade300,
+                  blurRadius: 10,
+                  offset: const Offset(0, -3),
+                ),
+              ],
             ),
-            FilePickerWidget(
-              label: "Upload RERA Certificate",
-              file: controller.reraFile,
-              prefilledFile: controller.reraPrefilled,
-              fileExt: controller.reraExt,
-              error: controller.reraError,
-              fileName: controller.reraFileName,
-              controller: controller,
-            ),
-            FilePickerWidget(
-              label: "Upload Police Verification",
-              file: controller.policeFile,
-              prefilledFile: controller.policePrefilled,
-              fileExt: controller.policeExt,
-              error: controller.policeError,
-              fileName: controller.policeFileName,
-              controller: controller,
-            ),
-            FilePickerWidget(
-              label: "Upload Bank Document",
-              file: controller.bankFile,
-              prefilledFile: controller.bankPrefilled,
-              fileExt: controller.bankExt,
-              error: controller.bankError,
-              fileName: controller.bankFileName,
-              controller: controller,
-            ),
-            SizedBox(height: 30.h),
-            Obx(() {
+            child: Obx(() {
               return SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -100,6 +159,7 @@ class VerificationDocScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: UColors.primary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: controller.isLoading.value ? 0 : 3,
                   ),
                   child: controller.isLoading.value
                       ? Row(
@@ -114,15 +174,15 @@ class VerificationDocScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 12),
-                      Text("Please wait...", style: TextStyle(fontSize: 16, color: Colors.white)),
+                      Text("Uploading...", style: TextStyle(fontSize: 16, color: Colors.white)),
                     ],
                   )
-                      : const Text("UPDATE", style: TextStyle(fontSize: 16, color: Colors.white)),
+                      : const Text("SUBMIT DOCUMENTS", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               );
             }),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -136,6 +196,7 @@ class FilePickerWidget extends StatelessWidget {
   final RxString error;
   final RxString fileName;
   final VerificationDocController controller;
+  final IconData icon;
 
   const FilePickerWidget({
     super.key,
@@ -146,25 +207,55 @@ class FilePickerWidget extends StatelessWidget {
     required this.error,
     required this.fileName,
     required this.controller,
+    required this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 16.0),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
           boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 6, offset: const Offset(0, 4)),
-            BoxShadow(color: Colors.white, blurRadius: 6, offset: const Offset(-2, -2)),
+            BoxShadow(
+              color: Colors.grey.shade200,
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: UColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(icon, color: UColors.primary, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // File Picker Row
             Obx(() {
               final path = file.value?.path ?? prefilledFile.value;
 
@@ -173,9 +264,9 @@ class FilePickerWidget extends StatelessWidget {
                 displayName = fileName.value;
               } else if (prefilledFile.value.isNotEmpty) {
                 if (prefilledFile.value.startsWith("data:image")) {
-                  displayName = "$label Image Selected";
+                  displayName = "$label Image";
                 } else if (prefilledFile.value.startsWith("data:application/pdf")) {
-                  displayName = "$label PDF Selected";
+                  displayName = "$label PDF";
                 } else if (prefilledFile.value.startsWith("http")) {
                   displayName = prefilledFile.value.split('/').last;
                 } else {
@@ -190,70 +281,91 @@ class FilePickerWidget extends StatelessWidget {
                   ElevatedButton.icon(
                     onPressed: () => controller.pickFile(file, fileExt, error, prefilledFile, fileName),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      elevation: 3,
+                      backgroundColor: UColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      elevation: 2,
                     ),
-                    icon: const Icon(Icons.upload_file, size: 20),
-                    label: const Text("Upload", style: TextStyle(fontWeight: FontWeight.bold)),
+                    icon: const Icon(Icons.upload_file, size: 18),
+                    label: const Text("Choose", style: TextStyle(fontWeight: FontWeight.w600)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.grey.shade300),
                       ),
-                      child: Text(displayName, overflow: TextOverflow.ellipsis),
+                      child: Text(
+                        displayName,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: path.isEmpty ? Colors.grey.shade600 : Colors.black87,
+                        ),
+                      ),
                     ),
                   ),
                   if (path.isNotEmpty) ...[
                     const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () => _showPreviewDialog(context, path),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(Icons.remove_red_eye, color: Colors.white),
+                    IconButton(
+                      onPressed: () => _showPreviewDialog(context, path),
+                      icon: const Icon(Icons.visibility, color: Colors.blue),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.blue.shade50,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                     ),
                   ],
                 ],
               );
             }),
+
             const SizedBox(height: 8),
+
+            // Status Message
             Obx(() {
-              return RichText(
-                text: TextSpan(
+              if (error.value.isNotEmpty) {
+                return Row(
                   children: [
-                    TextSpan(
-                      text: "$label :  ",
-                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 14),
-                    ),
-                    if (error.value.isNotEmpty)
-                      TextSpan(
-                        text: error.value,
-                        style: const TextStyle(fontWeight: FontWeight.normal, color: Colors.red, fontSize: 14),
-                      )
-                    else if (file.value != null || prefilledFile.value.isNotEmpty)
-                      const TextSpan(
-                        text: "File selected",
-                        style: TextStyle(fontWeight: FontWeight.normal, color: Colors.green, fontSize: 14),
-                      )
-                    else
-                      const TextSpan(
-                        text: "Support only Image/PDF. Max file size 5 MB.",
-                        style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 14),
+                    Icon(Icons.error_outline, size: 16, color: Colors.red),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        error.value,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
                       ),
+                    ),
                   ],
-                ),
-              );
+                );
+              } else if (file.value != null || prefilledFile.value.isNotEmpty) {
+                return Row(
+                  children: [
+                    Icon(Icons.check_circle, size: 16, color: Colors.green),
+                    const SizedBox(width: 6),
+                    const Text(
+                      "File selected",
+                      style: TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                );
+              } else {
+                return Row(
+                  children: [
+                    Icon(Icons.info_outline, size: 16, color: Colors.grey),
+                    const SizedBox(width: 6),
+                    const Expanded(
+                      child: Text(
+                        "Supported: JPG, PNG, PDF (Max 5MB)",
+                        style: TextStyle(color: Colors.grey, fontSize: 11),
+                      ),
+                    ),
+                  ],
+                );
+              }
             }),
           ],
         ),
@@ -271,13 +383,13 @@ class FilePickerWidget extends StatelessWidget {
         backgroundColor: Colors.transparent,
         insetPadding: const EdgeInsets.all(16),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           child: Container(
             color: Colors.white,
             width: double.infinity,
             height: ext == "pdf" ? MediaQuery.of(context).size.height * 0.75 : null,
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.75,
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
               maxWidth: MediaQuery.of(context).size.width * 0.95,
             ),
             child: Column(
@@ -286,14 +398,20 @@ class FilePickerWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    color: UColors.primary,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Preview", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                      IconButton(icon: const Icon(Icons.close, color: Colors.white), onPressed: () => Navigator.of(context).pop()),
+                      Text(
+                        "Preview - $label",
+                        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
                     ],
                   ),
                 ),
@@ -305,7 +423,7 @@ class FilePickerWidget extends StatelessWidget {
                         ? Image.memory(base64Decode(path.split(',').last), fit: BoxFit.contain)
                         : path.startsWith("data:application/pdf")
                         ? PDFViewFromBase64(base64String: path.split(',').last)
-                        : Center(child: Text("Unsupported file"))
+                        : const Center(child: Text("Unsupported file"))
                         : ext == "pdf"
                         ? PDFView(filePath: path)
                         : path.startsWith("http")
