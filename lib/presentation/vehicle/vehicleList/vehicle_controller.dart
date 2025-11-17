@@ -164,3 +164,20 @@ extension VehicleControllerUpdate on VehicleController {
   }
 }
 
+extension VehicleFiltering on VehicleController {
+  List<VehicleList> getFilteredVehicles(String query) {
+    if (query.isEmpty) return allMeeting;
+
+    return allMeeting.where((vehicle) {
+      final regNumber = vehicle.registrationNumber?.toLowerCase() ?? '';
+      final model = vehicle.modelName?.toLowerCase() ?? '';
+      final brand = vehicle.brandName?.toLowerCase() ?? '';
+      final color = vehicle.color?.toLowerCase() ?? '';
+
+      return regNumber.contains(query) ||
+          model.contains(query) ||
+          brand.contains(query) ||
+          color.contains(query);
+    }).toList();
+  }
+}

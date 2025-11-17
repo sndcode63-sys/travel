@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import '../../../models/vehicle/vehicle_list.dart';
 import '../updateVehicle/update_vehicle_screen.dart';
+import '../vehicleR_controller.dart';
 import 'vehicle_controller.dart';
 
 class VehicleListScreen extends GetView<VehicleController> {
@@ -13,6 +14,7 @@ class VehicleListScreen extends GetView<VehicleController> {
   @override
   Widget build(BuildContext context) {
     final VehicleController controller = Get.put(VehicleController());
+    final searchController = Get.find<VehiclerController>();
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -55,7 +57,12 @@ class VehicleListScreen extends GetView<VehicleController> {
           );
         }
 
-        if (controller.allMeeting.isEmpty) {
+        // ✅ Get filtered vehicles
+        final filteredVehicles = controller.getFilteredVehicles(
+          searchController.searchQuery.value,
+        );
+
+        if (filteredVehicles.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +73,9 @@ class VehicleListScreen extends GetView<VehicleController> {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  "No Vehicles Found",
+                  searchController.searchQuery.value.isEmpty
+                      ? "No Vehicles Found"
+                      : "No matching vehicles",
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
@@ -75,7 +84,9 @@ class VehicleListScreen extends GetView<VehicleController> {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Add your first vehicle to get started",
+                  searchController.searchQuery.value.isEmpty
+                      ? "Add your first vehicle to get started"
+                      : "Try a different search term",
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: Colors.grey[500],
@@ -92,9 +103,9 @@ class VehicleListScreen extends GetView<VehicleController> {
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
-            itemCount: controller.allMeeting.length,
+            itemCount: filteredVehicles.length,
             itemBuilder: (context, index) {
-              final vehicle = controller.allMeeting[index];
+              final vehicle = filteredVehicles[index];
               return AnimatedVehicleCard(
                 vehicleList: vehicle,
                 controller: controller,
