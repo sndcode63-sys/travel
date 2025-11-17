@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
 import '../../../data/services/api_manager.dart';
 import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
+import '../../profileCenter/profile_center_controller.dart';
 import '../../splash/splash_repository.dart';
 import 'login_repository.dart';
 
 class LoginController extends GetxController {
   RxBool isLoading = false.obs;
+
   // Form Key
   final formKey = GlobalKey<FormState>();
 
@@ -23,11 +25,14 @@ class LoginController extends GetxController {
   void togglePassword() {
     obscurePassword.value = !obscurePassword.value;
   }
+
   // On Sign In
   void onSignIn() async {
     if (!formKey.currentState!.validate()) return;
 
     try {
+      isLoading.value = true;
+
       final loginData = await LoginRepository.login(
         username: emailController.text.trim(),
         password: passwordController.text.trim(),
@@ -45,6 +50,20 @@ class LoginController extends GetxController {
         //  Save to AuthService
         await AuthService.to.saveUser(userData);
 
+        // ✅ Initialize ProfileCenterController after login
+        try {
+          // Check if already exists
+          final profileController = Get.isRegistered<ProfileCenterController>()
+              ? Get.find<ProfileCenterController>()
+              : Get.put(ProfileCenterController());
+
+          // Fetch fresh data
+          await profileController.fetchDataUser();
+          print("✅ ProfileCenterController initialized after login");
+        } catch (e) {
+          print("⚠️ Error initializing ProfileCenterController: $e");
+        }
+
         //  Navigate with user data
         Get.offNamed(AppRoutes.dashBoard, arguments: userData);
       } else {
@@ -58,8 +77,11 @@ class LoginController extends GetxController {
         message: e.toString(),
         isSuccess: false,
       );
+    } finally {
+      isLoading.value = false;
     }
   }
+
   @override
   void dispose() {
     emailController.dispose();

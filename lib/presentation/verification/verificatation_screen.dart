@@ -1,152 +1,276 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:travell_booking_app/utlis/app_routes.dart';
 import '../profileCenter/profile_center_controller.dart';
 
 class VerificationScreen extends StatelessWidget {
-  VerificationScreen({Key? key}) : super(key: key);
-
-  final ProfileCenterController profileController = Get.find<ProfileCenterController>();
-
-  // ✅ Generic Verification Card Widget
-  Widget _buildVerificationTile({
-    required String title,
-    required String type,
-    required int status,
-    required VoidCallback onTap,
-  }) {
-    final isVerified = status == 1;
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: ListTile(
-        leading: Icon(
-          isVerified ? Icons.verified : Icons.error_outline,
-          color: isVerified ? Colors.green : Colors.orangeAccent,
-          size: 30,
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        subtitle: Text(
-          isVerified ? "Verified" : "Pending Verification",
-          style: TextStyle(
-            color: isVerified ? Colors.green : Colors.redAccent,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        trailing: !isVerified
-            ? ElevatedButton(
-          onPressed: onTap,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: const Text(
-            "Verify",
-            style: TextStyle(color: Colors.white),
-          ),
-        )
-            : null,
-      ),
-    );
-  }
+  const VerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final profileController = Get.find<ProfileCenterController>();
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Verification Center"),
-        centerTitle: true,
-        backgroundColor: Colors.blueAccent,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.h),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => Get.back(),
+                    ),
+                    Text(
+                      "Verification Centre",
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.account_circle_rounded),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
+      backgroundColor: Color(0xfff2f3f7),
       body: Obx(() {
         final user = profileController.userData.value;
 
-        return profileController.isLoading.value
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildVerificationTile(
-                title: "Email Verification",
-                type: "Email",
-                status: user.emailVerifyStatus ?? 0,
-                onTap: () => _onVerifyTap("Email"),
-              ),
-              _buildVerificationTile(
-                title: "Phone Verification",
-                type: "Phone",
-                status: user.phoneVerifyStatus ?? 0,
-                onTap: () => _onVerifyTap("Phone"),
-              ),
-              _buildVerificationTile(
-                title: "Aadhar Verification",
-                type: "Aadhar",
-                status: user.aadharVerifyStatus ?? 0,
-                onTap: () => _onVerifyTap("Aadhar"),
-              ),
-              _buildVerificationTile(
-                title: "PAN Verification",
-                type: "PAN",
-                status: user.panVerifyStatus ?? 0,
-                onTap: () => _onVerifyTap("PAN"),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.refresh, color: Colors.white),
-                  label: const Text("Refresh Status", style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  ),
-                  onPressed: () async {
-                    await profileController.fetchDataUser();
-                    Get.snackbar(
-                      "Refreshed",
-                      "Latest verification statuses fetched successfully.",
-                      snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: Colors.green.withOpacity(0.2),
-                      colorText: Colors.black,
-                    );
-                  },
+        return Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 600),
+            child: ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                SizedBox(height: 16),
+
+                // Email Verification
+                _tile(
+                  icon: Icons.email_outlined,
+                  title: "Email",
+                  value: user.email ?? "Not set",
+                  verified: user.emailVerifyStatus == 1,
+                  isPending: user.emailVerifyStatus == 2,
+                  onTap: user.emailVerifyStatus == 1
+                      ? null
+                      : () => Get.toNamed(AppRoutes.emailVerification),
                 ),
-              ),
-            ],
+                SizedBox(height: 16),
+
+                // Phone Verification
+                _tile(
+                  icon: Icons.phone_android,
+                  title: "Phone Number",
+                  value: user.mobileNumber ?? "Not set",
+                  verified: user.phoneVerifyStatus == 1,
+                  isPending: user.phoneVerifyStatus == 2,
+                  bottomText: user.phoneVerifyStatus == 1
+                      ? null
+                      : "Contact Admin to change",
+                  onTap: user.phoneVerifyStatus == 1
+                      ? null
+                      : () => Get.toNamed(AppRoutes.phoneVerification),
+                ),
+                SizedBox(height: 16),
+
+                // Aadhar Verification
+                _tile(
+                  icon: Icons.credit_card,
+                  title: "Aadhar Number",
+                  value: user.aadharNumber ?? "Not set",
+                  verified: user.aadharVerifyStatus == 1,
+                  isPending: user.aadharVerifyStatus == 2,
+                  onTap: user.aadharVerifyStatus == 1
+                      ? null
+                      : () => Get.toNamed(AppRoutes.aadharVerification),
+                ),
+                SizedBox(height: 16),
+
+                // PAN Verification
+                _tile(
+                  icon: Icons.credit_card_outlined,
+                  title: "PAN Number",
+                  value: user.panNumber ?? "Not set",
+                  verified: user.panVerifyStatus == 1,
+                  isPending: user.panVerifyStatus == 2,
+                  onTap: user.panVerifyStatus == 1
+                      ? null
+                      : () => Get.toNamed(AppRoutes.panVerification),
+                ),
+              ],
+            ),
           ),
         );
       }),
     );
   }
+}
 
-  Future<void> _onVerifyTap(String type) async {
-    final result = await Get.toNamed(
-      '/otpVerification',
-      arguments: {"type": type},
-    );
+Widget _tile({
+  required IconData icon,
+  required String title,
+  required String value,
+  required bool verified,
+  bool isPending = false,
+  String? bottomText,
+  VoidCallback? onTap,
+}) {
+  // ✅ Determine status color and text
+  Color statusColor;
+  String statusText;
 
-    if (result != null && result['verified'] == true) {
-      profileController.markAsVerified(type);
-
-      Get.snackbar(
-        "Success",
-        "$type verification completed!",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.2),
-        colorText: Colors.black,
-      );
-    }
+  if (verified) {
+    statusColor = Colors.green;
+    statusText = "Verified";
+  } else if (isPending) {
+    statusColor = Colors.orange;
+    statusText = "Pending";
+  } else {
+    statusColor = Colors.red;
+    statusText = "Unverified";
   }
+
+  return InkWell(
+    borderRadius: BorderRadius.circular(16),
+    onTap: verified ? null : onTap, // ✅ Disable tap if verified
+    child: Opacity(
+      opacity: verified ? 0.7 : 1.0, // ✅ Dim if verified
+      child: Container(
+        padding: EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: verified
+              ? Color(0xffe8f5e9) // Light green background if verified
+              : Color(0xffeef1f4),
+          borderRadius: BorderRadius.circular(16),
+          border: verified
+              ? Border.all(color: Colors.green.withOpacity(0.3), width: 2)
+              : null,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, size: 26, color: verified ? Colors.green : null),
+                    SizedBox(width: 10),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: verified ? Colors.green.shade800 : null,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: statusColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            verified
+                                ? Icons.check_circle
+                                : isPending
+                                ? Icons.schedule
+                                : Icons.warning,
+                            color: Colors.white,
+                            size: 14,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            statusText,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (verified)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Icon(
+                          Icons.lock,
+                          color: Colors.green,
+                          size: 18,
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 18,
+                color: verified ? Colors.green.shade700 : null,
+              ),
+            ),
+            if (bottomText != null) ...[
+              SizedBox(height: 5),
+              Text(
+                bottomText,
+                style: TextStyle(
+                  color: isPending ? Colors.orange : Colors.red,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+            if (verified) ...[
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.verified_user, color: Colors.green, size: 16),
+                  SizedBox(width: 6),
+                  Text(
+                    "This document is verified and cannot be changed",
+                    style: TextStyle(
+                      color: Colors.green.shade700,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    ),
+  );
 }

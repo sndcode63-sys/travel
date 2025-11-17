@@ -56,22 +56,37 @@ class ProfileCenterController extends GetxController {
       print("PAN: $currentPanStatus");
 
       final response = await _repositoryProfileCentre.getAssociateUser();
+
+      print("📥 API Response verification statuses:");
+      print("Email: ${response.emailVerifyStatus}");
+      print("Phone: ${response.phoneVerifyStatus}");
+      print("Aadhar: ${response.aadharVerifyStatus}");
+      print("PAN: ${response.panVerifyStatus}");
+
       userData.value = response;
 
-      // ✅ PRESERVE local verification statuses if API doesn't return them
-      if (response.emailVerifyStatus == null && currentEmailStatus != null) {
+      // ✅ PRESERVE local verification statuses if API doesn't return them OR returns 0
+      // If API returns 0 but we had 1 (verified) locally, keep the local value
+      if ((response.emailVerifyStatus == null || response.emailVerifyStatus == 0) &&
+          currentEmailStatus == 1) {
         userData.value.emailVerifyStatus = currentEmailStatus;
         print("✅ Preserved email verification status: $currentEmailStatus");
       }
-      if (response.phoneVerifyStatus == null && currentPhoneStatus != null) {
+
+      if ((response.phoneVerifyStatus == null || response.phoneVerifyStatus == 0) &&
+          currentPhoneStatus == 1) {
         userData.value.phoneVerifyStatus = currentPhoneStatus;
         print("✅ Preserved phone verification status: $currentPhoneStatus");
       }
-      if (response.aadharVerifyStatus == null && currentAadharStatus != null) {
+
+      if ((response.aadharVerifyStatus == null || response.aadharVerifyStatus == 0) &&
+          currentAadharStatus == 1) {
         userData.value.aadharVerifyStatus = currentAadharStatus;
         print("✅ Preserved aadhar verification status: $currentAadharStatus");
       }
-      if (response.panVerifyStatus == null && currentPanStatus != null) {
+
+      if ((response.panVerifyStatus == null || response.panVerifyStatus == 0) &&
+          currentPanStatus == 1) {
         userData.value.panVerifyStatus = currentPanStatus;
         print("✅ Preserved pan verification status: $currentPanStatus");
       }
@@ -79,6 +94,11 @@ class ProfileCenterController extends GetxController {
       // ✅ Save to local storage
       storage.write('user_data', jsonEncode(userData.value.toJson()));
       print("✅ User data saved to cache");
+      print("📊 Final verification statuses:");
+      print("Email: ${userData.value.emailVerifyStatus}");
+      print("Phone: ${userData.value.phoneVerifyStatus}");
+      print("Aadhar: ${userData.value.aadharVerifyStatus}");
+      print("PAN: ${userData.value.panVerifyStatus}");
 
       // ✅ Force UI refresh
       userData.refresh();
@@ -91,9 +111,15 @@ class ProfileCenterController extends GetxController {
         message: errorMessage.value,
         isError: true,
       );
+      print("❌ Error fetching user data: $e");
     } finally {
       isLoading.value = false;
     }
+  }
+
+  // ✅ Public method for external refresh calls (alias for fetchDataUser)
+  Future<void> refreshUserData() async {
+    await fetchDataUser();
   }
 
   void markAsVerified(String type) {
@@ -101,7 +127,6 @@ class ProfileCenterController extends GetxController {
     userData.refresh();
     print("🎯 $type marked as verified and UI refreshed");
   }
-
 
   // ✅ Method to update verification status locally
   void updateVerificationStatus(String type, int status) {
@@ -128,6 +153,62 @@ class ProfileCenterController extends GetxController {
         // Save to local storage
         storage.write('user_data', jsonEncode(user.toJson()));
         print("✅ Verification status saved to cache");
+      }
+    });
+  }
+
+  // ✅ NEW: Update document information
+  void updateDocumentData({
+    String? aadharNumber,
+    String? panNumber,
+    String? passportNumber,
+    String? reraCertificate,
+    String? qualificationRemarks,
+    String? policeVerificationCopy,
+    String? bankCopyDocument,
+    String? aadharImageSource,
+    String? panImageSource,
+    String? passportImageSource,
+    String? qualificationRemarksImageSource,
+    String? reraImageSource,
+    String? policeVerificationImageSource,
+    String? bankCopyImageSource,
+  }) {
+    userData.update((user) {
+      if (user != null) {
+        if (aadharNumber != null) user.aadharNumber = aadharNumber;
+        if (panNumber != null) user.panNumber = panNumber;
+        if (passportNumber != null) user.passportNumber = passportNumber;
+        if (reraCertificate != null) user.reraCertificate = reraCertificate;
+        if (qualificationRemarks != null) user.qualificationRemarks = qualificationRemarks;
+        if (policeVerificationCopy != null) user.policeVerificationCopy = policeVerificationCopy;
+        if (bankCopyDocument != null) user.bankCopyDocument = bankCopyDocument;
+
+        if (aadharImageSource != null) user.aadharImageSource = aadharImageSource;
+        if (panImageSource != null) user.panImageSource = panImageSource;
+        if (passportImageSource != null) user.passportImageSource = passportImageSource;
+        if (qualificationRemarksImageSource != null) user.qualificationRemarksImageSource = qualificationRemarksImageSource;
+        if (reraImageSource != null) user.reraImageSource = reraImageSource;
+        if (policeVerificationImageSource != null) user.policeVerificationImageSource = policeVerificationImageSource;
+        if (bankCopyImageSource != null) user.bankCopyImageSource = bankCopyImageSource;
+
+        // Save to local storage
+        storage.write('user_data', jsonEncode(user.toJson()));
+        print("✅ Document data updated and saved to cache");
+      }
+    });
+  }
+
+  // ✅ NEW: Mark documents as pending after submission
+  void markDocumentsAsPending() {
+    userData.update((user) {
+      if (user != null) {
+        user.aadharVerifyStatus = 2; // Pending
+        user.panVerifyStatus = 2; // Pending
+
+        // Save to local storage
+        storage.write('user_data', jsonEncode(user.toJson()));
+        print("✅ Documents marked as pending");
       }
     });
   }
