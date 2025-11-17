@@ -15,27 +15,91 @@ class VehicleListScreen extends GetView<VehicleController> {
     final VehicleController controller = Get.put(VehicleController());
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(UColors.primary),
+                  strokeWidth: 3,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  "Loading vehicles...",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ],
+            ),
+          );
         }
 
         if (controller.hasError.value) {
-          return Center(child: Text(controller.errorMessage.value));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+                SizedBox(height: 16.h),
+                Text(
+                  controller.errorMessage.value,
+                  style: TextStyle(fontSize: 16.sp, color: Colors.grey[700]),
+                ),
+              ],
+            ),
+          );
         }
+
         if (controller.allMeeting.isEmpty) {
-          return const Center(child: Text("No Vehicles Found"));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.directions_car_outlined,
+                    size: 80,
+                    color: Colors.grey[300]
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  "No Vehicles Found",
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  "Add your first vehicle to get started",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.grey[500],
+                  ),
+                ),
+              ],
+            ),
+          );
         }
 
         return RefreshIndicator(
           onRefresh: () => controller.fetchUsers(),
+          color: UColors.primary,
           child: ListView.builder(
-            physics: BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(8),
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
             itemCount: controller.allMeeting.length,
             itemBuilder: (context, index) {
               final vehicle = controller.allMeeting[index];
-              return VehicleCard(vehicleList: vehicle, controller: controller);
+              return AnimatedVehicleCard(
+                vehicleList: vehicle,
+                controller: controller,
+                index: index,
+              );
             },
           ),
         );
@@ -44,9 +108,75 @@ class VehicleListScreen extends GetView<VehicleController> {
   }
 }
 
+class AnimatedVehicleCard extends StatefulWidget {
+  final VehicleList vehicleList;
+  final VehicleController controller;
+  final int index;
+
+  const AnimatedVehicleCard({
+    super.key,
+    required this.vehicleList,
+    required this.controller,
+    required this.index,
+  });
+
+  @override
+  State<AnimatedVehicleCard> createState() => _AnimatedVehicleCardState();
+}
+
+class _AnimatedVehicleCardState extends State<AnimatedVehicleCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 400 + (widget.index * 50)),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0.3, 0),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: _slideAnimation,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: VehicleCard(
+          vehicleList: widget.vehicleList,
+          controller: widget.controller,
+        ),
+      ),
+    );
+  }
+}
+
 class VehicleCard extends StatelessWidget {
   final VehicleList vehicleList;
   final VehicleController controller;
+
   const VehicleCard({
     super.key,
     required this.vehicleList,
@@ -56,704 +186,723 @@ class VehicleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          barrierColor: Colors.blue.withOpacity(0.3),
-          builder: (context) {
-            return FractionallySizedBox(
-              heightFactor: 0.95,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                child: SafeArea(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 16.h),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                "Vehicle Information",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 22,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => Navigator.pop(context),
-                                child: const Icon(
-                                  Icons.close,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Divider(height: 0, thickness: 1, color: UColors.grey),
-                        const SizedBox(height: 12),
-                        Center(
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: UColors.grey),
-                            ),
-                            child: Container(
-                              width: 70.w,
-                              height: Get.width * 0.8.w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: UColors.grey),
-                                color: Colors.grey[200],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child:
-                                    (vehicleList.photo != null &&
-                                            vehicleList.photo!.isNotEmpty)
-                                        ? CachedNetworkImage(
-                                          imageUrl:
-                                              "${vehicleList.fullImageUrl}${vehicleList.photo}",
-                                          fit: BoxFit.cover,
-                                          placeholder:
-                                              (context, url) => const Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                    ),
-                                              ),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                                  const Center(
-                                                    child: Icon(
-                                                      Icons.directions_car,
-                                                      size: 40,
-                                                    ),
-                                                  ),
-                                        )
-                                        : Center(
-                                          child: CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor: Colors.grey[400],
-                                            child: const Icon(
-                                              Icons.directions_car,
-                                              size: 24,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 30.h),
-                        Divider(height: 0, thickness: 1, color: UColors.grey),
-                        SizedBox(height: 20.h),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Submit Data"),
-                                  Text("N/A"),
-                                ],
-                              ),
-                              SizedBox(height: 12.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Vehicle TYpe"),
-                                  Text(vehicleList.type ?? ""),
-                                ],
-                              ),
-                              SizedBox(height: 12.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [Text("Brand"),
-                                  Text(vehicleList.brandName ?? "")],
-                              ),
-                              SizedBox(height: 12.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Model Name"),
-                                  Text(vehicleList.modelName ?? ""),
-                                ],
-                              ),
-                              SizedBox(height: 12.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Registration Number"),
-                                  Text(vehicleList.registrationNumber ?? ""),
-                                ],
-                              ),
-                              SizedBox(height: 12.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Color"),
-                                  Text(vehicleList.color ?? ""),
-                                ],
-                              ),
-                              SizedBox(height: 12.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Status"),
-                                  Container(
-                                    height: 24.h,
-                                    width: 80.w,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: controller.getStatusColor(vehicleList.visitStatus).withAlpha(40),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        vehicleList.visitStatus ?? "",
-                                        style: TextStyle(
-                                          color: controller.getStatusColor(vehicleList.visitStatus),
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 12.h),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-
+      onTap: () => _showVehicleDetails(context),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-        padding: const EdgeInsets.all(12),
+        margin: EdgeInsets.only(bottom: 16.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           color: Colors.white,
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(0, 2),
+              color: UColors.primary.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+              spreadRadius: 0,
             ),
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // Image Section with Gradient Overlay
+            Stack(
               children: [
-                Container(
-                  width: 70.w,
-                  height: 70.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: UColors.grey),
-                    color: Colors.grey[200],
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child:
-                        (vehicleList.photo != null &&
-                                vehicleList.photo!.isNotEmpty)
-                            ? CachedNetworkImage(
-                              imageUrl:
-                                  "${vehicleList.fullImageUrl}${vehicleList.photo}",
-                              fit: BoxFit.cover,
-                              placeholder:
-                                  (context, url) => const Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                              errorWidget:
-                                  (context, url, error) => const Center(
-                                    child: Icon(Icons.directions_car, size: 40),
-                                  ),
-                            )
-                            : Center(
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.grey[400],
-                                child: const Icon(
-                                  Icons.directions_car,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                  ),
+                  child: _buildVehicleImage(),
                 ),
-
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Registration: ${vehicleList.registrationNumber ?? "-"}",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color:
-                                  (vehicleList.type?.toLowerCase() ==
-                                          '2 wheeler')
-                                      ? UColors.primary
-                                      : Colors.green,
-                            ),
-                            child: Text(
-                              vehicleList.type ?? "",
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
+                // Gradient Overlay
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.3),
                         ],
                       ),
-                      Text(
-                        "Model: ${vehicleList.modelName ?? "-"}",
-                        overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                // Status Badge
+                Positioned(
+                  top: 12.h,
+                  right: 12.w,
+                  child: _buildStatusBadge(),
+                ),
+                // Vehicle Type Badge
+                Positioned(
+                  top: 12.h,
+                  left: 12.w,
+                  child: _buildTypeBadge(),
+                ),
+              ],
+            ),
+
+            // Content Section
+            Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Registration Number
+                  Row(
+                    children: [
+                      Icon(Icons.confirmation_number_outlined,
+                        size: 20,
+                        color: UColors.primary,
                       ),
-                      Text(
-                        "Brand: ${vehicleList.brandName ?? "-"}",
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        "Color: ${vehicleList.color ?? "-"}",
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 8.h),
-                      Container(
-                        height: 24.h,
-                        width: 100.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: controller
-                              .getStatusColor(vehicleList.visitStatus)
-                              .withAlpha(40),
-                        ),
-                        child: Center(
-                          child: Text(
-                            vehicleList.visitStatus ?? "",
-                            style: TextStyle(
-                              color: controller.getStatusColor(
-                                vehicleList.visitStatus,
-                              ),
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Text(
+                          vehicleList.registrationNumber ?? "N/A",
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[900],
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if ((vehicleList.visitStatus?.toLowerCase() ?? "") ==
-                        "pending")
-                      GestureDetector(
-                        onTap: () async {
-                          final result = await Get.to(
-                            () => UpdateVehicleScreen(),
-                            arguments: vehicleList,
-                          );
-                          if (result == true) {
-                            controller.fetchUsers();
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.greenAccent,
-                          ),
-                          child: const Text(
-                            "Edit Details",
-                            style: TextStyle(color: Colors.white),
-                          ),
+
+                  SizedBox(height: 12.h),
+
+                  // Vehicle Details Grid
+                  _buildDetailRow(
+                    Icons.directions_car,
+                    "Model",
+                    vehicleList.modelName ?? "-",
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildDetailRow(
+                    Icons.business,
+                    "Brand",
+                    vehicleList.brandName ?? "-",
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildDetailRow(
+                    Icons.palette,
+                    "Color",
+                    vehicleList.color ?? "-",
+                  ),
+
+                  SizedBox(height: 16.h),
+                  Divider(height: 1, color: Colors.grey[200]),
+                  SizedBox(height: 16.h),
+
+                  // Action Buttons
+                  Row(
+                    children: [
+                      // Edit Button (only for pending)
+                      if ((vehicleList.visitStatus?.toLowerCase() ?? "") == "pending")
+                        Expanded(
+                          child: _buildEditButton(),
                         ),
+
+                      if ((vehicleList.visitStatus?.toLowerCase() ?? "") == "pending")
+                        SizedBox(width: 12.w),
+
+                      // Active/Inactive Switch
+                      Expanded(
+                        child: _buildActiveSwitch(context),
                       ),
 
-                    SizedBox(width: 8.w),
-                    Obx(
-                      () => Switch(
-                        value: vehicleList.isOn.value,
-                        onChanged: (value) async {
-                          bool? confirmChange = await showGeneralDialog<bool>(
-                            context: Get.context!,
-                            barrierDismissible: true,
-                            barrierLabel: "Confirm",
-                            barrierColor: Colors.black54, // dim background
-                            transitionDuration: const Duration(
-                              milliseconds: 300,
-                            ), // smooth animation
-                            pageBuilder: (context, animation1, animation2) {
-                              return const SizedBox.shrink(); // required by showGeneralDialog
-                            },
-                            transitionBuilder: (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                              child,
-                            ) {
-                              final curvedValue =
-                                  Curves.easeInOutBack.transform(
-                                    animation.value,
-                                  ) -
-                                  1.0;
+                      SizedBox(width: 12.w),
 
-                              return Transform.scale(
-                                scale: 1 + curvedValue * 0.05, // pop-in effect
-                                child: Opacity(
-                                  opacity: animation.value,
-                                  child: Dialog(
-                                    backgroundColor: Colors.white,
-                                    elevation: 12,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(22.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          // Animated icon
-                                          AnimatedContainer(
-                                            duration: const Duration(
-                                              milliseconds: 400,
-                                            ),
-                                            curve: Curves.easeInOut,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  value
-                                                      ? Colors.green
-                                                          .withOpacity(0.15)
-                                                      : Colors.red.withOpacity(
-                                                        0.15,
-                                                      ),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            padding: const EdgeInsets.all(20),
-                                            child: Icon(
-                                              value
-                                                  ? Icons.toggle_on
-                                                  : Icons.toggle_off,
-                                              color:
-                                                  value
-                                                      ? Colors.green
-                                                      : Colors.red,
-                                              size: 60,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          const Text(
-                                            "Are you sure?",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Text(
-                                            "Do you want to ${value ? 'activate' : 'deactivate'} this vehicle?",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.grey[700],
-                                              fontSize: 15,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 25),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              // Cancel Button
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Colors.grey[200],
-                                                  foregroundColor: Colors.black,
-                                                  elevation: 0,
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 24,
-                                                        vertical: 10,
-                                                      ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          12,
-                                                        ),
-                                                  ),
-                                                ),
-                                                onPressed:
-                                                    () => Navigator.pop(
-                                                      context,
-                                                      false,
-                                                    ),
-                                                child: const Text("Cancel"),
-                                              ),
-                                              // Confirm Button
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      value
-                                                          ? Colors.green
-                                                          : Colors.red,
-                                                  foregroundColor: Colors.white,
-                                                  elevation: 3,
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 24,
-                                                        vertical: 10,
-                                                      ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          12,
-                                                        ),
-                                                  ),
-                                                ),
-                                                onPressed:
-                                                    () => Navigator.pop(
-                                                      context,
-                                                      true,
-                                                    ),
-                                                child: Text(
-                                                  value
-                                                      ? "Activate"
-                                                      : "Deactivate",
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-
-                          if (confirmChange == true) {
-                            controller.updateVehicleStatus(
-                              vehicleList.id!,
-                              value,
-                            );
-                          }
-                        },
-                        activeColor: UColors.primary,
-                        inactiveThumbColor: UColors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                      // Delete Button
+                      _buildDeleteButton(context),
+                    ],
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.red,
-                  ),
-                  child: InkWell(
-                    onTap: () async {
-                      bool? confirmDelete = await showGeneralDialog<bool>(
-                        context: Get.context!,
-                        barrierDismissible: true,
-                        barrierLabel: "DeleteConfirm",
-                        barrierColor: Colors.black54,
-                        transitionDuration: const Duration(milliseconds: 300),
-                        pageBuilder: (context, animation1, animation2) {
-                          return const SizedBox.shrink();
-                        },
-                        transitionBuilder: (
-                          context,
-                          animation,
-                          secondaryAnimation,
-                          child,
-                        ) {
-                          final curvedValue =
-                              Curves.easeInOutBack.transform(animation.value) -
-                              1.0;
-
-                          return Transform.scale(
-                            scale: 1 + curvedValue * 0.05,
-                            child: Opacity(
-                              opacity: animation.value,
-                              child: Dialog(
-                                backgroundColor: Theme.of(context).cardColor,
-                                elevation: 12,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(22.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      AnimatedContainer(
-                                        duration: const Duration(
-                                          milliseconds: 400,
-                                        ),
-                                        curve: Curves.easeInOut,
-                                        decoration: BoxDecoration(
-                                          color: Colors.red.withOpacity(0.15),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        padding: const EdgeInsets.all(20),
-                                        child: const Icon(
-                                          Icons.delete_forever_rounded,
-                                          color: Colors.red,
-                                          size: 60,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      const Text(
-                                        "Are you sure?",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "Do you want to remove this vehicle?",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.grey[700],
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 25),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.grey[200],
-                                              foregroundColor: Colors.black,
-                                              elevation: 0,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 24,
-                                                    vertical: 10,
-                                                  ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                            onPressed:
-                                                () => Navigator.pop(
-                                                  context,
-                                                  false,
-                                                ),
-                                            child: const Text("Cancel"),
-                                          ),
-                                          ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red,
-                                              foregroundColor: Colors.white,
-                                              elevation: 3,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 24,
-                                                    vertical: 10,
-                                                  ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                            onPressed:
-                                                () => Navigator.pop(
-                                                  context,
-                                                  true,
-                                                ),
-                                            child: const Text("Delete"),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-
-                      if (confirmDelete == true) {
-                        controller.deleteVehicle(vehicleList.id!);
-                      }
-                    },
-                    child: const Text(
-                      "Remove",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildVehicleImage() {
+    return Container(
+      height: 180.h,
+      width: double.infinity,
+      color: Colors.grey[200],
+      child: (vehicleList.photo != null && vehicleList.photo!.isNotEmpty)
+          ? CachedNetworkImage(
+        imageUrl: "${vehicleList.fullImageUrl}${vehicleList.photo}",
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(UColors.primary),
+          ),
+        ),
+        errorWidget: (context, url, error) => Center(
+          child: Icon(Icons.directions_car, size: 60, color: Colors.grey[400]),
+        ),
+      )
+          : Center(
+        child: Icon(Icons.directions_car, size: 80, color: Colors.grey[400]),
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: controller.getStatusColor(vehicleList.visitStatus),
+        boxShadow: [
+          BoxShadow(
+            color: controller.getStatusColor(vehicleList.visitStatus).withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Text(
+        vehicleList.visitStatus?.toUpperCase() ?? "N/A",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 11.sp,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypeBadge() {
+    final isTwo = vehicleList.type?.toLowerCase() == '2 wheeler';
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: isTwo ? UColors.primary : Colors.green,
+        boxShadow: [
+          BoxShadow(
+            color: (isTwo ? UColors.primary : Colors.green).withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isTwo ? Icons.two_wheeler : Icons.directions_car,
+            size: 14,
+            color: Colors.white,
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            vehicleList.type ?? "N/A",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 11.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: Colors.grey[600]),
+        SizedBox(width: 8.w),
+        Text(
+          "$label: ",
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.grey[800],
+              fontWeight: FontWeight.w600,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEditButton() {
+    return GestureDetector(
+      onTap: () async {
+        final result = await Get.to(
+              () => UpdateVehicleScreen(),
+          arguments: vehicleList,
+        );
+        if (result == true) {
+          controller.fetchUsers();
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: LinearGradient(
+            colors: [Colors.green[400]!, Colors.green[600]!],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.green.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.edit, color: Colors.white, size: 18),
+            SizedBox(width: 6.w),
+            Text(
+              "Edit",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActiveSwitch(BuildContext context) {
+    return Obx(() {
+      final isActive = vehicleList.isOn.value;
+      return GestureDetector(
+        onTap: () => _handleStatusToggle(context, !isActive),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: isActive ? Colors.green[50] : Colors.red[50],
+            border: Border.all(
+              color: isActive ? Colors.green : Colors.red,
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                isActive ? Icons.check_circle : Icons.cancel,
+                color: isActive ? Colors.green : Colors.red,
+                size: 20,
+              ),
+              SizedBox(width: 6.w),
+              Text(
+                isActive ? "Active" : "Inactive",
+                style: TextStyle(
+                  color: isActive ? Colors.green[700] : Colors.red[700],
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildDeleteButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _handleDelete(context),
+      child: Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.red,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.red.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.delete_outline,
+          color: Colors.white,
+          size: 22,
+        ),
+      ),
+    );
+  }
+
+  void _handleStatusToggle(BuildContext context, bool newValue) async {
+    bool? confirmChange = await _showConfirmationDialog(
+      context: context,
+      title: "Change Status",
+      message: "Do you want to ${newValue ? 'activate' : 'deactivate'} this vehicle?",
+      confirmText: newValue ? "Activate" : "Deactivate",
+      confirmColor: newValue ? Colors.green : Colors.red,
+      icon: newValue ? Icons.toggle_on : Icons.toggle_off,
+      iconColor: newValue ? Colors.green : Colors.red,
+    );
+
+    if (confirmChange == true) {
+      controller.updateVehicleStatus(vehicleList.id!, newValue);
+    }
+  }
+
+  void _handleDelete(BuildContext context) async {
+    bool? confirmDelete = await _showConfirmationDialog(
+      context: context,
+      title: "Delete Vehicle",
+      message: "Are you sure you want to remove this vehicle? This action cannot be undone.",
+      confirmText: "Delete",
+      confirmColor: Colors.red,
+      icon: Icons.delete_forever_rounded,
+      iconColor: Colors.red,
+    );
+
+    if (confirmDelete == true) {
+      controller.deleteVehicle(vehicleList.id!);
+    }
+  }
+
+  Future<bool?> _showConfirmationDialog({
+    required BuildContext context,
+    required String title,
+    required String message,
+    required String confirmText,
+    required Color confirmColor,
+    required IconData icon,
+    required Color iconColor,
+  }) {
+    return showGeneralDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Confirm",
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation1, animation2) => const SizedBox.shrink(),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.easeOutBack.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: Dialog(
+              backgroundColor: Colors.white,
+              elevation: 16,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(24.w),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(16.w),
+                      decoration: BoxDecoration(
+                        color: iconColor.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(icon, color: iconColor, size: 48),
+                    ),
+                    SizedBox(height: 20.h),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.sp,
+                        color: Colors.grey[900],
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 15.sp,
+                        height: 1.4,
+                      ),
+                    ),
+                    SizedBox(height: 24.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              side: BorderSide(color: Colors.grey[300]!),
+                            ),
+                            onPressed: () => Navigator.pop(context, false),
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: confirmColor,
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            onPressed: () => Navigator.pop(context, true),
+                            child: Text(
+                              confirmText,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showVehicleDetails(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => VehicleDetailsSheet(
+        vehicleList: vehicleList,
+        controller: controller,
+      ),
+    );
+  }
+}
+
+class VehicleDetailsSheet extends StatelessWidget {
+  final VehicleList vehicleList;
+  final VehicleController controller;
+
+  const VehicleDetailsSheet({
+    super.key,
+    required this.vehicleList,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.9,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          ),
+          child: Column(
+            children: [
+              // Handle Bar
+              Container(
+                margin: EdgeInsets.only(top: 12.h),
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Header
+              Padding(
+                padding: EdgeInsets.all(20.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Vehicle Details",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24.sp,
+                        color: Colors.grey[900],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.grey[600]),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.grey[100],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Divider(height: 1, color: Colors.grey[200]),
+
+              // Content
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: EdgeInsets.all(20.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Vehicle Image
+                      Center(
+                        child: Container(
+                          height: 250.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey[200],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: (vehicleList.photo != null && vehicleList.photo!.isNotEmpty)
+                                ? CachedNetworkImage(
+                              imageUrl: "${vehicleList.fullImageUrl}${vehicleList.photo}",
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                              errorWidget: (context, url, error) => Center(
+                                child: Icon(Icons.directions_car, size: 60, color: Colors.grey[400]),
+                              ),
+                            )
+                                : Center(
+                              child: Icon(Icons.directions_car, size: 80, color: Colors.grey[400]),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 30.h),
+
+                      // Details Section
+                      _buildDetailCard("Vehicle Information", [
+                        _DetailItem("Registration Number", vehicleList.registrationNumber ?? "N/A"),
+                        _DetailItem("Type", vehicleList.type ?? "N/A"),
+                        _DetailItem("Brand", vehicleList.brandName ?? "N/A"),
+                        _DetailItem("Model", vehicleList.modelName ?? "N/A"),
+                        _DetailItem("Color", vehicleList.color ?? "N/A"),
+                      ]),
+
+                      SizedBox(height: 16.h),
+
+                      _buildDetailCard("Status Information", [
+                        _DetailItem("Visit Status", vehicleList.visitStatus ?? "N/A"),
+                        _DetailItem("Active Status", vehicleList.active == 1 ? "Active" : "Inactive"),
+                      ]),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailCard(String title, List<_DetailItem> items) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+              color: UColors.primary,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          ...items.map((item) => Padding(
+            padding: EdgeInsets.only(bottom: 10.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  item.label,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    item.value,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey[900],
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+          )),
+        ],
+      ),
+    );
+  }
+}
+
+class _DetailItem {
+  final String label;
+  final String value;
+  _DetailItem(this.label, this.value);
 }

@@ -1,125 +1,146 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:travell_booking_app/utlis/constents/app_sizes.dart';
 
 import '../../utlis/constents/colors.dart';
 import 'vehicleList/widgets/custom_tab_bar.dart';
+import 'vehicleR_controller.dart';
+
 
 class Vehicler extends StatelessWidget {
   const Vehicler({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize:  Size.fromHeight(70.h),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () => Get.back(),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Vehicle",
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
+    final searchController = Get.put(VehiclerController());
+    final TextEditingController textController = TextEditingController();
+
+    return GestureDetector(
+      onTap: (){
+        hideKeyboard();
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70.h),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.h, bottom: 12.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => Get.back(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Vehicle",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "vehicle list",
-                            style: TextStyle(fontSize: 14.sp),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () {},
-                  ),
-                ],
+                            Text(
+                              "vehicle list",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-      body: Container(
-        color: Colors.blue.withOpacity(0.08),
-        child: Column(
-          children: [
-            SizedBox(height: 20.h,),
-            // AppTextField(
-            //   prefixIcon: Icon(Icons.search),
-            //   suffixIcon: Icon(Icons.mic),
-            //   hintText: 'Search by Date/Time/Client Name',
-            //   hintStyle: TextStyle(color: UColors.grey,
-            //   fontSize: 16,
-            //   fontWeight: FontWeight.w400),
-            // )
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.r),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-
-                border: Border.all(color: UColors.grey),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(Icons.search, color: Colors.grey),
-                  Text(
-                    'Search by Date/Time/Client Name',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
+        body: Container(
+          color: UColors.white,
+          child: Column(
+            children: [
+              SizedBox(height: 20.h),
+              // Search Bar
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.r),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
                     ),
-                  ),
-                  Icon(Icons.mic, color: Colors.grey),
-                ],
+                  ],
+                  border: Border.all(color: UColors.grey),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.search, color: Colors.grey),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: TextField(
+                        controller: textController,
+                        onChanged: (value) {
+                          searchController.updateSearch(value);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search by Registration/Model/Brand/Color',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14.sp,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    Obx(() {
+                      if (searchController.searchQuery.value.isNotEmpty) {
+                        return IconButton(
+                          icon: Icon(Icons.clear, color: Colors.grey),
+                          onPressed: () {
+                            textController.clear();
+                            searchController.clearSearch();
+                          },
+                        );
+                      }
+                      return Container();
+                    }),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 10.h,),
-            Expanded(child: CustomVehicleTabs()),
-          ],
+              SizedBox(height: 10.h),
+              Expanded(child: CustomVehicleTabs()),
+            ],
+          ),
         ),
       ),
     );
   }
-
-
 }

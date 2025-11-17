@@ -306,12 +306,14 @@ class HomScreen extends StatelessWidget {
                           label: 'My Complaint',
                           icon: AppImages.addSuggestion,
                           color: const Color(0xFF00BCD4),
-                          route: AppRoutes.myComplaint,
+                          route: AppRoutes.myComplain1,
                         ),
                         ActivityItem(
                           label: 'Complaint With Me',
                           icon: AppImages.hand,
                           color: const Color(0xFF3F51B5),
+                          route: AppRoutes.myComplainWithMe,
+
                         ),
                       ],
                     ),

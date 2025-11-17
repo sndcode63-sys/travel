@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:travell_booking_app/utlis/app_routes.dart';
+import '../../../data/services/api_manager.dart';
 import '../../../utlis/custom_widgets/customApiHeloer/custom_api_helper.dart';
+import '../../splash/splash_repository.dart';
 import 'login_repository.dart';
 
 class LoginController extends GetxController {
@@ -29,16 +31,22 @@ class LoginController extends GetxController {
       final loginData = await LoginRepository.login(
         username: emailController.text.trim(),
         password: passwordController.text.trim(),
-
       );
 
-
       if (loginData.status == 200) {
-        final _ = loginData.firebaseToken.toString();
         CustomNotifier.showSnackbar(
           message: loginData.message.toString(),
         );
-        Get.offNamed(AppRoutes.dashBoard);
+
+        //  Fetch full user details after login
+        final userRepository = UserRepository();
+        final userData = await userRepository.getUserDetails();
+
+        //  Save to AuthService
+        await AuthService.to.saveUser(userData);
+
+        //  Navigate with user data
+        Get.offNamed(AppRoutes.dashBoard, arguments: userData);
       } else {
         CustomNotifier.showSnackbar(
           message: loginData.message.toString(),
@@ -52,7 +60,6 @@ class LoginController extends GetxController {
       );
     }
   }
-
   @override
   void dispose() {
     emailController.dispose();

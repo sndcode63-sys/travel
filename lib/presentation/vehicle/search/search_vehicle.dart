@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_button.dart';
 import 'package:travell_booking_app/utlis/custom_widgets/custom_text_field.dart';
 import '../../../utlis/constents/colors.dart';
+import '../../../utlis/constents/img_constants.dart';
 import 'search_controller.dart';
 import '../../../models/vehicle/vehicle_search.dart';
 
@@ -20,12 +21,68 @@ class SearchVehicle extends StatelessWidget {
     return GestureDetector(
       onTap: hideKeyboard,
       child: Scaffold(
-        appBar: AppBar(title: const Text("My Complaints")),
+        appBar: PreferredSize(
+          preferredSize:  Size.fromHeight(70.h),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.h,bottom: 12.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => Get.back(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Vehicle",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Search vehicle",
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
+                const SizedBox(height: 16),
                 _searchBar(),
                 const SizedBox(height: 20),
                 Expanded(
@@ -85,21 +142,19 @@ class SearchVehicle extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey.withAlpha(78),
+                color: UColors.primary,
                 borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(18),
                   bottomRight: Radius.circular(18),
                 ),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              child: const Row(
+              child:  Row(
                 children: [
-                  Icon(Icons.search, color: Colors.black, size: 20),
-                  SizedBox(width: 6),
                   Text(
                     "Search",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: UColors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -363,7 +418,7 @@ class NotifyBottomSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  /// Capture or Preview Image
+                  // Capture or Preview Image
                   Obx(
                         () => DottedBorder(
                       color: Colors.grey,
@@ -385,8 +440,7 @@ class NotifyBottomSheet extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.camera_alt,
-                                    color: UColors.primary, size: 40.sp),
+                              Image.asset(AppImages.picture, width: 200.w, height: 200.h),
                                 SizedBox(height: 8.h),
                                 Text(
                                   "Tap to capture vehicle image",
@@ -410,15 +464,6 @@ class NotifyBottomSheet extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 16),
-                  CustomButton(
-                    text: "Capture Image",
-                    backgroundColor: Colors.greenAccent,
-                    textColor: UColors.white,
-                    width: 210.w,
-                    onPressed: () => controller.openCamera(),
-                  ),
                   const SizedBox(height: 16),
 
                   AppTextField(
@@ -437,7 +482,7 @@ class NotifyBottomSheet extends StatelessWidget {
                       style: TextStyle(fontSize: 16.sp, color: UColors.black),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 40),
 
                   CustomButton(
                     text: "NOTIFY",
@@ -445,7 +490,6 @@ class NotifyBottomSheet extends StatelessWidget {
                     onPressed: () => controller.saveForm(vehicleId),
                   ),
 
-                  SizedBox(height: 40.h),
                 ],
               ),
             ),

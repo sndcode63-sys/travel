@@ -57,5 +57,7 @@ class AppRoutes {
   static const associateList = '/associateList-screen';
   static const associateTab = '/associateTab-screen';
   static const  unifiedVerification = '/unified-verification';
+  static const  myComplain1 = '/myComplain1';
+  static const  myComplainWithMe = '/myComplainWithMe';
 
 }

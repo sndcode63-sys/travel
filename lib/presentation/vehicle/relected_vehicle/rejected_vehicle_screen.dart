@@ -59,7 +59,6 @@ class RejectedVehicleScreen extends GetView<RejectedVController> {
           );
         }
 
-        // ✅ Get filtered vehicles
         final filteredVehicles = controller.getFilteredVehicles(
           searchController.searchQuery.value,
         );

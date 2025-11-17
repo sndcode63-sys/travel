@@ -9,7 +9,7 @@ import '../../../models/scheme/scheme_list_data.dart';
 import '../../../models/team/team_self_model.dart';
 
 
-class Repositorys {
+class Repository1 {
   final ApiServices _apiServices = ApiServices();
   CancelToken? _cancelToken;
 

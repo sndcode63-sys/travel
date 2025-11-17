@@ -2,16 +2,15 @@ import 'package:get/get.dart';
 
 import '../../../core/helpers.dart';
 import '../../../models/complain/get_dispute.dart';
-import '../AssociateComplain/repository.dart';
-import 'repository.dart';
+import 'repository1.dart';
 
-class MyComplainController extends GetxController {
+class MyComplainController1 extends GetxController {
   RxBool isLoading = false.obs;
   RxBool hasData = false.obs;
 
   RxList<Data> disputeList = <Data>[].obs;
 
-  final Repositorys _repository = Repositorys();
+  final Repository1 _repository = Repository1();
 
   @override
   void onInit() {

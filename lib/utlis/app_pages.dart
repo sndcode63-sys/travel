@@ -30,6 +30,7 @@ import 'package:travell_booking_app/presentation/complaine/coplainDisputeSummary
 import 'package:travell_booking_app/presentation/complaine/disputSummary/dispute_enter_binding.dart';
 import 'package:travell_booking_app/presentation/complaine/myComplain/my_complain_binding.dart';
 import 'package:travell_booking_app/presentation/complaine/myComplain/my_complain_screen.dart';
+import 'package:travell_booking_app/presentation/complaine/myComplain1/my_complain_binding1.dart';
 import 'package:travell_booking_app/presentation/dashBoard/dash_board_screen.dart';
 import 'package:travell_booking_app/presentation/liberary/libraryData/library_data.dart';
 import 'package:travell_booking_app/presentation/liberary/libraryData/library_data_binding.dart';
@@ -96,7 +97,10 @@ import '../presentation/associate/relationInformation/relation_information_scree
 import '../presentation/auth/password/forget_password_screen.dart';
 import '../presentation/auth/reset_password/reset_password_screen.dart';
 import '../presentation/bankVerification/bank_verification.dart';
+import '../presentation/complaine/complainWithMe/complain_with_me.dart';
+import '../presentation/complaine/complainWithMe/complain_with_me_binding.dart';
 import '../presentation/complaine/disputSummary/dispute_enter_summary.dart';
+import '../presentation/complaine/myComplain1/my_complain_screen1.dart';
 import '../presentation/dashBoard/dash_board_binding.dart';
 import '../presentation/meeting/meeting_binding.dart';
 import '../presentation/settings/resetPassword/reset_password.dart';
@@ -462,6 +466,18 @@ class AppPages {
       name: AppRoutes.unifiedVerification,
       page: () => AssociateTab(),
       binding: AssociateTabBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.myComplain1,
+      page: () => MyComplainScreen1(),
+      binding: MyComplainBinding1(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRoutes.myComplainWithMe,
+      page: () => ComplainWithMe(),
+      binding: ComplainWithMeBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

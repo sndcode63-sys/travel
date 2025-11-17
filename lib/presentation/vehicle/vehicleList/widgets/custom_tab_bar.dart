@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:travell_booking_app/presentation/vehicle/pending_vehicle/pending_vehicle_screen.dart';
+import 'package:travell_booking_app/presentation/vehicle/relected_vehicle/rejected_vehicle_screen.dart';
 import 'package:travell_booking_app/presentation/vehicle/vehicleList/vehicle_list_screen.dart';
 
 import '../../../../utlis/custom_widgets/custom_listview_builder.dart';
+import '../../approved_vehicle/approved_vehicle_screen.dart';
 
 class CustomVehicleTabs extends StatelessWidget {
   CustomVehicleTabs({super.key});
@@ -40,6 +43,9 @@ class CustomVehicleTabs extends StatelessWidget {
                 index: currentIndex,
                 children: [
                   VehicleListScreen(),
+                  ApprovedVehicleScreen(),
+                  PendingVehicleScreen(),
+                  RejectedVehicleScreen(),
                 ],
               );
             },

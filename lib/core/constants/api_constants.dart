@@ -50,6 +50,7 @@ class ApiConstants1{
   static const String saveVerificationData = "$baseUrl/save-verification-data";
   static const String saveAssociateData = "$baseUrl/save-associate-data";
   static const String associateList = "$baseUrl/get-associate-list";
+  static const String getDisputeData = "$baseUrl/get-dispute-data";
 
   // Headers
   static const String contentType = 'application/json';

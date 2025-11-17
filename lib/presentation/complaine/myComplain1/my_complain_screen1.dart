@@ -1,16 +1,13 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:travell_booking_app/utlis/app_routes.dart';
-import 'package:travell_booking_app/utlis/constents/colors.dart';
-import 'my_complain_controller.dart';
+import 'my_complain_controller1.dart';
 import 'view_screen.dart';
 
-class MyComplainScreen extends StatelessWidget {
-  MyComplainScreen({super.key});
+class MyComplainScreen1 extends StatelessWidget {
+  MyComplainScreen1({super.key});
 
-  final MyComplainController controller = Get.put(MyComplainController());
+  final MyComplainController1 controller = Get.put(MyComplainController1());
   final TextEditingController searchController = TextEditingController();
 
   @override
