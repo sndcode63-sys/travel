@@ -47,10 +47,13 @@ class VehicleList {
     this.base64Image,
     this.visitStatus,
     this.name,
-  });
+  }) {
+    // Initialize isOn based on active field from backend
+    isOn.value = active == 1;
+  }
 
   VehicleList.fromJson(Map<String, dynamic> json) {
-    id = json['id']?.toString() ?? json['_id']?.toString(); // ✅ fixed
+    id = json['id']?.toString() ?? json['_id']?.toString();
     registrationNumber = json['registration_number'];
     modelName = json['model_name'];
     brand = json['brand'];
@@ -70,6 +73,9 @@ class VehicleList {
     base64Image = json['base64_image'];
     visitStatus = json['visit_status'];
     name = json['name'];
+
+    // Initialize isOn based on active field from backend
+    isOn.value = active == 1;
   }
 
   Map<String, dynamic> toJson() {
@@ -99,9 +105,8 @@ class VehicleList {
 
   String get fullImageUrl => ApiConstants1.imagePath;
 
-
   @override
   String toString() {
-    return 'VehicleList(id: $id, registrationNumber: $registrationNumber, modelName: $modelName, brand: $brand)';
+    return 'VehicleList(id: $id, registrationNumber: $registrationNumber, modelName: $modelName, brand: $brand, active: $active)';
   }
 }
