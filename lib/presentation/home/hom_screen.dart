@@ -10,6 +10,7 @@ import 'package:travell_booking_app/utlis/app_routes.dart';
 import 'package:travell_booking_app/utlis/constents/colors.dart';
 import 'package:travell_booking_app/utlis/constents/img_constants.dart';
 import '../../data/services/api_manager.dart';
+import '../../main.dart';
 import 'home_controller.dart';
 import 'wigets/home_slider_drawer.dart';
 
@@ -33,7 +34,7 @@ class HomScreen extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: UColors.white,
-        drawer: const HomeSliderDrawer(),
+        drawer:  CustomDrawer(),
         appBar: AppBar(
           centerTitle: false,
           backgroundColor: UColors.primary,

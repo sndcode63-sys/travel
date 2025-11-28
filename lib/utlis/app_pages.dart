@@ -83,6 +83,7 @@ import 'package:travell_booking_app/presentation/verification/pan/pan_verificati
 import 'package:travell_booking_app/presentation/verification/pan/pan_verification_binding.dart';
 import 'package:travell_booking_app/presentation/verification/phone/phone_verification.dart';
 import 'package:travell_booking_app/presentation/verification/phone/phone_verification_binding.dart';
+import '../main.dart';
 import '../presentation/addmetting/visitList/visit_list_binding.dart';
 import '../presentation/addmetting/visitList/visit_screen.dart';
 import '../presentation/associate/associtaeGeneral/add_associate_binding.dart';
@@ -368,7 +369,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.theme,
-      page: () => ThemeScreen(),
+      page: () => ColorSelectorSheet(),
       binding: ThemeBinding(),
       transition: Transition.rightToLeft,
     ),

@@ -46,7 +46,7 @@ class LoginScreen extends GetView<LoginController> {
 
                          ),
                          SizedBox(height: 20.h),
-                        /// Email Field
+                        // Email Field
                         AppTextField(
                           controller: controller.emailController,
                           hintText: "Email Address / Mobile Number",
@@ -78,7 +78,7 @@ class LoginScreen extends GetView<LoginController> {
 
                          SizedBox(height: 12.h),
 
-                        /// Forgot Password
+                        // Forgot Password
                         Align(
                           alignment: Alignment.centerRight,
                           child: GestureDetector(

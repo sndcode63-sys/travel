@@ -50,7 +50,7 @@ class LoginController extends GetxController {
         //  Save to AuthService
         await AuthService.to.saveUser(userData);
 
-        // ✅ Initialize ProfileCenterController after login
+        //  Initialize ProfileCenterController after login
         try {
           // Check if already exists
           final profileController = Get.isRegistered<ProfileCenterController>()
@@ -59,9 +59,9 @@ class LoginController extends GetxController {
 
           // Fetch fresh data
           await profileController.fetchDataUser();
-          print("✅ ProfileCenterController initialized after login");
+          print(" ProfileCenterController initialized after login");
         } catch (e) {
-          print("⚠️ Error initializing ProfileCenterController: $e");
+          print(" Error initializing ProfileCenterController: $e");
         }
 
         //  Navigate with user data
